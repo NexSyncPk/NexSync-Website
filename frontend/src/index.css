@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #2962FF;
+  --primary-orange: #FF6D00;
+  --secondary-steel: #78909C;
+  --secondary-teal: #00BFA5;
+  --secondary-navy: #0A2463;
+  --background-ice: #F5F7FA;
+}
+
+@layer base {
+  body {
+    @apply bg-background-ice text-secondary-navy font-sans;
+    margin: 0;
+    min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-secondary-navy font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-primary-orange text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-600 transition-colors duration-200 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary-blue text-primary-blue px-6 py-3 rounded-lg font-medium hover:bg-primary-blue hover:text-white transition-all duration-200;
+  }
+  
+  .card {
+    @apply bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300;
+  }
+  
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
