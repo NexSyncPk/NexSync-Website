@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card } from '../components/ui/index';
-import { companyValues } from '../data/mockData';
-import { Lightbulb, Award, Users, TrendingUp, Shield } from 'lucide-react';
+import { Card } from "../components";
+import { companyValues } from "../data/mockData";
+import { Lightbulb, Award, Users, TrendingUp, Shield } from "lucide-react";
 
 const iconMap = {
   Lightbulb,
@@ -48,12 +48,13 @@ export const AboutPage: React.FC = () => {
                 Our Mission
               </h2>
               <p className="text-lg text-secondary-steel leading-relaxed">
-                To empower businesses with innovative digital solutions that drive growth, 
-                enhance user experiences, and create lasting value. We believe that great 
-                technology should be accessible, reliable, and transformative.
+                To empower businesses with innovative digital solutions that
+                drive growth, enhance user experiences, and create lasting
+                value. We believe that great technology should be accessible,
+                reliable, and transformative.
               </p>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -80,7 +81,7 @@ export const AboutPage: React.FC = () => {
             >
               <div className="w-full h-64 bg-gradient-to-br from-primary-orange to-secondary-navy rounded-2xl shadow-xl"></div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -92,10 +93,11 @@ export const AboutPage: React.FC = () => {
                 Our Vision
               </h2>
               <p className="text-lg text-secondary-steel leading-relaxed">
-                To be the leading digital innovation partner for businesses worldwide, 
-                setting new standards for quality, creativity, and technological excellence. 
-                We envision a future where every business can harness the full potential 
-                of digital transformation.
+                To be the leading digital innovation partner for businesses
+                worldwide, setting new standards for quality, creativity, and
+                technological excellence. We envision a future where every
+                business can harness the full potential of digital
+                transformation.
               </p>
             </motion.div>
           </div>
@@ -116,14 +118,15 @@ export const AboutPage: React.FC = () => {
               Our Values
             </h2>
             <p className="text-xl text-secondary-steel max-w-3xl mx-auto">
-              These core principles guide everything we do and shape our company culture.
+              These core principles guide everything we do and shape our company
+              culture.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {companyValues.map((value, index) => {
               const IconComponent = iconMap[value.icon as keyof typeof iconMap];
-              
+
               return (
                 <motion.div
                   key={value.id}
@@ -138,14 +141,12 @@ export const AboutPage: React.FC = () => {
                         <IconComponent size={32} className="text-white" />
                       </div>
                     </div>
-                    
+
                     <h3 className="text-xl font-semibold text-secondary-navy mb-4">
                       {value.title}
                     </h3>
-                    
-                    <p className="text-secondary-steel">
-                      {value.description}
-                    </p>
+
+                    <p className="text-secondary-steel">{value.description}</p>
                   </Card>
                 </motion.div>
               );
@@ -168,10 +169,10 @@ export const AboutPage: React.FC = () => {
               Meet Our Team
             </h2>
             <p className="text-xl text-secondary-steel mb-12 max-w-3xl mx-auto">
-              Our diverse team of experts brings together years of experience in technology, 
-              design, and business strategy.
+              Our diverse team of experts brings together years of experience in
+              technology, design, and business strategy.
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[1, 2, 3].map((_, index) => (
                 <motion.div

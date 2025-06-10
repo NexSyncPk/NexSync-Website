@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card } from '../ui/index';
+import { Card } from "../ui/index.tsx";
 import { services } from '../../data/mockData';
 import { Code, Smartphone, Cloud, Palette } from 'lucide-react';
 

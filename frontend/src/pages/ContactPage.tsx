@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, Button } from '../components/ui/index';
+import { Card, Button } from "../components";
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import type { ContactFormData } from '../types';
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, Button } from '../components/ui/index';
-import { jobOpenings, benefits } from '../data/mockData';
-import { MapPin, Clock, DollarSign, Users, Home, BookOpen, Star } from 'lucide-react';
+import { Card, Button } from "../components";
+import { jobOpenings, benefits } from "../data/mockData";
+import { MapPin, DollarSign, Users, Home, BookOpen, Star } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const benefitIconMap = {

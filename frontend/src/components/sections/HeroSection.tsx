@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Target } from 'lucide-react';
-import { Button } from '../ui/index';
+import { Button } from "../ui/index.tsx";
 import { Link } from 'react-router-dom';
 
 export const HeroSection: React.FC = () => {
