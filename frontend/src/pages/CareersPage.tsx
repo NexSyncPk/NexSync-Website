@@ -35,18 +35,18 @@ export const CareersPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6 main-heading">
               Join NexSync
             </h1>
             <p className="text-xl lg:text-2xl opacity-90 mb-8">
               Build the future with us. We're looking for passionate individuals who want to make a difference.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-md:items-center ">
+              <Button className='btn-secondary '>
                 View Open Positions
               </Button>
               <Link to="/contact">
-                <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-secondary-navy">
+                <Button className="border-white text-white hover:bg-white hover:text-secondary-navy px-14 bg-transparent border-2 ">
                   Contact Us
                 </Button>
               </Link>
@@ -85,7 +85,7 @@ export const CareersPage: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="text-center h-full">
+                  <Card className="text-center h-full shadow-xl ease-linear duration-200 transition-all ring-1 ring-slate-300">
                     <div className="mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center mx-auto">
                         <IconComponent size={32} className="text-white" />
@@ -168,7 +168,7 @@ export const CareersPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="hover:border-primary-blue">
+                <Card className="hover:border-primary-blue hover:scale-[1.02] transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-4">

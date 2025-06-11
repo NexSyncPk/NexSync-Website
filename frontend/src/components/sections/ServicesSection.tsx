@@ -42,7 +42,7 @@ export const ServicesSection: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="text-center h-full group">
+                <Card className="text-center h-full group shadow-xl ring-1 ring-slate-300 transition-all ease-linear duration-200">
                   <div className="mb-6">
                     <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
                       <IconComponent size={32} className="text-white" />
@@ -61,7 +61,7 @@ export const ServicesSection: React.FC = () => {
                     {service.features.map((feature, idx) => (
                       <div
                         key={idx}
-                        className="text-sm text-secondary-steel bg-background-ice px-3 py-1 rounded-full inline-block mr-2 mb-2"
+                        className="text-sm text-secondary-steel bg-background-ice px-3 py-1 rounded-full inline-block mr-2 "
                       >
                         {feature}
                       </div>
