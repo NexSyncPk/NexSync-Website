@@ -33,7 +33,7 @@ const AdminLayout = ({ children }: Props) => {
           <AppSidebar className="absolute" />
           <main className="">
             <div className="relative w-screen h-12 border-b-2 flex">
-              <div className="w-16 h-full flex items-center justify-between border-r-2 border-slate-300">
+              <div className="w-14 h-full flex items-center justify-between border-r-2 border-slate-300">
                 <SidebarTrigger className="absolute z-10 bg-transparent top-3 px-7 " />
               </div>
               <div className="flex items-center h-full w-[96%] px-8">
