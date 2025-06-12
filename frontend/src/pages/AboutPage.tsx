@@ -24,7 +24,7 @@ export const AboutPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="main-heading">
               About NexSync
             </h1>
             <p className="text-xl lg:text-2xl opacity-90">
@@ -42,7 +42,7 @@ export const AboutPage: React.FC = () => {
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              // viewport={{ once: true }}
             >
               <h2 className="text-4xl font-bold text-secondary-navy mb-6">
                 Our Mission
@@ -135,7 +135,7 @@ export const AboutPage: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="text-center h-full">
+                  <Card className="text-center h-full shadow-xl ring-1 ring-slate-300 transition-all ease-linear duration-200">
                     <div className="mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center mx-auto">
                         <IconComponent size={32} className="text-white" />
@@ -173,8 +173,8 @@ export const AboutPage: React.FC = () => {
               technology, design, and business strategy.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((_, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
+              {[1, 2, 3,4].map((_, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
@@ -182,7 +182,7 @@ export const AboutPage: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="text-center">
+                  <Card className="text-center transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
                     <div className="w-24 h-24 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full mx-auto mb-4"></div>
                     <h3 className="text-xl font-semibold text-secondary-navy mb-2">
                       Team Member {index + 1}

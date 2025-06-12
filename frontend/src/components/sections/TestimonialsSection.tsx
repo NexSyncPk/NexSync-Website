@@ -55,7 +55,7 @@ export const TestimonialsSection: React.FC = () => {
                 </span>
               </div>
               <div className="text-left">
-                <h4 className="text-xl font-semibold">
+                <h4 className="text-xl font-semibold text-gray-200">
                   {testimonials[currentIndex].name}
                 </h4>
                 <p className="text-gray-300">
