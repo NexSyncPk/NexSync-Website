@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavigationItem {
   id: string;
@@ -11,10 +11,10 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
-  { id: '1', label: 'Home', path: '/' },
-  { id: '2', label: 'About', path: '/about' },
-  { id: '3', label: 'Careers', path: '/careers' },
-  { id: '4', label: 'Contact', path: '/contact' },
+  { id: "1", label: "Home", path: "/" },
+  { id: "2", label: "About", path: "/about" },
+  { id: "3", label: "Careers", path: "/careers" },
+  { id: "4", label: "Contact", path: "/contact" },
 ];
 
 export const Navigation: React.FC = () => {
@@ -26,11 +26,11 @@ export const Navigation: React.FC = () => {
       <div className="section-container">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary-blue to-primary-orange rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">N</span>
-            </div>
-            <span className="text-2xl font-bold text-secondary-navy">NexSync</span>
+          <Link to="/" className="flex items-center w-cover h-9 space-x-1 ">
+            <img src="/Logo.png" alt="Logo" className="w-full h-full" />
+            <span className="text-2xl font-bold text-secondary-navy">
+              NexSync
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -41,8 +41,8 @@ export const Navigation: React.FC = () => {
                 to={item.path}
                 className={`text-lg font-medium transition-colors duration-200 ${
                   location.pathname === item.path
-                    ? 'text-primary-blue border-b-2 border-primary-blue'
-                    : 'text-secondary-steel hover:text-primary-blue'
+                    ? "text-primary-blue border-b-2 border-primary-blue"
+                    : "text-secondary-steel hover:text-primary-blue"
                 }`}
               >
                 {item.label}
@@ -64,7 +64,7 @@ export const Navigation: React.FC = () => {
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden border-t border-gray-200"
             >
@@ -76,8 +76,8 @@ export const Navigation: React.FC = () => {
                     onClick={() => setIsOpen(false)}
                     className={`block text-lg font-medium transition-colors duration-200 ${
                       location.pathname === item.path
-                        ? 'text-primary-blue'
-                        : 'text-secondary-steel hover:text-primary-blue'
+                        ? "text-primary-blue"
+                        : "text-secondary-steel hover:text-primary-blue"
                     }`}
                   >
                     {item.label}

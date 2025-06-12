@@ -1,19 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
 
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-secondary-navy text-white py-12">
       <div className="section-container">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 ">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-blue to-primary-orange rounded-lg flex items-center justify-center">
+              {/* <div className="w-8 h-8 bg-gradient-to-r from-primary-blue to-primary-orange rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">N</span>
-              </div>
-              <span className="text-xl font-bold">NexSync</span>
+              </div> */}
+              <img src="/Logo.png" alt="NexSync" width={70} height={70} />
+              <span className="text-2xl font-bold">NexSync</span>
             </div>
             <p className="text-gray-300">
               Building innovative digital solutions for tomorrow's challenges.
@@ -24,16 +25,28 @@ export const Footer: React.FC = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Quick Links</h4>
             <div className="space-y-2">
-              <Link to="/" className="block text-gray-300 hover:text-primary-blue transition-colors">
+              <Link
+                to="/"
+                className="block text-gray-300 hover:text-primary-blue transition-colors"
+              >
                 Home
               </Link>
-              <Link to="/about" className="block text-gray-300 hover:text-primary-blue transition-colors">
+              <Link
+                to="/about"
+                className="block text-gray-300 hover:text-primary-blue transition-colors"
+              >
                 About Us
               </Link>
-              <Link to="/careers" className="block text-gray-300 hover:text-primary-blue transition-colors">
+              <Link
+                to="/careers"
+                className="block text-gray-300 hover:text-primary-blue transition-colors"
+              >
                 Careers
               </Link>
-              <Link to="/contact" className="block text-gray-300 hover:text-primary-blue transition-colors">
+              <Link
+                to="/contact"
+                className="block text-gray-300 hover:text-primary-blue transition-colors"
+              >
                 Contact
               </Link>
             </div>

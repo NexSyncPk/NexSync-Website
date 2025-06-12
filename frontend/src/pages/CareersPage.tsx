@@ -58,11 +58,11 @@ export const CareersPage: React.FC = () => {
       {/* Why Work With Us */}
       <section className="py-20 bg-white">
         <div className="section-container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+          <div
+            // initial={{ opacity: 0, y: 30 }}
+            // whileInView={{ opacity: 1, y: 0 }}
+            // transition={{ duration: 0.8 }}
+            // viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl lg:text-5xl font-bold text-secondary-navy mb-6">
@@ -71,7 +71,7 @@ export const CareersPage: React.FC = () => {
             <p className="text-xl text-secondary-steel max-w-3xl mx-auto">
               Join a team that values innovation, growth, and work-life balance.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => {
