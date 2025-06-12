@@ -1,7 +1,5 @@
 // src/layouts/AdminLayout.tsx
-import { use, type ReactNode } from "react";
-import { Sidebar } from "../ui/sidebar";
-import { Navigation } from "../Navigation";
+import type { ReactNode } from "react";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import { useLocation } from "react-router-dom";
@@ -29,10 +27,10 @@ const AdminLayout = ({ children }: Props) => {
   return (
     <>
       <SidebarProvider>
-        <div className="relative  w-full min-h-screen mb-2 flex">
+        <div className="relative w-full  pb-10 flex">
           <AppSidebar className="absolute" />
-          <main className="">
-            <div className="relative w-screen h-12 border-b-2 flex">
+          <main className="bg-background-ice w-full h-full ">
+            <div className="relative w-full h-12 border-b-2 flex bg-white">
               <div className="w-14 h-full flex items-center justify-between border-r-2 border-slate-300">
                 <SidebarTrigger className="absolute z-10 bg-transparent top-3 px-7 " />
               </div>
