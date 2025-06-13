@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const JobPostingController = require("../controllers/JobPostingController");
+const authenticateAdmin = require("../middlewares/auth.middleware");
 
-router.post("/", JobPostingController.createJobPosting);
+router.post("/", authenticateAdmin, JobPostingController.createJobPosting);
 
-router.get("/", JobPostingController.getAllJobPostings);
+router.get("/", authenticateAdmin, JobPostingController.getAllJobPostings);
 
-router.get("/:id", JobPostingController.getJobPostingById);
+router.get("/:id", authenticateAdmin, JobPostingController.getJobPostingById);
 
-router.put("/", JobPostingController.updateJobPosting);
+router.put("/", authenticateAdmin, JobPostingController.updateJobPosting);
 
-router.delete("/", JobPostingController.deleteJobPosting);
+router.delete("/", authenticateAdmin, JobPostingController.deleteJobPosting);
 module.exports = router;
