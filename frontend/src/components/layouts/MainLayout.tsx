@@ -1,5 +1,7 @@
 // src/layouts/MainLayout.tsx
 import type { ReactNode } from "react";
+import { Navigation } from "../Navigation";
+import { Footer } from "../Footer";
 // import { Navigation } from "../Navigation";
 // import { Footer } from "../Footer";
 
@@ -10,8 +12,9 @@ type Props = {
 const MainLayout = ({ children }: Props) => {
   return (
     <>
+      <Navigation />
       <main className="">{children}</main>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };

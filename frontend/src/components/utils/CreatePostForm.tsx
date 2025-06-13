@@ -63,7 +63,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
       jobType: "remote",
       domain: "",
       salary: Number(""),
-      requirements: [],
+      requirements: ["", "", ""], // Default to 3 empty requirements
     },
   });
 
@@ -90,8 +90,9 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
         onSubmit={form.handleSubmit(handleSubmit)}
         className="relative space-y-6 w-4/5 mx-auto p-6 bg-white rounded-lg shadow-md mt-20 md:w-3/5 lg:w-2/5"
       >
+        <h1 className="text-center text-2xl font-bold">Create Job</h1>
         <div
-          className="absolute top-4 right-4 cursor-pointer"
+          className="absolute top-0 right-4 cursor-pointer"
           onClick={() => {
             form.reset();
             setForm(false);
@@ -106,7 +107,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="username872..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -194,7 +195,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             <FormField
               key={field.id}
               control={form.control}
-              name={`requirements.${index}` as const}
+              name={`requirements.${index}`}
               render={({ field }) => (
                 <FormItem className="flex gap-2 items-center">
                   <FormControl>
@@ -215,7 +216,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
               )}
             />
           ))}
-          <Button type="button" onClick={() => append("")}>
+          <Button type="button" onClick={() => append(" ")}>
             + Add Requirement
           </Button>
         </div>

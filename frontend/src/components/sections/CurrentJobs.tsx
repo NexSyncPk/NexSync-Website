@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Card, Button } from "../../components";
-import { MapPin, DollarSign, Users, Home, BookOpen, Star } from "lucide-react";
-import { jobOpenings, benefits } from "../../data/mockData";
+import { MapPin, DollarSign, Users } from "lucide-react";
+import { jobOpenings } from "../../data/mockData";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CreatePostForm from "../utils/CreatePostForm";
@@ -20,6 +20,8 @@ export const CurrentJobs: React.FC = () => {
   const types = ["all", "full-time", "internship", "contract"];
 
   const [form, setForm] = useState(false);
+
+  const user = "admin";
 
   return (
     <section className="py-20 bg-background-ice ">
@@ -143,10 +145,31 @@ export const CurrentJobs: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mt-6 lg:mt-0 lg:ml-8">
-                    <Link to="/contact">
-                      <Button className="w-full lg:w-auto">Apply Now</Button>
-                    </Link>
+                  <div className="flex flex-col lg:items-center lg:justify-end mt-6 lg:mt-0 space-y-2">
+                    {user !== "admin" && (
+                      <div className="mt-6 lg:mt-0 lg:ml-8">
+                        <Link to="/contact">
+                          <Button className="w-full lg:w-auto btn-primary">
+                            Apply Now
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                    <div className="mt-6 lg:mt-0 lg:ml-8">
+                      {/* <Link to="/contact"> */}
+                      <Button className="w-full lg:w-auto btn-secondary lg:px-9">
+                        Archive
+                      </Button>
+                      {/* </Link> */}
+                    </div>
+
+                    <div className="mt-6 lg:mt-0 lg:ml-8">
+                      {/* <Link to="/contact"> */}
+                      <Button className="w-full lg:w-auto btn-secondary lg:px-10 !bg-red-600 hover:!bg-red-700">
+                        Delete
+                      </Button>
+                      {/* </Link> */}
+                    </div>
                   </div>
                 </div>
               </Card>
