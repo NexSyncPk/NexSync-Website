@@ -128,20 +128,20 @@ const MediaHomePage = () => {
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
-                <div className="flex flex-col items-center">
-                  <span className="text-4xl font-extrabold text-secondary-navy">
+                <div className="flex flex-col items-center ">
+                  <span className="text-3xl font-extrabold text-secondary-navy">
                     50+
                   </span>
-                  <span className="mt-2 text-lg text-gray-600">Projects</span>
+                  <span className="mt-2 text-lg text-gray-600 ">Projects</span>
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-4xl font-extrabold text-secondary-navy">
+                <div className="flex flex-col items-center ">
+                  <span className="text-3xl font-extrabold text-secondary-navy">
                     20+
                   </span>
                   <span className="mt-2 text-lg text-gray-600">Clients</span>
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-4xl font-extrabold text-secondary-navy">
+                <div className="flex flex-col items-center ">
+                  <span className="text-3xl font-extrabold text-secondary-navy">
                     90%
                   </span>
                   <span className="mt-2 text-lg text-gray-600">
@@ -158,13 +158,26 @@ const MediaHomePage = () => {
               >
                 <div>
                   <label className="block font-semibold mb-1">
-                    Hero Image URL
+                    Hero Image Upload
                   </label>
                   <input
-                    type="text"
-                    {...registerHero("heroImage")}
+                    type="file"
+                    accept="image/*"
                     className="w-full border rounded px-3 py-2"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        // Set the value in react-hook-form
+                        // Since react-hook-form expects a string, we use setValue
+                        // @ts-ignore
+                        registerHero("heroImage").onChange({
+                          target: { name: "heroImage", value: url },
+                        });
+                      }
+                    }}
                   />
+
                   {errorsHero.heroImage && (
                     <span className="text-red-500 text-sm">
                       {errorsHero.heroImage.message}
@@ -227,17 +240,12 @@ const MediaHomePage = () => {
         <section className="w-full h-fit bg-white rounded-md shadow-lg mb-6">
           <div className="flex items-center justify-between p-4 border-b-2 border-slate-200">
             <h1 className="text-2xl font-bold">Testimonial Section</h1>
-            {/* {!testimonialEdit ? (
-              <Edit
-                className="w-6 h-6 text-secondary-navy cursor-pointer"
-                onClick={() => setTestimonialEdit(true)}
-              />
-            ) : (
+            {testimonialEdit && (
               <X
                 className="w-6 h-6 text-secondary-navy cursor-pointer"
                 onClick={() => setTestimonialEdit(false)}
               />
-            )} */}
+            )}
           </div>
 
           {!testimonialEdit ? (
