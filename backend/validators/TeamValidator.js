@@ -7,8 +7,8 @@ class TeamValidator extends BaseValidator {
       const schema = Joi.object().keys({
         name: Joi.string().required().label("Name"),
         email: Joi.string().email().required().label("Email"),
-        position: Joi.string().required().label("Position"),
-        picture: Joi.string().uri().required().label("Picture"),
+        position: Joi.string().optional().label("Position"),
+
         description: Joi.string().optional().label("Description"),
         isDeleted: Joi.boolean().optional(),
       });

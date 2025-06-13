@@ -14,7 +14,7 @@ class JobApplicationValidator extends BaseValidator {
       expectedSalary: Joi.number().required().label("Expected Salary"),
       yearOfPassing: Joi.number().required().label("Year of Passing"),
       address: Joi.string().optional().label("Address"),
-      resume: Joi.string().uri().required().label("Resume Link"),
+
       availability: Joi.string()
         .valid("remote", "hybrid", "onsite")
         .required()

@@ -1,4 +1,3 @@
-
 require("express-async-errors");
 const express = require("express");
 const cors = require("cors");
@@ -12,16 +11,14 @@ app.use(express.json());
 
 app.use(cors());
 
-
 app.use("/api", routes);
 
+app.use("/uploads", express.static("uploads"));
 
-app.get('/users', (req, res) => {
+app.get("/users", (req, res) => {
   res.json([{ name: "John Doee" }]);
-})
-
+});
 
 app.use(error);
-
 
 module.exports = app;

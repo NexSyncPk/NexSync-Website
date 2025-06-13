@@ -1,10 +1,12 @@
 const JobPostingRepo = require("../repos/JobPostingRepo");
+const { db } = require("sequelize");
 const JobPostingValidator = require("../validators/JobPostingValidator");
 const {
   validateCreateJobPosting,
   validateUpdateJobPosting,
 } = require("../validators/JobPostingValidator");
 const BaseController = require("./BaseController");
+const { Op } = require("sequelize");
 class JobPostingController extends BaseController {
   constructor() {
     super();
@@ -16,6 +18,7 @@ class JobPostingController extends BaseController {
       return this.validationErrorResponse(res, validationResult.message);
     }
     const jobPosting = await JobPostingRepo.createJobPosting(req.body);
+    console.log("jobPosting >>>", jobPosting);
     return this.successResponse(
       res,
       jobPosting,
@@ -24,21 +27,63 @@ class JobPostingController extends BaseController {
   };
 
   getAllJobPostings = async (req, res) => {
-    const jobPostings = await JobPostingRepo.getAllJobPostings();
+    const {
+      sortBy = "id",
+      sortOrder = "DESC",
+      page = 1,
+      limit = 10,
+      search = "",
+      filterByTitle,
+      filterByPosition,
+      filterByDomain,
+    } = req.query;
+
+    const offset = (page - 1) * limit;
+
+    const searchCondition = search
+      ? {
+          [Op.or]: [
+            { title: { [Op.like]: `%${search}%` } },
+            { domain: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : {};
+
+    const filterConditions = {};
+    if (filterByTitle)
+      filterConditions.title = { [Op.like]: `%${filterByTitle}%` };
+    if (filterByPosition)
+      filterConditions.position = { [Op.like]: `%${filterByPosition}%` };
+    if (filterByDomain)
+      filterConditions.domain = { [Op.like]: `%${filterByDomain}%` };
+
+    const where = {
+      ...searchCondition,
+      ...filterConditions,
+    };
+
+    const jobPostings = await JobPostingRepo.getAllJobPostings({
+      where,
+      offset: parseInt(offset),
+      limit: parseInt(limit),
+      order: [[sortBy, sortOrder.toUpperCase()]],
+    });
+
     return this.successResponse(
       res,
       jobPostings,
-      "Job Postings successfully fetched"
+      "Job postings fetched successfully"
     );
   };
+
   getJobPostingById = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     if (!id) {
-      return this.validationErrorResponse(res, "ID is required in query");
+      return this.validationErrorResponse(res, "ID is required in params");
     }
     const jobPosting = await JobPostingRepo.getJobPostingById(id);
     if (!jobPosting) {
-      return this.errorResponse(res, "Job Posting not found", 404);
+      return this.errorResponse(res, "Job Posting not found", 400);
     }
 
     return this.successResponse(res, jobPosting, "Job posting fetched");
@@ -68,7 +113,7 @@ class JobPostingController extends BaseController {
   deleteJobPosting = async (req, res) => {
     const { id, type } = req.query;
     if (!id) {
-      return this.errorResponse(res, "id is required", 404);
+      return this.errorResponse(res, "id is required", 400);
     }
     if (type && type !== "soft" && type !== "hard") {
       return this.validationErrorResponse(
@@ -79,17 +124,11 @@ class JobPostingController extends BaseController {
 
     const jobPosting = await JobPostingRepo.getJobPostingById(id);
     if (!jobPosting) {
-      return this.errorResponse(res, "Job Posting not found", 404);
+      return this.errorResponse(res, "Job Posting not found", 400);
     }
 
     await JobPostingRepo.deleteJobPosting(id, type || "soft");
-    return this.successResponse(
-      res,
-      null,
-      `Job Posting ${
-        type === "hard" ? "permanently" : "softly"
-      } deleted successfully`
-    );
+    return this.successResponse(res, null, `Job Posting deleted successfully`);
   };
 }
 

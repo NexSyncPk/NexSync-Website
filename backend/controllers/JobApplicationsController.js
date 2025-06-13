@@ -4,18 +4,30 @@ const {
 } = require("../validators/JobApplicationsValidator");
 
 const JobApplicationsRepo = require("../repos/JobApplicationsRepo");
-
+const { Op } = require("sequelize");
+const db = require("sequelize");
+const JobApplications = db.JobApplications;
+const JobPosting = db.JobPosting;
 class JobApplicationsController extends BaseController {
   constructor() {
     super();
   }
   createJobApplication = async (req, res) => {
+    if (!req.file) {
+      return this.validationErrorResponse(res, "Resume is required");
+    }
     const validationResult = validateCreateJobApplication(req.body);
     if (!validationResult.status) {
       return this.validationErrorResponse(res, validationResult.message);
     }
+    const resume = `/uploads/resumes/${req.file.filename}`;
+    const applicationData = {
+      ...req.body,
+      resume,
+    };
+
     const jobApplication = await JobApplicationsRepo.createJobApplication(
-      req.body
+      applicationData
     );
     return this.successResponse(
       res,
@@ -25,22 +37,68 @@ class JobApplicationsController extends BaseController {
   };
 
   getAllJobApplications = async (req, res) => {
-    const jobApplications = await JobApplicationsRepo.getAllJobApplications();
+    const {
+      sortBy = "createdAt",
+      sortOrder = "DESC",
+      page = 1,
+      limit = 10,
+      search = "",
+      lastEducation,
+      expectedSalary,
+      yearOfPassing,
+    } = req.query;
+
+    const offset = (page - 1) * limit;
+
+    const searchCondition = search
+      ? {
+          [Op.or]: [
+            { name: { [Op.like]: `%${search}%` } },
+            { email: { [Op.like]: `%${search}%` } },
+            { phoneNumber: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : {};
+
+    const filterConditions = {};
+    if (lastEducation) filterConditions.lastEducation = lastEducation;
+    if (expectedSalary) filterConditions.expectedSalary = expectedSalary;
+    if (yearOfPassing) filterConditions.yearOfPassing = yearOfPassing;
+
+    const where = {
+      ...searchCondition,
+      ...filterConditions,
+    };
+
+    const jobApplications = await JobApplicationsRepo.getAllJobApplications({
+      where,
+      offset: parseInt(offset),
+      limit: parseInt(limit),
+      order: [[sortBy, sortOrder.toUpperCase()]],
+      include: [
+        {
+          model: db.JobPosting,
+          as: "jobPosting",
+          attributes: ["id", "title"],
+        },
+      ],
+    });
+
     return this.successResponse(
       res,
       jobApplications,
-      "Job Applications successfully fetched"
+      "Job Applications fetched"
     );
   };
   getJobApplicationById = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     if (!id) {
       return this.validationErrorResponse(res, "ID is required in query");
     }
 
     const jobApplication = await JobApplicationsRepo.getJobApplicationById(id);
     if (!jobApplication) {
-      return this.errorResponse(res, "Job Application not found", 404);
+      return this.errorResponse(res, "Job Application not found", 400);
     }
     return this.successResponse(res, jobApplication, "Job Application fetched");
   };
@@ -60,16 +118,14 @@ class JobApplicationsController extends BaseController {
 
     const jobApplication = await JobApplicationsRepo.getJobApplicationById(id);
     if (!jobApplication) {
-      return this.errorResponse(res, "Job Application not found", 404);
+      return this.errorResponse(res, "Job Application not found", 400);
     }
 
     await JobApplicationsRepo.deleteJobApplication(id, type || "soft");
     return this.successResponse(
       res,
       null,
-      `Job Application ${
-        type === "hard" ? "permanently" : "softly"
-      } deleted successfully`
+      `Job Application deleted successfully`
     );
   };
 }

@@ -26,6 +26,7 @@ module.exports = {
       },
       domain: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       salary: {
         type: Sequelize.INTEGER,

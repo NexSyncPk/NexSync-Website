@@ -1,31 +1,62 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class JobPosting extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      JobPosting.hasMany(models.JobApplications, {
+        foreignKey: "jobPostingsId",
+        as: "applications",
+      });
     }
   }
-  JobPosting.init({
-    title: DataTypes.STRING,
-    position: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    jobType: DataTypes.STRING,
-    domain: DataTypes.STRING,
-    salary: DataTypes.INTEGER,
-    requirements: DataTypes.JSON,
-    isArchived: DataTypes.BOOLEAN,
-    isDeleted: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'JobPosting',
-  });
+
+  JobPosting.init(
+    {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      position: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      jobType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      domain: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      salary: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      requirements: {
+        type: DataTypes.JSON,
+        allowNull: false,
+      },
+      isArchived: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false,
+      },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: "JobPosting",
+    }
+  );
+
   return JobPosting;
 };

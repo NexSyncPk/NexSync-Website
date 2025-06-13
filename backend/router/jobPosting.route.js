@@ -6,7 +6,7 @@ router.post("/", JobPostingController.createJobPosting);
 
 router.get("/", JobPostingController.getAllJobPostings);
 
-router.get("/single", JobPostingController.getJobPostingById);
+router.get("/:id", JobPostingController.getJobPostingById);
 
 router.put("/", JobPostingController.updateJobPosting);
 

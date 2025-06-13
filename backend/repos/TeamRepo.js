@@ -1,5 +1,5 @@
 const BaseRepository = require("./BaseRepo.js");
-const db = require("../models.index.js");
+const db = require("../models/index.js");
 
 class TeamRepo extends BaseRepository {
   model;
@@ -23,7 +23,7 @@ class TeamRepo extends BaseRepository {
   }
 
   async updateTeamMember(data, id) {
-    await this.update(data, { id });
+    return await this.update(data, { id });
   }
   async deleteTeamMember(id, type) {
     await this.delete({ id, type });

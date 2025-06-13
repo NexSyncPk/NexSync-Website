@@ -1,5 +1,5 @@
 const BaseRepo = require("./BaseRepo");
-
+const db = require("../models/index.js");
 class JobApplicationsRepo extends BaseRepo {
   model;
   constructor() {
@@ -8,14 +8,14 @@ class JobApplicationsRepo extends BaseRepo {
   }
 
   async createJobApplication(data) {
-    await this.create(data);
+    return await this.create(data);
   }
   async getAllJobApplications() {
-    await this.findAll();
+    return await this.findAll();
   }
 
   async getJobApplicationById(id) {
-    await this.findOne({ id });
+    return await this.findOne({ id });
   }
   async deleteJobApplication(id, type) {
     await this.delete({ id, type });

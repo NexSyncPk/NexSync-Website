@@ -1,31 +1,60 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class JobApplications extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      JobApplications.belongsTo(models.JobPosting, {
+        foreignKey: "jobPostingsId",
+        as: "jobPosting",
+      });
     }
   }
-  JobApplications.init({
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    phoneNumber: DataTypes.STRING,
-    lastEducation: DataTypes.STRING,
-    expectedSalary: DataTypes.INTEGER,
-    yearOfPassing: DataTypes.INTEGER,
-    address: DataTypes.TEXT,
-    resume: DataTypes.STRING,
-    jobPostingsId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'JobApplications',
-  });
+
+  JobApplications.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastEducation: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      expectedSalary: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      yearOfPassing: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.TEXT,
+        allowNull: true, // optional
+      },
+      resume: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      jobPostingsId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: "JobApplications",
+    }
+  );
+
   return JobApplications;
 };
