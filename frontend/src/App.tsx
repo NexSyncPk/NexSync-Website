@@ -16,7 +16,7 @@ import MediaHomePage from "./components/sections/MediaHomePage";
 import MediaAboutPage from "./components/sections/MediaAboutPage";
 import MediaCareersPage from "./components/sections/MediaCareersPage";
 import MediaContactPage from "./components/sections/MediaContactPage";
-import HighestAppliedJobs from "./components/sections/HighestAppliedJobs";
+import HighestAppliedJobs from "./components/sections/AppliedJobs";
 import Traffic from "./components/sections/Traffic";
 import UserEngagement from "./components/sections/UserEngagement";
 import BounceRate from "./components/sections/BounceRate";
@@ -27,7 +27,6 @@ function App() {
     <Router>
       <ScrollToTop />
       <div className="min-h-screen flex flex-col">
-        <Navigation />
         <main className="flex-1">
           <Routes>
             <Route
@@ -135,7 +134,7 @@ function App() {
 
             {/* Analytics Routes */}
             <Route
-              path="/Analytics/HighestAppliedJobs"
+              path="/Analytics/AppliedJobs"
               element={
                 <AdminLayout>
                   <HighestAppliedJobs />
@@ -176,7 +175,6 @@ function App() {
             />
           </Routes>
         </main>
-        <Footer />
       </div>
     </Router>
   );

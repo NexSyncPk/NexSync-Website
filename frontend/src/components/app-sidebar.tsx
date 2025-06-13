@@ -49,7 +49,7 @@ const data = {
     {
       title: "Analytics",
       items: [
-        { title: "Highest Applied Jobs", url: "/Analytics/HighestAppliedJobs" },
+        { title: "Applied Jobs", url: "/Analytics/AppliedJobs" },
         { title: "Traffic", url: "/Analytics/Traffic" },
         { title: "User Engagement", url: "/Analytics/UserEngagement" },
         { title: "Bounce Rate", url: "/Analytics/BounceRate" },
@@ -85,7 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 className="group/label text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
-                <CollapsibleTrigger>
+                <CollapsibleTrigger className="!font-semibold">
                   {item.title}{" "}
                   <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
                 </CollapsibleTrigger>
