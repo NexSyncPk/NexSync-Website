@@ -10,5 +10,6 @@ router.use("/adminAuth", adminAuthRoutes);
 router.use("/team", teamRoutes);
 router.use("/jobPosting", jobPostingRoutes);
 router.use("/jobApplication", jobApplicationsRoutes);
+router.use("/testimonial", testimonialRoutes);
 
 module.exports = router;
