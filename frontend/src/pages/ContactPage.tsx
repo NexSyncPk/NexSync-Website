@@ -93,13 +93,7 @@ export const ContactPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-<<<<<<< HEAD
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6">
-              Get in Touch
-            </h1>
-=======
             <h1 className="main-heading">Get in Touch</h1>
->>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
             <p className="text-xl lg:text-2xl opacity-90">
               Ready to start your next project? We'd love to hear from you.
             </p>
@@ -134,7 +128,7 @@ export const ContactPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
               >
-                <Card className="text-center h-full">
+                <Card className="text-center h-full duration-200 transition-all ease-linear ring-1 ring-slate-300 shadow-xl">
                   <div className="mb-6">
                     <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center mx-auto">
                       <info.icon size={32} className="text-white" />
@@ -168,11 +162,7 @@ export const ContactPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-<<<<<<< HEAD
-              <Card>
-=======
               <Card className=" shadow-xl ring-1 ring-slate-300 transition-all ease-linear duration-200 hover:scale-[1.03]">
->>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                 <h2 className="text-3xl font-bold text-secondary-navy mb-6">
                   Send us a Message
                 </h2>
@@ -301,11 +291,6 @@ export const ContactPage: React.FC = () => {
                         </p>
                       )}
                     </div>
-<<<<<<< HEAD
-                    
-                    <Button type="submit" size="lg" className="w-full group">
-                      <Send size={20} className="mr-2 group-hover:translate-x-1 transition-transform" />
-=======
 
                     <Button
                       type="submit"
@@ -313,7 +298,6 @@ export const ContactPage: React.FC = () => {
                       className="w-full hover:transform-none"
                     >
                       <Send size={20} className="mr-2 " />
->>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                       Send Message
                     </Button>
                   </form>
@@ -328,7 +312,7 @@ export const ContactPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full">
+              <Card className="h-full ring-1 ring-slate-300 transition-all ease-linear duration-200 hover:scale-[1.03] shadow-xl">
                 <h3 className="text-2xl font-bold text-secondary-navy mb-6">
                   Find Us
                 </h3>

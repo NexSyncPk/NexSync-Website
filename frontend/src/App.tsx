@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Navigation } from './components/Navigation';
-import { Footer } from './components/Footer';
-import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { CareersPage } from './pages/CareersPage';
-import { ContactPage } from './pages/ContactPage';
-=======
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
@@ -31,26 +21,15 @@ import BounceRate from "./components/sections/BounceRate";
 import ClickThroughRate from "./components/sections/ClickThroughRate";
 import JobApplicationPage from "./pages/JobApplicationPage";
 import { Toaster } from "react-hot-toast";
->>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
 
 function App() {
   return (
     <Router>
-<<<<<<< HEAD
-=======
       <Toaster />
       <ScrollToTop />
->>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
       <div className="min-h-screen flex flex-col">
-        <Navigation />
         <main className="flex-1">
           <Routes>
-<<<<<<< HEAD
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/careers" element={<CareersPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-=======
             <Route
               path="/"
               element={
@@ -203,10 +182,8 @@ function App() {
                 </AdminLayout>
               }
             />
->>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
           </Routes>
         </main>
-        <Footer />
       </div>
     </Router>
   );
