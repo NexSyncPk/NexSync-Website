@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import { Card } from "../components";
 import { companyValues } from "../data/mockData";
 import { Lightbulb, Award, Users, TrendingUp, Shield } from "lucide-react";
@@ -24,9 +24,7 @@ export const AboutPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="main-heading">
-              About NexSync
-            </h1>
+            <h1 className="main-heading">About NexSync</h1>
             <p className="text-xl lg:text-2xl opacity-90">
               We're on a mission to build the future of digital experiences
             </p>
@@ -62,7 +60,13 @@ export const AboutPage: React.FC = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="w-full h-64 bg-gradient-to-br from-secondary-teal to-primary-blue rounded-2xl shadow-xl"></div>
+              <div className="w-full h-64 bg-gradient-to-br from-secondary-teal to-primary-blue rounded-2xl shadow-xl">
+                <img
+                  src="/Mission.jpg"
+                  alt=""
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+              </div>
             </motion.div>
           </div>
         </div>
@@ -79,7 +83,13 @@ export const AboutPage: React.FC = () => {
               viewport={{ once: true }}
               className="relative order-2 lg:order-1"
             >
-              <div className="w-full h-64 bg-gradient-to-br from-primary-orange to-secondary-navy rounded-2xl shadow-xl"></div>
+              <div className="w-full h-64 bg-gradient-to-br from-primary-orange to-secondary-navy rounded-2xl shadow-xl">
+                <img
+                  src="/Vision.jpg"
+                  alt=""
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+              </div>
             </motion.div>
 
             <motion.div
@@ -174,7 +184,7 @@ export const AboutPage: React.FC = () => {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
-              {[1, 2, 3,4].map((_, index) => (
+              {[1, 2, 3, 4].map((_, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}

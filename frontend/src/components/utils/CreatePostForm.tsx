@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, type FieldArrayPath } from "react-hook-form";
 import { z } from "zod";
+import { JobCreationSchema } from "@/schemas/JobCreationSchema";
 
 import { Button } from "../../components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,30 +23,7 @@ import {
 } from "../../components/ui/select";
 import { BadgeX } from "lucide-react";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  position: z.enum(["full-time", "part-time", "intern", "contract"], {
-    message: "Position must be selected.",
-  }),
-  description: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
-  jobType: z.enum(["remote", "hybrid", "onsite"]),
-  domain: z.string(),
-  salary: z.coerce.number().min(0, {
-    message: "Salary must be a positive number.",
-  }),
-  requirements: z
-    .array(z.string().min(1))
-    .min(1, "At least one requirement is required"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof JobCreationSchema>;
 
 interface CreatePostFormProps {
   setForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,22 +31,20 @@ interface CreatePostFormProps {
 
 const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(JobCreationSchema),
     defaultValues: {
-      username: "",
       title: "",
       position: "full-time",
       description: "",
       jobType: "remote",
       domain: "",
-      salary: Number(""),
-      requirements: ["", "", ""], // Default to 3 empty requirements
+      salary: "",
+      requirements: [""],
     },
   });
-
-  const { fields, append, remove } = useFieldArray<FormValues>({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "requirements",
+    name: "requirements" as FieldArrayPath<FormValues>,
   });
 
   function handleSubmit(values: FormValues) {
@@ -82,10 +57,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
   }
 
   return (
-    <Form
-      {...form}
-      // className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md"
-    >
+    <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
         className="relative space-y-6 w-4/5 mx-auto p-6 bg-white rounded-lg shadow-md mt-20 md:w-3/5 lg:w-2/5"
@@ -102,20 +74,6 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
         </div>
         <FormField
           control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="username872..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem>
@@ -127,7 +85,6 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="position"
@@ -151,7 +108,6 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="description"
@@ -165,7 +121,6 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="jobType"
@@ -187,15 +142,14 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
               <FormMessage />
             </FormItem>
           )}
-        />
-
+        />{" "}
         <div className="space-y-4 flex flex-col">
-          <FormLabel>Requirements </FormLabel>
+          <FormLabel>Requirements</FormLabel>
           {fields.map((field, index) => (
             <FormField
               key={field.id}
               control={form.control}
-              name={`requirements.${index}`}
+              name={`requirements.${index}` as const}
               render={({ field }) => (
                 <FormItem className="flex gap-2 items-center">
                   <FormControl>
@@ -209,6 +163,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
                     variant="destructive"
                     onClick={() => remove(index)}
                     size="icon"
+                    disabled={fields.length === 1}
                   >
                     <BadgeX className="w-4 h-4" />
                   </Button>
@@ -216,11 +171,10 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
               )}
             />
           ))}
-          <Button type="button" onClick={() => append(" ")}>
+          <Button type="button" onClick={() => append("")}>
             + Add Requirement
           </Button>
         </div>
-
         <FormField
           control={form.control}
           name="domain"
@@ -234,7 +188,6 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="salary"
@@ -242,14 +195,12 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
             <FormItem>
               <FormLabel>Salary</FormLabel>
               <FormControl>
-                <Input placeholder="Salary" {...field} />
+                <Input type="text" placeholder="50000" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        {/* Optional: Add requirement inputs dynamically */}
         <Button type="submit">Submit</Button>
       </form>
     </Form>

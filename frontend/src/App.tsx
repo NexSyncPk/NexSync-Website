@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navigation } from "./components/Navigation";
-import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/HomePage";
 import { AboutPage } from "./pages/AboutPage";
 import { CareersPage } from "./pages/CareersPage";
@@ -21,10 +19,13 @@ import Traffic from "./components/sections/Traffic";
 import UserEngagement from "./components/sections/UserEngagement";
 import BounceRate from "./components/sections/BounceRate";
 import ClickThroughRate from "./components/sections/ClickThroughRate";
+import JobApplicationPage from "./pages/JobApplicationPage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <Router>
+      <Toaster />
       <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <main className="flex-1">
@@ -58,6 +59,14 @@ function App() {
               element={
                 <MainLayout>
                   <ContactPage />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/job/:id"
+              element={
+                <MainLayout>
+                  <JobApplicationPage />
                 </MainLayout>
               }
             />

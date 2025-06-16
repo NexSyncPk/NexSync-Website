@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Card, Button } from "../../components";
 import { MapPin, DollarSign, Users } from "lucide-react";
 import { archivedJobs } from "../../data/mockData";
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const ArchivedJobs = () => {

@@ -17,7 +17,7 @@ export const TestimonialsSection: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-secondary-navy text-white">
+    <section className="py-20 bg-secondary-navy text-white border-b border-gray-600">
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
