@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { testimonials } from "../../data/mockData";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { testimonials } from '../../data/mockData';
 
 export const TestimonialsSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -11,13 +11,11 @@ export const TestimonialsSection: React.FC = () => {
   };
 
   const prevTestimonial = () => {
-    setCurrentIndex(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
-    );
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   return (
-    <section className="py-20 bg-secondary-navy text-white border-b border-gray-600">
+    <section className="py-20 bg-secondary-navy text-white">
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -30,8 +28,7 @@ export const TestimonialsSection: React.FC = () => {
             What Our Clients Say
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Don't just take our word for it - hear from the companies we've
-            helped succeed.
+            Don't just take our word for it - hear from the companies we've helped succeed.
           </p>
         </motion.div>
 
@@ -50,7 +47,7 @@ export const TestimonialsSection: React.FC = () => {
                 "{testimonials[currentIndex].quote}"
               </p>
             </div>
-
+            
             <div className="flex items-center justify-center space-x-4">
               <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">
@@ -58,12 +55,11 @@ export const TestimonialsSection: React.FC = () => {
                 </span>
               </div>
               <div className="text-left">
-                <h4 className="text-xl font-semibold text-gray-200">
+                <h4 className="text-xl font-semibold">
                   {testimonials[currentIndex].name}
                 </h4>
                 <p className="text-gray-300">
-                  {testimonials[currentIndex].position} at{" "}
-                  {testimonials[currentIndex].company}
+                  {testimonials[currentIndex].position} at {testimonials[currentIndex].company}
                 </p>
               </div>
             </div>
@@ -86,8 +82,8 @@ export const TestimonialsSection: React.FC = () => {
                   onClick={() => setCurrentIndex(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     index === currentIndex
-                      ? "bg-primary-blue"
-                      : "bg-white bg-opacity-30 hover:bg-opacity-50"
+                      ? 'bg-primary-blue'
+                      : 'bg-white bg-opacity-30 hover:bg-opacity-50'
                   }`}
                 />
               ))}
