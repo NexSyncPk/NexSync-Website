@@ -24,7 +24,11 @@ export const AboutPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
+<<<<<<< HEAD
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
+=======
+            <h1 className="main-heading">
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
               About NexSync
             </h1>
             <p className="text-xl lg:text-2xl opacity-90">
@@ -173,8 +177,13 @@ export const AboutPage: React.FC = () => {
               technology, design, and business strategy.
             </p>
 
+<<<<<<< HEAD
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[1, 2, 3].map((_, index) => (
+=======
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
+              {[1, 2, 3,4].map((_, index) => (
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}

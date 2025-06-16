@@ -1,12 +1,22 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from 'lucide-react';
+=======
+import React from "react";
+import { Link } from "react-router-dom";
+import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
 
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-secondary-navy text-white py-12">
       <div className="section-container">
+<<<<<<< HEAD
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+=======
+        <div className="grid grid-cols-1 md:grid-cols-4 ">
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">

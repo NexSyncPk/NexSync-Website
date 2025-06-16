@@ -41,8 +41,13 @@ export const CareersPage: React.FC = () => {
             <p className="text-xl lg:text-2xl opacity-90 mb-8">
               Build the future with us. We're looking for passionate individuals who want to make a difference.
             </p>
+<<<<<<< HEAD
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="secondary" size="lg">
+=======
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-md:items-center ">
+              <Button className='btn-secondary '>
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                 View Open Positions
               </Button>
               <Link to="/contact">

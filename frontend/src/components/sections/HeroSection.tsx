@@ -24,7 +24,11 @@ export const HeroSection: React.FC = () => {
                 className="text-5xl lg:text-7xl font-bold text-secondary-navy leading-tight"
               >
                 Welcome to{' '}
+<<<<<<< HEAD
                 <span className="bg-gradient-to-r from-primary-blue to-primary-orange bg-clip-text text-transparent">
+=======
+                <span className="bg-gradient-to-r from-primary-blue to-primary-orange bg-clip-text text-transparent animated-text">
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                   NexSync
                 </span>
               </motion.h1>

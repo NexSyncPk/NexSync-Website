@@ -89,7 +89,11 @@ export const ContactPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
+<<<<<<< HEAD
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
+=======
+            <h1 className="main-heading">
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
               Get in Touch
             </h1>
             <p className="text-xl lg:text-2xl opacity-90">
@@ -162,7 +166,11 @@ export const ContactPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
+<<<<<<< HEAD
               <Card>
+=======
+              <Card className=' shadow-xl ring-1 ring-slate-300 transition-all ease-linear duration-200 hover:scale-[1.03]'>
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                 <h2 className="text-3xl font-bold text-secondary-navy mb-6">
                   Send us a Message
                 </h2>
@@ -265,8 +273,13 @@ export const ContactPage: React.FC = () => {
                       {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
                     </div>
                     
+<<<<<<< HEAD
                     <Button type="submit" size="lg" className="w-full group">
                       <Send size={20} className="mr-2 group-hover:translate-x-1 transition-transform" />
+=======
+                    <Button type="submit" size="lg" className="w-full hover:transform-none">
+                      <Send size={20} className="mr-2 " />
+>>>>>>> parent of 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
                       Send Message
                     </Button>
                   </form>
