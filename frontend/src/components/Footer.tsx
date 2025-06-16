@@ -1,14 +1,24 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from 'lucide-react';
+=======
+import React from "react";
+import { Mail, Phone, MapPin, Linkedin, Instagram } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+>>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
 
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-secondary-navy text-white py-12">
       <div className="section-container">
+<<<<<<< HEAD
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+=======
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 place-items-center ">
+>>>>>>> 827af8b ([FIX]: Apply Job Form Created and some of the error in different components fixed)
           {/* Company Info */}
-          <div className="space-y-4">
+          <div className="space-y-4 px-2">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-primary-blue to-primary-orange rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">N</span>
@@ -21,7 +31,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h4 className="text-lg font-semibold">Quick Links</h4>
             <div className="space-y-2">
               <Link to="/" className="block text-gray-300 hover:text-primary-blue transition-colors">
@@ -37,23 +47,25 @@ export const Footer: React.FC = () => {
                 Contact
               </Link>
             </div>
-          </div>
+          </div> */}
 
           {/* Contact Info */}
-          <div className="space-y-4">
+          <div className="space-y-4 px-2">
             <h4 className="text-lg font-semibold">Contact Info</h4>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Mail size={16} className="text-primary-blue" />
-                <span className="text-gray-300">hello@nexsync.com</span>
+                <span className="text-gray-300">nexsyncpvtltd@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone size={16} className="text-primary-blue" />
-                <span className="text-gray-300">+1 (555) 123-4567</span>
+                <span className="text-gray-300">0324-3240157</span>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin size={16} className="text-primary-blue" />
-                <span className="text-gray-300">San Francisco, CA</span>
+                <MapPin size={30} className="text-primary-blue" />
+                <span className="text-gray-300">
+                  National Incubation Center, NED University, Karachi, 75270
+                </span>
               </div>
             </div>
           </div>
@@ -63,22 +75,24 @@ export const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://www.linkedin.com/company/nexsyncpvtltd/"
                 className="p-2 bg-gray-700 rounded-lg hover:bg-primary-blue transition-colors"
               >
                 <Linkedin size={20} />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/nexsyncpvtltd/"
                 className="p-2 bg-gray-700 rounded-lg hover:bg-primary-blue transition-colors"
               >
-                <Twitter size={20} />
+                <Instagram size={20} />
               </a>
               <a
-                href="#"
+                href="https://wa.me/923243240157"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 bg-gray-700 rounded-lg hover:bg-primary-blue transition-colors"
               >
-                <Github size={20} />
+                <FaWhatsapp size={20} />
               </a>
             </div>
           </div>
