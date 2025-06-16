@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 const MediaHomePage = () => {
   const [heroEdit, setHeroEdit] = useState(false);
   const [testimonialEdit, setTestimonialEdit] = useState(false);
-  // const [testimonialAdd, setTestimonialAdd] = useState(false);
+  const [testimonialAdd, setTestimonialAdd] = useState(false);
 
   // Hero Schema
   const heroSchema = z.object({
