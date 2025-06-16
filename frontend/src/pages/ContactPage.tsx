@@ -1,58 +1,62 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { Card, Button } from "../components";
-import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
-import type { ContactFormData } from '../types';
+import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import type { ContactFormData } from "../types";
 
 export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    message: '',
-    subject: '',
+    name: "",
+    email: "",
+    message: "",
+    subject: "",
   });
-  
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Partial<ContactFormData>>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear error when user starts typing
     if (errors[name as keyof ContactFormData]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<ContactFormData> = {};
-    
+
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
-    
+
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
-    
+
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = "Message is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       // Simulate form submission
       setTimeout(() => {
         setIsSubmitted(true);
-        setFormData({ name: '', email: '', message: '', subject: '' });
+        setFormData({ name: "", email: "", message: "", subject: "" });
       }, 1000);
     }
   };
@@ -60,21 +64,21 @@ export const ContactPage: React.FC = () => {
   const contactInfo = [
     {
       icon: Mail,
-      title: 'Email',
-      content: 'hello@nexsync.com',
-      description: 'Send us an email anytime',
+      title: "Email",
+      content: "nexsyncpvtltd@gmail.com",
+      description: "Send us an email anytime",
     },
     {
       icon: Phone,
-      title: 'Phone',
-      content: '+1 (555) 123-4567',
-      description: 'Mon-Fri from 8am to 6pm',
+      title: "Phone",
+      content: "0324-3240157",
+      description: "Mon-Fri from 9am to 6pm",
     },
     {
       icon: MapPin,
-      title: 'Office',
-      content: 'San Francisco, CA',
-      description: '123 Innovation Street',
+      title: "Office",
+      content: "NexSync",
+      description: "National Incubation Center, NED University, Karachi, 75270",
     },
   ];
 
@@ -89,9 +93,7 @@ export const ContactPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6">
-              Get in Touch
-            </h1>
+            <h1 className="main-heading">Get in Touch</h1>
             <p className="text-xl lg:text-2xl opacity-90">
               Ready to start your next project? We'd love to hear from you.
             </p>
@@ -126,24 +128,22 @@ export const ContactPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
               >
-                <Card className="text-center h-full">
+                <Card className="text-center h-full duration-200 transition-all ease-linear ring-1 ring-slate-300 shadow-xl">
                   <div className="mb-6">
                     <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center mx-auto">
                       <info.icon size={32} className="text-white" />
                     </div>
                   </div>
-                  
+
                   <h3 className="text-xl font-semibold text-secondary-navy mb-2">
                     {info.title}
                   </h3>
-                  
+
                   <p className="text-lg font-medium text-primary-blue mb-2">
                     {info.content}
                   </p>
-                  
-                  <p className="text-secondary-steel">
-                    {info.description}
-                  </p>
+
+                  <p className="text-secondary-steel">{info.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -162,11 +162,11 @@ export const ContactPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card>
+              <Card className=" shadow-xl ring-1 ring-slate-300 transition-all ease-linear duration-200 hover:scale-[1.03]">
                 <h2 className="text-3xl font-bold text-secondary-navy mb-6">
                   Send us a Message
                 </h2>
-                
+
                 {isSubmitted ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -174,7 +174,10 @@ export const ContactPage: React.FC = () => {
                     transition={{ duration: 0.6 }}
                     className="text-center py-8"
                   >
-                    <CheckCircle size={64} className="text-green-500 mx-auto mb-4" />
+                    <CheckCircle
+                      size={64}
+                      className="text-green-500 mx-auto mb-4"
+                    />
                     <h3 className="text-2xl font-semibold text-secondary-navy mb-2">
                       Message Sent!
                     </h3>
@@ -192,7 +195,10 @@ export const ContactPage: React.FC = () => {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-secondary-navy mb-2">
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium text-secondary-navy mb-2"
+                        >
                           Name *
                         </label>
                         <input
@@ -202,15 +208,22 @@ export const ContactPage: React.FC = () => {
                           value={formData.name}
                           onChange={handleChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all ${
-                            errors.name ? 'border-red-500' : 'border-gray-300'
+                            errors.name ? "border-red-500" : "border-gray-300"
                           }`}
                           placeholder="Your full name"
                         />
-                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                        {errors.name && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.name}
+                          </p>
+                        )}
                       </div>
-                      
+
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-secondary-navy mb-2">
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium text-secondary-navy mb-2"
+                        >
                           Email *
                         </label>
                         <input
@@ -220,16 +233,23 @@ export const ContactPage: React.FC = () => {
                           value={formData.email}
                           onChange={handleChange}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all ${
-                            errors.email ? 'border-red-500' : 'border-gray-300'
+                            errors.email ? "border-red-500" : "border-gray-300"
                           }`}
                           placeholder="your.email@example.com"
                         />
-                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                        {errors.email && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.email}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    
+
                     <div>
-                      <label htmlFor="subject" className="block text-sm font-medium text-secondary-navy mb-2">
+                      <label
+                        htmlFor="subject"
+                        className="block text-sm font-medium text-secondary-navy mb-2"
+                      >
                         Subject
                       </label>
                       <select
@@ -246,9 +266,12 @@ export const ContactPage: React.FC = () => {
                         <option value="partnership">Partnership</option>
                       </select>
                     </div>
-                    
+
                     <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-secondary-navy mb-2">
+                      <label
+                        htmlFor="message"
+                        className="block text-sm font-medium text-secondary-navy mb-2"
+                      >
                         Message *
                       </label>
                       <textarea
@@ -258,15 +281,23 @@ export const ContactPage: React.FC = () => {
                         onChange={handleChange}
                         rows={6}
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all resize-none ${
-                          errors.message ? 'border-red-500' : 'border-gray-300'
+                          errors.message ? "border-red-500" : "border-gray-300"
                         }`}
                         placeholder="Tell us about your project or inquiry..."
                       />
-                      {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
+                      {errors.message && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.message}
+                        </p>
+                      )}
                     </div>
-                    
-                    <Button type="submit" size="lg" className="w-full group">
-                      <Send size={20} className="mr-2 group-hover:translate-x-1 transition-transform" />
+
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full hover:transform-none"
+                    >
+                      <Send size={20} className="mr-2 " />
                       Send Message
                     </Button>
                   </form>
@@ -281,26 +312,45 @@ export const ContactPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full">
+              <Card className="h-full ring-1 ring-slate-300 transition-all ease-linear duration-200 hover:scale-[1.03] shadow-xl">
                 <h3 className="text-2xl font-bold text-secondary-navy mb-6">
                   Find Us
                 </h3>
                 <div className="w-full h-64 lg:h-96 bg-gradient-to-br from-secondary-steel to-secondary-navy rounded-lg flex items-center justify-center">
-                  <div className="text-center text-white">
+                  {/* <div className="text-center text-white">
                     <MapPin size={48} className="mx-auto mb-4" />
                     <p className="text-lg">Interactive Map</p>
                     <p className="text-sm opacity-75">Coming Soon</p>
-                  </div>
+                  </div> */}
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.0717804193782!2d67.1129801!3d24.929624499999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33932bc557c5d%3A0x38073c4629dcd4a3!2sNational%20Incubation%20Center%20Karachi!5e0!3m2!1sen!2s!4v1750053137172!5m2!1sen!2s"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
                 </div>
                 <div className="mt-6 space-y-4">
                   <div>
-                    <h4 className="font-semibold text-secondary-navy">Address</h4>
-                    <p className="text-secondary-steel">123 Innovation Street, San Francisco, CA 94105</p>
+                    <h4 className="font-semibold text-secondary-navy">
+                      Address
+                    </h4>
+                    <p className="text-secondary-steel">
+                      National Incubation Center, NED University, Karachi, 75270
+                    </p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-secondary-navy">Business Hours</h4>
-                    <p className="text-secondary-steel">Monday - Friday: 8:00 AM - 6:00 PM</p>
-                    <p className="text-secondary-steel">Weekend: By appointment</p>
+                    <h4 className="font-semibold text-secondary-navy">
+                      Business Hours
+                    </h4>
+                    <p className="text-secondary-steel">
+                      Monday - Friday: 8:00 AM - 6:00 PM
+                    </p>
+                    <p className="text-secondary-steel">
+                      Weekend: By appointment
+                    </p>
                   </div>
                 </div>
               </Card>

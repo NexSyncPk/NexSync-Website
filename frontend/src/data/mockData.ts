@@ -74,6 +74,57 @@ export const jobOpenings: JobOpening[] = [
     salary: '$50 - $75/hour'
   }
 ];
+export const archivedJobs: JobOpening[] = [
+  {
+    id: '1',
+    title: 'Senior Full Stack Developer',
+    type: 'full-time',
+    department: 'development',
+    description: 'Join our development team to build cutting-edge web applications using modern technologies.',
+    requirements: [
+      '5+ years of experience with React and Node.js',
+      'Experience with TypeScript and cloud platforms',
+      'Strong problem-solving skills',
+      'Excellent communication abilities'
+    ],
+    location: 'Remote / Hybrid',
+    salary: '$80,000 - $120,000',
+    isArchived: true
+  },
+  {
+    id: '2',
+    title: 'UI/UX Design Intern',
+    type: 'internship',
+    department: 'design',
+    description: 'Learn and contribute to user interface design for innovative digital products.',
+    requirements: [
+      'Currently pursuing design or related degree',
+      'Proficiency in Figma or similar design tools',
+      'Portfolio showcasing design projects',
+      'Passion for user-centered design'
+    ],
+    location: 'On-site',
+    salary: '$2,000 - $3,000/month',
+    isArchived: true
+
+  },
+  {
+    id: '3',
+    title: 'Digital Marketing Specialist',
+    type: 'contract',
+    department: 'marketing',
+    description: 'Drive our digital marketing initiatives and help grow our brand presence.',
+    requirements: [
+      '3+ years in digital marketing',
+      'Experience with SEO, SEM, and social media',
+      'Analytics and data-driven mindset',
+      'Creative content creation skills'
+    ],
+    location: 'Remote',
+    salary: '$50 - $75/hour',
+    isArchived: true
+  }
+];
 
 export const services: Service[] = [
   {
@@ -103,7 +154,8 @@ export const services: Service[] = [
     description: 'User-centered design solutions that combine aesthetics with functionality.',
     icon: 'Palette',
     features: ['User Research', 'Prototyping', 'Design Systems', 'Accessibility']
-  }
+  },
+  
 ];
 
 export const companyValues: CompanyValue[] = [
