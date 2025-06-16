@@ -21,6 +21,7 @@ module.exports = class BaseRepository {
   }
 
   async softDelete(id) {
+    console.log("Soft deleting ID:", id);
     return this.model.update(
       {
         isDeleted: true,

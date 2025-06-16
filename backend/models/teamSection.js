@@ -2,13 +2,16 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Team extends Model {
+  class TeamSection extends Model {
     static associate(models) {
-      // define association here
+      TeamSection.belongsTo(models.Page, {
+        foreignKey: "pageId",
+        as: "page",
+      });
     }
   }
 
-  Team.init(
+  TeamSection.init(
     {
       name: {
         type: DataTypes.STRING,
@@ -30,12 +33,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      pageId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,
-      modelName: "Team",
+      modelName: "TeamSection",
+      tableName: "TeamSection",
     }
   );
 
-  return Team;
+  return TeamSection;
 };
