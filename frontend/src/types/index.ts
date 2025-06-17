@@ -1,10 +1,13 @@
 export interface Testimonial {
-  id: string;
+  id: number;
   name: string;
-  position: string;
+  designation: string;
   company: string;
-  quote: string;
-  avatar?: string;
+  feedback: string;
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  pageId: number;
 }
 
 export interface JobOpening {
@@ -117,4 +120,21 @@ export interface JobApplicationSummary {
     hybrid: number;
     onsite: number;
   };
+}
+
+export interface IObjectProps {
+  [key: string]: any;
+}
+
+export interface TeamMemberAttributes {
+  id: number;
+  name: string;
+  email: string;
+  position: string;
+  picture: string;
+  description?: string;
+  isDeleted: boolean;
+  pageId: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

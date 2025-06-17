@@ -13,21 +13,25 @@ const MediaContactPage = () => {
   const addressSchema = z.object({
     address: z.string().min(1, "Address is required"),
   });
-
   // Schema for business hours form
   const businessHoursSchema = z.object({
-    weekdayHours: z.string().min(1, "Weekday hours are required"),
-    weekendHours: z.string().min(1, "Weekend hours are required"),
+    startDay: z.string().min(1, "Start day is required"),
+    endDay: z.string().min(1, "End day is required"),
+    startTime: z.string().min(1, "Start time is required"),
+    endTime: z.string().min(1, "End time is required"),
   });
 
   type AddressFormValues = z.infer<typeof addressSchema>;
   type BusinessHoursFormValues = z.infer<typeof businessHoursSchema>;
-
   // Current data (this would typically come from an API)
   const [contactData, setContactData] = useState({
     address: "National Incubation Center, NED University, Karachi, 75270",
-    weekdayHours: "Monday - Friday: 8:00 AM - 6:00 PM",
-    weekendHours: "Weekend: By appointment",
+    businessHours: "Monday - Friday: 8:00 AM - 6:00 PM",
+    // Separate fields for editing
+    startDay: "Monday",
+    endDay: "Friday",
+    startTime: "08:00",
+    endTime: "18:00",
   });
 
   // Address form
@@ -43,7 +47,6 @@ const MediaContactPage = () => {
       address: contactData.address,
     },
   });
-
   // Business hours form
   const {
     register: registerHours,
@@ -54,8 +57,10 @@ const MediaContactPage = () => {
   } = useForm<BusinessHoursFormValues>({
     resolver: zodResolver(businessHoursSchema),
     defaultValues: {
-      weekdayHours: contactData.weekdayHours,
-      weekendHours: contactData.weekendHours,
+      startDay: contactData.startDay,
+      endDay: contactData.endDay,
+      startTime: contactData.startTime,
+      endTime: contactData.endTime,
     },
   });
 
@@ -65,14 +70,29 @@ const MediaContactPage = () => {
     setContactData((prev) => ({ ...prev, address: data.address }));
     setIsEditingAddress(false);
   };
+  const convertTo12Hour = (time24: string) => {
+    const [hours, minutes] = time24.split(":");
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
 
   const onSubmitHours = (data: BusinessHoursFormValues) => {
     console.log("Business Hours Update Data:", data);
+    // Convert 24-hour time to 12-hour format and merge the separate fields
+    const startTime12 = convertTo12Hour(data.startTime);
+    const endTime12 = convertTo12Hour(data.endTime);
+    const mergedHours = `${data.startDay} - ${data.endDay}: ${startTime12} - ${endTime12}`;
+
     // Here you would call your API to update business hours
     setContactData((prev) => ({
       ...prev,
-      weekdayHours: data.weekdayHours,
-      weekendHours: data.weekendHours,
+      businessHours: mergedHours,
+      startDay: data.startDay,
+      endDay: data.endDay,
+      startTime: data.startTime,
+      endTime: data.endTime,
     }));
     setIsEditingHours(false);
   };
@@ -81,10 +101,11 @@ const MediaContactPage = () => {
     setAddressValue("address", contactData.address);
     setIsEditingAddress(true);
   };
-
   const handleEditHours = () => {
-    setHoursValue("weekdayHours", contactData.weekdayHours);
-    setHoursValue("weekendHours", contactData.weekendHours);
+    setHoursValue("startDay", contactData.startDay);
+    setHoursValue("endDay", contactData.endDay);
+    setHoursValue("startTime", contactData.startTime);
+    setHoursValue("endTime", contactData.endTime);
     setIsEditingHours(true);
   };
 
@@ -196,8 +217,7 @@ const MediaContactPage = () => {
                 />
               )}
             </div>
-          </div>
-
+          </div>{" "}
           <div className="p-6 min-h-[150px]">
             {!isEditingHours ? (
               <div className="space-y-4">
@@ -206,10 +226,7 @@ const MediaContactPage = () => {
                     Business Hours
                   </h4>
                   <p className="text-secondary-steel text-lg">
-                    {contactData.weekdayHours}
-                  </p>
-                  <p className="text-secondary-steel text-lg">
-                    {contactData.weekendHours}
+                    {contactData.businessHours}
                   </p>
                 </div>
               </div>
@@ -218,37 +235,85 @@ const MediaContactPage = () => {
                 onSubmit={handleHoursSubmit(onSubmitHours)}
                 className="space-y-4"
               >
-                <div>
-                  <label className="block font-semibold mb-2 text-secondary-navy">
-                    Weekday Hours
-                  </label>
-                  <input
-                    type="text"
-                    {...registerHours("weekdayHours")}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-                    placeholder="e.g., Monday - Friday: 8:00 AM - 6:00 PM"
-                  />
-                  {hoursErrors.weekdayHours && (
-                    <span className="text-red-500 text-sm">
-                      {hoursErrors.weekdayHours.message}
-                    </span>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-semibold mb-2 text-secondary-navy">
+                      Start Day
+                    </label>
+                    <select
+                      {...registerHours("startDay")}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-blue focus:border-transparent"
+                    >
+                      <option value="">Select day</option>
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                    </select>
+                    {hoursErrors.startDay && (
+                      <span className="text-red-500 text-sm">
+                        {hoursErrors.startDay.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block font-semibold mb-2 text-secondary-navy">
+                      End Day
+                    </label>
+                    <select
+                      {...registerHours("endDay")}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-blue focus:border-transparent"
+                    >
+                      <option value="">Select day</option>
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                    </select>
+                    {hoursErrors.endDay && (
+                      <span className="text-red-500 text-sm">
+                        {hoursErrors.endDay.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <label className="block font-semibold mb-2 text-secondary-navy">
-                    Weekend Hours
-                  </label>
-                  <input
-                    type="text"
-                    {...registerHours("weekendHours")}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-                    placeholder="e.g., Weekend: By appointment"
-                  />
-                  {hoursErrors.weekendHours && (
-                    <span className="text-red-500 text-sm">
-                      {hoursErrors.weekendHours.message}
-                    </span>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-semibold mb-2 text-secondary-navy">
+                      Start Time
+                    </label>
+                    <input
+                      type="time"
+                      {...registerHours("startTime")}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-blue focus:border-transparent"
+                    />
+                    {hoursErrors.startTime && (
+                      <span className="text-red-500 text-sm">
+                        {hoursErrors.startTime.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block font-semibold mb-2 text-secondary-navy">
+                      End Time
+                    </label>
+                    <input
+                      type="time"
+                      {...registerHours("endTime")}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-blue focus:border-transparent"
+                    />
+                    {hoursErrors.endTime && (
+                      <span className="text-red-500 text-sm">
+                        {hoursErrors.endTime.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex space-x-3">
                   <button
@@ -286,16 +351,13 @@ const MediaContactPage = () => {
               <div>
                 <h4 className="font-semibold text-secondary-navy">Address</h4>
                 <p className="text-secondary-steel">{contactData.address}</p>
-              </div>
+              </div>{" "}
               <div>
                 <h4 className="font-semibold text-secondary-navy">
                   Business Hours
                 </h4>
                 <p className="text-secondary-steel">
-                  {contactData.weekdayHours}
-                </p>
-                <p className="text-secondary-steel">
-                  {contactData.weekendHours}
+                  {contactData.businessHours}
                 </p>
               </div>
             </div>

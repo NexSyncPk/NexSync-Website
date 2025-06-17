@@ -1,9 +1,10 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card } from "../components";
 import { companyValues } from "../data/mockData";
 import { Lightbulb, Award, Users, TrendingUp, Shield } from "lucide-react";
-
+import { getTeamSectionData } from "../api/services";
+import type { TeamMemberAttributes } from "@/types";
 const iconMap = {
   Lightbulb,
   Award,
@@ -13,6 +14,31 @@ const iconMap = {
 };
 
 export const AboutPage: React.FC = () => {
+  const [teamSectionData, setTeamSectionData] = React.useState<
+    TeamMemberAttributes[]
+  >([]);
+
+  // Fetch team section data
+  const fetchTeamSectionData = async () => {
+    try {
+      const response = await getTeamSectionData();
+      return response;
+    } catch (error) {
+      console.error("Error fetching team section data:", error);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetchTeamSectionData();
+      if (response && response.data) {
+        console.log("Team Section Data:", response);
+        setTeamSectionData(response.data);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -181,25 +207,33 @@ export const AboutPage: React.FC = () => {
             <p className="text-xl text-secondary-steel mb-12 max-w-3xl mx-auto">
               Our diverse team of experts brings together years of experience in
               technology, design, and business strategy.
-            </p>
-
+            </p>{" "}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
-              {[1, 2, 3, 4].map((_, index) => (
+              {teamSectionData.map((member, index) => (
                 <motion.div
-                  key={index}
+                  key={member.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="text-center transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
-                    <div className="w-24 h-24 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full mx-auto mb-4"></div>
+                  <Card className="text-center transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl h-72">
+                    <div className="w-24 h-24 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full mx-auto mb-4 overflow-hidden">
+                      <img
+                        src={member.picture}
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     <h3 className="text-xl font-semibold text-secondary-navy mb-2">
-                      Team Member {index + 1}
+                      {member.name}
                     </h3>
-                    <p className="text-secondary-steel mb-4">Position Title</p>
+                    <p className="text-secondary-steel mb-4">
+                      {member.position}
+                    </p>
                     <p className="text-sm text-secondary-steel">
-                      Coming soon - meet our amazing team members!
+                      {member.description ||
+                        "Passionate team member contributing to our success!"}
                     </p>
                   </Card>
                 </motion.div>

@@ -1,9 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { testimonials } from "../../data/mockData";
+import api from "@/api/interceptor";
+import { getTestimonialsData } from "@/api/services";
+import type { Testimonial } from "@/types";
 
 export const TestimonialsSection: React.FC = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  const getTestimonials = async () => {
+    try {
+      const response = await getTestimonialsData();
+      if (response && response.data) {
+        console.log("Testimonials Data:", response);
+        setTestimonials(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching testimonials data:", error);
+    }
+  };
+
+  // Fetch testimonials on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      await getTestimonials();
+    };
+    fetchData();
+  }, []);
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextTestimonial = () => {
@@ -47,23 +72,23 @@ export const TestimonialsSection: React.FC = () => {
             <div className="mb-8">
               <Quote size={48} className="text-primary-blue mx-auto mb-6" />
               <p className="text-2xl lg:text-3xl font-light leading-relaxed italic mb-8">
-                "{testimonials[currentIndex].quote}"
+                "{testimonials[currentIndex]?.feedback}"
               </p>
             </div>
 
             <div className="flex items-center justify-center space-x-4">
               <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">
-                  {testimonials[currentIndex].name.charAt(0)}
+                  {testimonials[currentIndex]?.name.charAt(0)}
                 </span>
               </div>
               <div className="text-left">
                 <h4 className="text-xl font-semibold text-gray-200">
-                  {testimonials[currentIndex].name}
+                  {testimonials[currentIndex]?.name}
                 </h4>
                 <p className="text-gray-300">
-                  {testimonials[currentIndex].position} at{" "}
-                  {testimonials[currentIndex].company}
+                  {testimonials[currentIndex]?.designation} at{" "}
+                  {testimonials[currentIndex]?.company}
                 </p>
               </div>
             </div>

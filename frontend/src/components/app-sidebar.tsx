@@ -21,42 +21,9 @@ import {
   SidebarRail,
 } from "../components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
+import { Sidebar_Data } from "./utils/constants";
 
 // This is sample data.
-const data = {
-  // versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-  navMain: [
-    {
-      title: "Job Management",
-      items: [
-        {
-          title: "Application Overview",
-          url: "/JobsManagement/ApplicationOverview",
-        },
-        { title: "Current Jobs", url: "/JobsManagement/CurrentJobs" },
-        { title: "Archived Jobs", url: "/JobsManagement/ArchivedJobs" },
-      ],
-    },
-    {
-      title: "Media Management",
-      items: [
-        { title: "Home Page", url: "/MediaManagement/HomePage" },
-        { title: "About Page", url: "/MediaManagement/AboutPage" },
-        { title: "Contact Page", url: "/MediaManagement/ContactPage" },
-      ],
-    },
-    {
-      title: "Analytics",
-      items: [
-        { title: "Applied Jobs", url: "/Analytics/AppliedJobs" },
-        { title: "Traffic", url: "/Analytics/Traffic" },
-        { title: "User Engagement", url: "/Analytics/UserEngagement" },
-        { title: "Bounce Rate", url: "/Analytics/BounceRate" },
-        { title: "Click Through Rate", url: "/Analytics/ClickThroughRate" },
-      ],
-    },
-  ],
-};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
@@ -72,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="gap-0">
         {/* We create a collapsible SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {Sidebar_Data.navMain.map((item) => (
           <Collapsible
             key={item.title}
             title={item.title}

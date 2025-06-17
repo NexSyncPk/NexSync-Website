@@ -38,7 +38,7 @@ export const CurrentJobs: React.FC = () => {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-secondary-navy mb-6 text-center">
+          <h2 className="text-4xl  font-bold text-secondary-navy mb-6 text-center">
             Open Positions
           </h2>
 
