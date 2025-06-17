@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Card, Button } from "../../components";
+import { Card, Button } from "../components";
 import { MapPin, DollarSign, Users } from "lucide-react";
-import { jobOpenings } from "../../data/mockData";
+import { jobOpenings } from "../data/mockData";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import CreatePostForm from "../utils/CreatePostForm";
+import CreatePostForm from "../components/utils/CreatePostForm";
 
 export const CurrentJobs: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
