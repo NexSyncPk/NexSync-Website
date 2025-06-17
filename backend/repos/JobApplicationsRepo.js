@@ -18,7 +18,7 @@ class JobApplicationsRepo extends BaseRepo {
     return await this.findOne({ id });
   }
   async deleteJobApplication(id, type) {
-    await this.delete({ id, type });
+    await this.delete(id, type);
   }
 }
 
