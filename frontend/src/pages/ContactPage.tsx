@@ -317,11 +317,6 @@ export const ContactPage: React.FC = () => {
                   Find Us
                 </h3>
                 <div className="w-full h-64 lg:h-96 bg-gradient-to-br from-secondary-steel to-secondary-navy rounded-lg flex items-center justify-center">
-                  {/* <div className="text-center text-white">
-                    <MapPin size={48} className="mx-auto mb-4" />
-                    <p className="text-lg">Interactive Map</p>
-                    <p className="text-sm opacity-75">Coming Soon</p>
-                  </div> */}
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.0717804193782!2d67.1129801!3d24.929624499999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33932bc557c5d%3A0x38073c4629dcd4a3!2sNational%20Incubation%20Center%20Karachi!5e0!3m2!1sen!2s!4v1750053137172!5m2!1sen!2s"
                     width="100%"

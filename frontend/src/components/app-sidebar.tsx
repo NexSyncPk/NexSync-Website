@@ -42,7 +42,6 @@ const data = {
       items: [
         { title: "Home Page", url: "/MediaManagement/HomePage" },
         { title: "About Page", url: "/MediaManagement/AboutPage" },
-        { title: "Careers Page", url: "/MediaManagement/CareersPage" },
         { title: "Contact Page", url: "/MediaManagement/ContactPage" },
       ],
     },

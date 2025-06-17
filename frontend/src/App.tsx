@@ -11,8 +11,7 @@ import ArchivedJobs from "./pages/ArchivedJobs";
 import JobsOverview from "./pages/JobsOverview";
 import AdminLayout from "./components/layouts/AdminLayout";
 import MediaHomePage from "./pages/MediaHomePage/MediaHomePage";
-import MediaAboutPage from "./pages/MediaAboutPage";
-import MediaCareersPage from "./pages/MediaCareersPage";
+import MediaAboutPage from "./pages/Media About Page/MediaAboutPage";
 import MediaContactPage from "./pages/MediaContactPage";
 import HighestAppliedJobs from "./components/sections/AppliedJobs";
 import Traffic from "./pages/Traffic";
@@ -121,14 +120,6 @@ function App() {
               element={
                 <AdminLayout>
                   <MediaAboutPage />
-                </AdminLayout>
-              }
-            />
-            <Route
-              path="/MediaManagement/CareersPage"
-              element={
-                <AdminLayout>
-                  <MediaCareersPage />
                 </AdminLayout>
               }
             />

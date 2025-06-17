@@ -9,7 +9,7 @@ const ArchivedJobs = () => {
   return (
     <div className="w-full h-full bg-background-ice flex flex-col items-center mt-10">
       <h1 className="text-4xl font-bold mt-10">Archived Jobs</h1>
-      <div className="space-y-6 mt-10 w-full max-w-4xl px-4">
+      <div className="space-y-6 mt-10 w-full max-w-4xl px-4 pb-10">
         {archivedJobs.map((job, index) => (
           <motion.div
             key={job.id}

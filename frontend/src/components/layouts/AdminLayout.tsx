@@ -29,7 +29,7 @@ const AdminLayout = ({ children }: Props) => {
     <>
       {/* <Navigation /> */}
       <SidebarProvider>
-        <div className="relative w-full h-fit pb-10 flex ">
+        <div className="relative w-full h-fit  flex ">
           <AppSidebar className="fixed " />
           <main className="bg-background-ice w-full h-full ">
             <div className="fixed w-full h-12 border-b-2 flex bg-white z-50 border-t">
