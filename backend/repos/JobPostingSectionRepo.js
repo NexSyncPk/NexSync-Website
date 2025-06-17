@@ -10,8 +10,8 @@ class JobPostingSectionRepo extends BaseRepo {
     return await this.create(data);
   }
 
-  async getAllJobPostings() {
-    return await this.findAll();
+  async getAllJobPostings(options) {
+    return await this.findAll(options);
   }
 
   async getJobPostingById(id) {
@@ -24,6 +24,9 @@ class JobPostingSectionRepo extends BaseRepo {
 
   async deleteJobPosting(id, type) {
     return await this.delete(id, type);
+  }
+  async toggleArchive(id, isArchived) {
+    return this.model.update({ isArchived }, { where: { id } });
   }
 }
 module.exports = new JobPostingSectionRepo();

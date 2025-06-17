@@ -35,6 +35,7 @@ class JobPostingSectionController extends BaseController {
       filterByTitle,
       filterByPosition,
       filterByDomain,
+      filterByArchived,
     } = req.query;
 
     const offset = (page - 1) * limit;
@@ -55,6 +56,9 @@ class JobPostingSectionController extends BaseController {
       filterConditions.position = { [Op.like]: `%${filterByPosition}%` };
     if (filterByDomain)
       filterConditions.domain = { [Op.like]: `%${filterByDomain}%` };
+    if (filterByArchived === "true" || filterByArchived === "false") {
+      filterConditions.isArchived = filterByArchived === "true";
+    }
 
     const where = {
       ...searchCondition,
@@ -98,10 +102,8 @@ class JobPostingSectionController extends BaseController {
       return this.validationErrorResponse(res, validationResult.message);
     }
 
-    const updatedJobPosting = await JobPostingSectionRepo.updateJobPosting(
-      req.body,
-      id
-    );
+    await JobPostingSectionRepo.updateJobPosting(req.body, id);
+    const updatedJobPosting = await JobPostingSectionRepo.getJobPostingById(id);
     return this.successResponse(
       res,
       updatedJobPosting,
@@ -126,8 +128,33 @@ class JobPostingSectionController extends BaseController {
       return this.errorResponse(res, "Job Posting not found", 400);
     }
 
-    await JobPostingSectionRepo.deleteJobSectionPosting(id, type || "soft");
+    await JobPostingSectionRepo.deleteJobPosting(id, type || "soft");
     return this.successResponse(res, null, `Job Posting deleted successfully`);
+  };
+  archiveJobPosting = async (req, res) => {
+    const { id } = req.query;
+    const { archived } = req.body;
+    console.log("DEBUG BODY >>>", req.body); // add this line
+
+    if (archived === undefined) {
+      return this.validationErrorResponse(
+        res,
+        "'archived' (true/false) is required in request body"
+      );
+    }
+
+    const target = await JobPostingSectionRepo.getJobPostingById(id);
+    if (!target) {
+      return this.errorResponse(res, "Job posting not found", 400);
+    }
+
+    const updated = await JobPostingSectionRepo.toggleArchive(id, archived);
+
+    return this.successResponse(
+      res,
+      null,
+      `Job posting ${archived ? "archived" : "unarchived"} successfully`
+    );
   };
 }
 

@@ -24,4 +24,9 @@ router.delete(
   authenticateAdmin,
   JobPostingSectionController.deleteJobPosting
 );
+router.put(
+  "/archive",
+  authenticateAdmin,
+  JobPostingSectionController.archiveJobPosting
+);
 module.exports = router;
