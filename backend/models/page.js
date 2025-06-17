@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Page.hasOne(models.HeroSection, { foreignKey: "pageId" });
       Page.hasOne(models.TeamSection, { foreignKey: "pageId" });
+      Page.hasOne(models.JobPostingSection, { foreignKey: "pageId" });
     }
   }
   Page.init(

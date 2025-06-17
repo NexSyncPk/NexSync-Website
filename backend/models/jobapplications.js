@@ -4,7 +4,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class JobApplications extends Model {
     static associate(models) {
-      JobApplications.belongsTo(models.JobPosting, {
+      JobApplications.belongsTo(models.JobPostingSection, {
         foreignKey: "jobPostingsId",
         as: "jobPosting",
       });

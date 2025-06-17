@@ -1,20 +1,22 @@
-const TestimonialsRepo = require("../repos/TestimonalsRepo");
+const TestimonialSectionRepo = require("../repos/TestimonialSectionRepo");
 const {
   validateCreateTestimonial,
   validateUpdatedTestimonial,
-} = require("../validators/TestimonalsValidator");
+} = require("../validators/TestimonialSectionValidator");
 const BaseController = require("./BaseController");
-class TestimonalsController extends BaseController {
+class TestimonialSectionController extends BaseController {
   constructor() {
     super();
   }
-  createTestimonals = async (req, res) => {
+  createTestimonials = async (req, res) => {
     const validationResult = validateCreateTestimonial(req.body);
     if (!validationResult) {
       return this.validationErrorResponse(res, validationResult.message);
     }
 
-    const testimonial = await TestimonialsRepo.createTestimonal(req.body);
+    const testimonial = await TestimonialSectionRepo.createTestimonial(
+      req.body
+    );
     return this.successResponse(
       res,
       testimonial,
@@ -54,7 +56,7 @@ class TestimonalsController extends BaseController {
       ...searchCondition,
       ...filterConditions,
     };
-    const testimonials = await TestimonialsRepo.getAllTestimonals({
+    const testimonials = await TestimonialSectionRepo.getAllTestimonials({
       where,
       offset: parseInt(offset),
       limit: parseInt(limit),
@@ -68,7 +70,7 @@ class TestimonalsController extends BaseController {
     if (!id) {
       return this.validationErrorResponse(res, "Id is required in params");
     }
-    const testimonial = await TestimonialsRepo.getTestimonalById(id);
+    const testimonial = await TestimonialSectionRepo.getTestimonialById(id);
     if (!testimonial) {
       return this.errorResponse(res, "Testimonial not found", 400);
     }
@@ -86,8 +88,8 @@ class TestimonalsController extends BaseController {
       return this.validationErrorResponse(res, validationResult.message);
     }
 
-    const updatedTestimonial = await TestimonialsRepo.updateTestimonal(
-      req.body,
+    await TestimonialSectionRepo.updateTestimonial(req.body, id);
+    const updatedTestimonial = await TestimonialSectionRepo.getTestimonialById(
       id
     );
 
@@ -110,14 +112,14 @@ class TestimonalsController extends BaseController {
       );
     }
 
-    const testimonial = await TestimonialsRepo.deleteTestimonal(id);
+    const testimonial = await TestimonialSectionRepo.deleteTestimonial(id);
     if (!testimonial) {
       return this.errorResponse(res, "Testimonial not found", 400);
     }
 
-    await TestimonialsRepo.deletetestimonial(id, type || "soft");
+    await TestimonialSectionRepo.deletetestimonial(id, type || "soft");
     return this.successResponse(res, null, `Testimonial deleted successfully`);
   };
 }
 
-module.exports = new TestimonalsController();
+module.exports = new TestimonialSectionController();

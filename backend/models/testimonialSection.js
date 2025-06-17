@@ -2,13 +2,16 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Testimonal extends Model {
+  class TestimonialSection extends Model {
     static associate(models) {
-      // define association here
+      TestimonialSection.belongsTo(models.Page, {
+        foreignKey: "pageId",
+        as: "page",
+      });
     }
   }
 
-  Testimonal.init(
+  TestimonialSection.init(
     {
       name: {
         type: DataTypes.STRING,
@@ -34,9 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Testimonal",
+      modelName: "TestimonialSection",
+      tableName: "TestimonialSection",
     }
   );
 
-  return Testimonal;
+  return TestimonialSection;
 };

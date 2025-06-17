@@ -2,16 +2,20 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class JobPosting extends Model {
+  class JobPostingSection extends Model {
     static associate(models) {
-      JobPosting.hasMany(models.JobApplications, {
+      JobPostingSection.hasMany(models.JobApplications, {
         foreignKey: "jobPostingsId",
         as: "applications",
+      });
+      JobPostingSection.belongsTo(models.Page, {
+        foreignKey: "pageId",
+        as: "page",
       });
     }
   }
 
-  JobPosting.init(
+  JobPostingSection.init(
     {
       title: {
         type: DataTypes.STRING,
@@ -54,9 +58,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "JobPosting",
+      modelName: "JobPostingSection",
     }
   );
 
-  return JobPosting;
+  return JobPostingSection;
 };
