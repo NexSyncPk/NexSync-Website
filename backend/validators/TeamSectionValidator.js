@@ -1,14 +1,14 @@
 const Joi = require("joi");
 const BaseValidator = require("./BaseValidator.js");
 
-class TeamValidator extends BaseValidator {
+class TeamSectionValidator extends BaseValidator {
   validateCreateTeamMember = (member) => {
     {
       const schema = Joi.object().keys({
         name: Joi.string().required().label("Name"),
         email: Joi.string().email().required().label("Email"),
         position: Joi.string().optional().label("Position"),
-
+        pageId: Joi.number().integer().required(),
         description: Joi.string().optional().label("Description"),
         isDeleted: Joi.boolean().optional(),
       });
@@ -27,4 +27,4 @@ class TeamValidator extends BaseValidator {
     return this.validate(schema, member);
   };
 }
-module.exports = new TeamValidator();
+module.exports = new TeamSectionValidator();

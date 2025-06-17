@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const BaseValidator = require("./BaseValidator.js");
 
-class JobPostingValidator extends BaseValidator {
+class JobPostingSectionValidator extends BaseValidator {
   validateCreateJobPosting = (jobPosting) => {
     const schema = Joi.object().keys({
       title: Joi.string().required().label("Job Title"),
@@ -53,4 +53,4 @@ class JobPostingValidator extends BaseValidator {
   };
 }
 
-module.exports = new JobPostingValidator();
+module.exports = new JobPostingSectionValidator();

@@ -1,14 +1,13 @@
-const BaseController = require("./BaseController");
-const TeamRepo = require("../repos/TeamRepo.js");
+const BaseController = require("./BaseController.js");
+const TeamSectionRepo = require("../repos/TeamSectionRepo.js");
 const {
   validateCreateTeamMember,
   validateUpdatedTeamMember,
-} = require("../validators/TeamValidator.js");
-const JobPostingRepo = require("../repos/JobPostingRepo.js");
-const db=require("sequelize");
+} = require("../validators/TeamSectionValidator.js");
+const db = require("sequelize");
 const { Op } = require("sequelize");
 
-class TeamController extends BaseController {
+class TeamSectionController extends BaseController {
   constructor() {
     super();
   }
@@ -24,9 +23,10 @@ class TeamController extends BaseController {
     const picture = `/uploads/teamMembers/${req.file.filename}`;
     const teamMemberData = {
       ...req.body,
+      pageId: parseInt(req.body.pageId),
       picture,
     };
-    const teamMember = await TeamRepo.createTeamMember(teamMemberData);
+    const teamMember = await TeamSectionRepo.createTeamMember(teamMemberData);
     return this.successResponse(
       res,
       teamMember,
@@ -62,7 +62,7 @@ class TeamController extends BaseController {
       ...searchCondition,
       ...filterConditions,
     };
-    const members = await TeamRepo.getAllTeamMembers({
+    const members = await TeamSectionRepo.getAllTeamMembers({
       where,
       offset: parseInt(offset),
       limit: parseInt(limit),
@@ -77,7 +77,7 @@ class TeamController extends BaseController {
     if (!id) {
       return this.validationErrorResponse(res, "ID is required in params");
     }
-    const member = await TeamRepo.getTeamMemberById(id);
+    const member = await TeamSectionRepo.getTeamMemberById(id);
     if (!member) {
       return this.errorResponse(res, "Team member not found", 400);
     }
@@ -95,7 +95,8 @@ class TeamController extends BaseController {
       return this.validationErrorResponse(res, validationResult.message);
     }
 
-    const updatedMember = await TeamRepo.updateTeamMember(req.body, id);
+    await TeamSectionRepo.updateTeamMember(req.body, id);
+    const updatedMember = await TeamSectionRepo.getTeamMemberById(id);
     return this.successResponse(
       res,
       updatedMember,
@@ -115,14 +116,14 @@ class TeamController extends BaseController {
       );
     }
 
-    const member = await TeamRepo.getTeamMemberById(id);
+    const member = await TeamSectionRepo.getTeamMemberById(id);
     if (!member) {
       return this.errorResponse(res, "Team member not found", 400);
     }
 
-    await TeamRepo.deleteTeamMember(id, type || "soft");
+    await TeamSectionRepo.deleteTeamMember(id, type || "soft");
     return this.successResponse(res, null, `Team member deleted successfully`);
   };
 }
 
-module.exports = new TeamController();
+module.exports = new TeamSectionController();

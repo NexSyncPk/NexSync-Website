@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const BaseValidator = require("./BaseValidator.js");
 
-class TestimonialsValidator extends BaseValidator {
+class TestimonialSectionValidator extends BaseValidator {
   validateCreateTestimonial = (testimonial) => {
     const schema = Joi.object().keys({
       name: Joi.string().required().label("Name"),
@@ -9,6 +9,7 @@ class TestimonialsValidator extends BaseValidator {
       company: Joi.string().required().label("Company"),
       feedback: Joi.string().required().label("Feedback"),
       isDeleted: Joi.boolean().optional().label("Is Deleted"),
+      pageId: Joi.number().integer().required(),
     });
 
     return this.validate(schema, testimonial);
@@ -29,4 +30,4 @@ class TestimonialsValidator extends BaseValidator {
   };
 }
 
-module.exports = new TestimonialsValidator();
+module.exports = new TestimonialSectionValidator();

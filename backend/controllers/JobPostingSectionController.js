@@ -1,13 +1,12 @@
-const JobPostingRepo = require("../repos/JobPostingRepo");
+const JobPostingSectionRepo = require("../repos/JobPostingSectionRepo");
 const { db } = require("sequelize");
-const JobPostingValidator = require("../validators/JobPostingValidator");
 const {
   validateCreateJobPosting,
   validateUpdateJobPosting,
-} = require("../validators/JobPostingValidator");
+} = require("../validators/JobPostingSectionValidator");
 const BaseController = require("./BaseController");
 const { Op } = require("sequelize");
-class JobPostingController extends BaseController {
+class JobPostingSectionController extends BaseController {
   constructor() {
     super();
   }
@@ -17,7 +16,7 @@ class JobPostingController extends BaseController {
     if (!validationResult.status) {
       return this.validationErrorResponse(res, validationResult.message);
     }
-    const jobPosting = await JobPostingRepo.createJobPosting(req.body);
+    const jobPosting = await JobPostingSectionRepo.createJobPosting(req.body);
     console.log("jobPosting >>>", jobPosting);
     return this.successResponse(
       res,
@@ -62,7 +61,7 @@ class JobPostingController extends BaseController {
       ...filterConditions,
     };
 
-    const jobPostings = await JobPostingRepo.getAllJobPostings({
+    const jobPostings = await JobPostingSectionRepo.getAllJobPostings({
       where,
       offset: parseInt(offset),
       limit: parseInt(limit),
@@ -81,7 +80,7 @@ class JobPostingController extends BaseController {
     if (!id) {
       return this.validationErrorResponse(res, "ID is required in params");
     }
-    const jobPosting = await JobPostingRepo.getJobPostingById(id);
+    const jobPosting = await JobPostingSectionRepo.getJobPostingById(id);
     if (!jobPosting) {
       return this.errorResponse(res, "Job Posting not found", 400);
     }
@@ -99,7 +98,7 @@ class JobPostingController extends BaseController {
       return this.validationErrorResponse(res, validationResult.message);
     }
 
-    const updatedJobPosting = await JobPostingRepo.updateJobPosting(
+    const updatedJobPosting = await JobPostingSectionRepo.updateJobPosting(
       req.body,
       id
     );
@@ -122,14 +121,14 @@ class JobPostingController extends BaseController {
       );
     }
 
-    const jobPosting = await JobPostingRepo.getJobPostingById(id);
+    const jobPosting = await JobPostingSectionRepo.getJobPostingById(id);
     if (!jobPosting) {
       return this.errorResponse(res, "Job Posting not found", 400);
     }
 
-    await JobPostingRepo.deleteJobPosting(id, type || "soft");
+    await JobPostingSectionRepo.deleteJobSectionPosting(id, type || "soft");
     return this.successResponse(res, null, `Job Posting deleted successfully`);
   };
 }
 
-module.exports = new JobPostingController();
+module.exports = new JobPostingSectionController();

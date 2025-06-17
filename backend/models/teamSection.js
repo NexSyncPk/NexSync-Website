@@ -2,41 +2,52 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Testimonal extends Model {
+  class TeamSection extends Model {
     static associate(models) {
-      // define association here
+      TeamSection.belongsTo(models.Page, {
+        foreignKey: "pageId",
+        as: "page",
+      });
     }
   }
 
-  Testimonal.init(
+  TeamSection.init(
     {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      designation: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      company: {
+      position: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      feedback: {
+      picture: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
       isDeleted: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
         defaultValue: false,
+      },
+      pageId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "Testimonal",
+      modelName: "TeamSection",
+      tableName: "TeamSection",
     }
   );
 
-  return Testimonal;
+  return TeamSection;
 };

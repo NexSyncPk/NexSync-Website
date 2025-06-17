@@ -1,10 +1,9 @@
-const BaseRepo = require("./BaseRepo");
+const BaseRepo = require("./BaseRepo.js");
 const db = require("../models/index.js");
-class JobPostingRepo extends BaseRepo {
-  model;
+class JobPostingSectionRepo extends BaseRepo {
   constructor() {
-    super(db.JobPosting);
-    this.model = db.JobPosting;
+    super(db.JobPostingSection);
+    this.model = db.JobPostingSection;
   }
 
   async createJobPosting(data) {
@@ -27,4 +26,4 @@ class JobPostingRepo extends BaseRepo {
     return await this.delete(id, type);
   }
 }
-module.exports = new JobPostingRepo();
+module.exports = new JobPostingSectionRepo();
