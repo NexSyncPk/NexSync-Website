@@ -1,4 +1,4 @@
-import { Delete, Edit, X } from "lucide-react";
+import { Delete, Edit, UserPlus, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const MediaHomePage = () => {
   const [heroEdit, setHeroEdit] = useState(false);
   const [testimonialEdit, setTestimonialEdit] = useState(false);
+  const [testimonialAdd, setTestimonialAdd] = useState(false);
 
   // Hero Schema
   const heroSchema = z.object({
@@ -244,6 +245,12 @@ const MediaHomePage = () => {
               <X
                 className="w-6 h-6 text-secondary-navy cursor-pointer"
                 onClick={() => setTestimonialEdit(false)}
+              />
+            )}
+            {!testimonialAdd && !testimonialEdit && (
+              <UserPlus
+                className="cursor-pointer hover:scale-105"
+                onClick={() => setTestimonialEdit(true)}
               />
             )}
           </div>
