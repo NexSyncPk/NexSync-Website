@@ -7,4 +7,5 @@ export {
 export {
  getTeamSectionData,
  getTestimonialsData,
+ getHeroSectionData
 } from "./userService";

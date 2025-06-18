@@ -81,4 +81,15 @@ export const getTestimonialsData = async ()=>{
     }
 }
 
+export const getHeroSectionData = async ()=>{
+    try{
+        const response = await api.get(getHeroSection)
+        return response;
+    }
+    catch(error){
+        console.error("Error fetching hero section data:", error);
+        return false;
+    }
+}
+
 

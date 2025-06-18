@@ -138,3 +138,12 @@ export interface TeamMemberAttributes {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface HeroSectionAttributes {
+  pageId: number;
+  heroImage: string;
+  noOfProjects: number;
+  noOfClients: number;
+  satisfactionPercentage: number; // must be between 0 and 100
+  isDeleted: boolean;
+}

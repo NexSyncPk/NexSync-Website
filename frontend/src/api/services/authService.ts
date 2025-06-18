@@ -1,5 +1,5 @@
 import api from "../interceptor";
-import { adminLogin, adminLogout, adminResetPassword } from "../endpoints";
+import { adminLogin, adminLogout } from "../endpoints";
 import {type IObjectProps } from "../../types/index";
 import Cookies from "js-cookie";
 

@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Target } from "lucide-react";
 import { Button } from "../ui/index.tsx";
 import { Link } from "react-router-dom";
+import { getHeroSectionData } from "@/api/services/userService.ts";
+import { type HeroSectionAttributes } from "@/types/index.ts";
 
 export const HeroSection: React.FC = () => {
+  const [heroSection, setHeroSection] = useState<HeroSectionAttributes>();
+  const getHeroSection = async () => {
+    try {
+      const response = await getHeroSectionData();
+      if (response && response.data) {
+        console.log("Hero Section Data:", response.data);
+        setHeroSection(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching hero section data:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch hero section data on component mount
+    const fetchHero = async () => {
+      try {
+        await getHeroSection();
+      } catch (error) {
+        console.error("Error in useEffect while fetching hero section:", error);
+      }
+    };
+    fetchHero();
+  }, []);
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-background-ice via-white to-blue-50 flex items-center">
       <div className="section-container">
@@ -71,18 +98,20 @@ export const HeroSection: React.FC = () => {
               className="grid grid-cols-3 gap-6 pt-8"
             >
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary-blue">50+</div>
+                <div className="text-3xl font-bold text-primary-blue">
+                  {heroSection?.noOfProjects}+
+                </div>
                 <div className="text-secondary-steel">Projects</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-orange">
-                  25+
+                  {heroSection?.noOfClients}+
                 </div>
                 <div className="text-secondary-steel">Clients</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-secondary-teal">
-                  99%
+                  {heroSection?.satisfactionPercentage}%
                 </div>
                 <div className="text-secondary-steel">Satisfaction</div>
               </div>
@@ -107,7 +136,7 @@ export const HeroSection: React.FC = () => {
                     </div>
                   </div> */}
                   <img
-                    src="/Hero.jpg"
+                    src={"Hero.jpg"}
                     alt=""
                     className="w-full h-full rounded-xl object-cover"
                   />
