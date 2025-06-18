@@ -16,6 +16,7 @@ class JobPostingSectionValidator extends BaseValidator {
         .label("Job Type"),
       domain: Joi.string().required().label("Domain"),
       salary: Joi.number().integer().optional().label("Salary"),
+      pageId: Joi.number().integer().required(),
       requirements: Joi.array()
         .items(Joi.string())
         .required()

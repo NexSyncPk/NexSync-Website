@@ -9,17 +9,9 @@ router.post(
   JobApplicationsController.createJobApplication
 );
 
-router.get(
-  "/",
-  authenticateAdmin,
-  JobApplicationsController.getAllJobApplications
-);
+router.get("/", JobApplicationsController.getAllJobApplications);
 
-router.get(
-  "/:id",
-  authenticateAdmin,
-  JobApplicationsController.getJobApplicationById
-);
+router.get("/:id", JobApplicationsController.getJobApplicationById);
 
 router.delete(
   "/",

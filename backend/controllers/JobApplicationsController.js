@@ -5,7 +5,8 @@ const {
 
 const JobApplicationsRepo = require("../repos/JobApplicationsRepo");
 const { Op } = require("sequelize");
-const db = require("sequelize");
+// const db = require("sequelize");
+const db = require("../models/index.js");
 const JobApplications = db.JobApplications;
 const JobPosting = db.JobPosting;
 class JobApplicationsController extends BaseController {
