@@ -8,5 +8,7 @@ export {
  getTeamSectionData,
  getTestimonialsData,
  getHeroSectionData,
- getFindUs
+ getFindUs,
+  getJobs,
+  applyForJob,
 } from "./userService";

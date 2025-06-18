@@ -21,8 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "./Loader";
+import { applyForJob } from "../../api/services/userService";
 
 type FormValues = z.infer<typeof JobApplicationSchema>;
 
@@ -32,15 +33,17 @@ const ApplyJobForm: React.FC = () => {
     "idle" | "success" | "error"
   >("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   // Handle toast notifications when status changes
   useEffect(() => {
     if (submitStatus === "success") {
-      toast.success(
+      console.log(
         "Application submitted successfully! Thank you for applying. We will get back to you soon."
       );
+      navigate("/careers");
     } else if (submitStatus === "error") {
-      toast.error("Application submission failed. Please try again later.");
+      console.log("Application submission failed. Please try again later.");
     }
   }, [submitStatus]);
 
@@ -51,13 +54,14 @@ const ApplyJobForm: React.FC = () => {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
+      phoneNumber: "",
       address: "",
       lastEducation: "intermediate",
       yearOfPassing: "",
       expectedSalary: "",
       availability: "remote",
       resume: undefined as unknown as File,
+      jobPostingsId: jobId ? parseInt(jobId, 10) : undefined, // Ensure jobId is a number
     },
   });
 
@@ -66,45 +70,73 @@ const ApplyJobForm: React.FC = () => {
     form.reset({
       name: "",
       email: "",
-      phone: "",
+      phoneNumber: "",
       address: "",
       lastEducation: "intermediate",
       yearOfPassing: "",
       expectedSalary: "",
       availability: "remote",
       resume: undefined as unknown as File,
+      jobPostingsId: jobId ? parseInt(jobId, 10) : undefined, // Reset jobPostingId
     });
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
-
   async function handleSubmit(values: FormValues) {
     try {
       setSubmitStatus("idle");
 
-      // Create submission data with jobid
-      const submissionData = {
-        ...values,
-        jobid: Number(jobId) || "",
-      };
+      if (!jobId) {
+        toast.error("Job ID is missing. Please try again.");
+        return;
+      }
 
-      console.log("Form submitted with data:", submissionData);
-      console.log("Job ID:", jobId);
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("phoneNumber", values.phoneNumber);
+      formData.append("address", values.address || "");
+      formData.append("lastEducation", values.lastEducation);
+      formData.append("yearOfPassing", values.yearOfPassing);
+      formData.append("expectedSalary", values.expectedSalary);
+      formData.append("availability", values.availability);
+      formData.append("jobPostingsId", jobId);
 
-      // Simulate API call with timeout (replace this with actual API call)
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Append the actual file object, not just the filename
+      if (values.resume) {
+        formData.append("resume", values.resume);
+      }
 
-      // Simulate success/error scenarios
-      console.log("Form submission completed successfully!");
-      setSubmitStatus("success"); // Reset form after successful submission (with a delay to show success message)
-      setTimeout(() => {
-        resetForm();
-        setSubmitStatus("idle");
-      }, 2000);
+      console.log("Form submitted with data:");
+      // Log form data entries for debugging
+      for (const [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`${key}:`, value.name, value.size, value.type);
+        } else {
+          console.log(`${key}:`, value);
+        }
+      }
+
+      // Call the actual API
+      const response = await applyForJob(formData);
+
+      if (response && response.status) {
+        console.log("Form submission completed successfully!");
+        setSubmitStatus("success");
+        // Reset form after successful submission
+        setTimeout(() => {
+          resetForm();
+          setSubmitStatus("idle");
+        }, 2000);
+      } else {
+        throw new Error("Failed to submit application");
+      }
     } catch (error) {
       console.error("Form submission failed:", error);
       setSubmitStatus("error");
+      toast.error("Failed to submit application. Please try again.");
 
       // Reset error status after 3 seconds
       setTimeout(() => {
@@ -169,7 +201,7 @@ const ApplyJobForm: React.FC = () => {
           />
           <FormField
             control={form.control}
-            name="phone"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Mobile Number</FormLabel>

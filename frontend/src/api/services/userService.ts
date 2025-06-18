@@ -59,6 +59,7 @@ import {
 } from "../endpoints";
 
 import { type IObjectProps } from "../../types/index";
+import { ca } from "zod/v4/locales";
 
 export const getTeamSectionData = async ()=>{
     try{
@@ -104,3 +105,24 @@ export const getFindUs = async ()=>{
     }
 }
 
+export const getJobs =async () =>{
+    try{
+        const response = await api.get(getJobPostings);
+        return response;
+    }
+    catch (error) {
+        console.error("Error fetching job postings:", error);
+        return false;
+    }
+}
+
+
+export const applyForJob = async (data: IObjectProps) => {
+    try {
+        const response = await api.post(createJobApplication, data);
+        return response;
+    } catch (error) {
+        console.error("Error applying for job:", error);
+        return false;
+    }
+}

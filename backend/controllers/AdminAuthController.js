@@ -16,14 +16,20 @@ class AdminAuthController extends BaseController {
       inputEmail !== process.env.ADMIN_EMAIL ||
       inputPassword !== process.env.ADMIN_PASSWORD
     ) {
-      return this.errorResponse(res, "Invalid credentials", 401);
+      return this.errorResponse(res, "Invalid credentials", 403);
     }
 
     const token = jwt.sign({ email: inputEmail }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "4d",
     });
 
-    return this.successResponse(res, { token }, "Login successful");
+    const user = {
+      email: process.env.ADMIN_EMAIL,
+      password: process.env.ADMIN_PASSWORD,
+      role: "admin",
+    };
+
+    return this.successResponse(res, { token, user }, "Login successful");
   };
 }
 

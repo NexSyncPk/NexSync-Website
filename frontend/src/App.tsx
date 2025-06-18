@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import { Toaster } from "react-hot-toast";
 import Routes from "./routes/Routes";
@@ -7,13 +8,15 @@ import Routes from "./routes/Routes";
 function App() {
   return (
     <Router>
-      <Toaster />
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-1">
-          <Routes />
-        </main>
-      </div>
+      <AuthProvider>
+        <Toaster />
+        <ScrollToTop />
+        <div className="min-h-screen flex flex-col">
+          <main className="flex-1">
+            <Routes />
+          </main>
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

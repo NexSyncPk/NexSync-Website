@@ -1,4 +1,4 @@
-import type { Testimonial, JobOpening, Service, CompanyValue, Benefit, TeamMemberAttributes } from '../types/index';
+import type { Testimonial, JobOpening, Service, CompanyValue, Benefit, TeamMemberAttributes, Job } from '../types/index';
 
 export const fallbackTestimonials: Testimonial[] = [
   {
@@ -36,7 +36,80 @@ export const fallbackTestimonials: Testimonial[] = [
   }
 ];
 
-export const jobOpenings: JobOpening[] = [
+export const mockJobs: Job[] = [
+  {
+    id: 1,
+    title: "Frontend Developer",
+    position: "full-time",
+    description: "Develop responsive UIs using React and Tailwind CSS.",
+    jobType: "remote",
+    domain: "Web Development",
+    salary: 85000,
+    requirements: ["React", "Tailwind", "REST APIs"],
+    isArchived: false,
+    isDeleted: false,
+    createdAt: new Date("2025-01-01T10:00:00Z"),
+    updatedAt: new Date("2025-01-01T10:00:00Z"),
+  },
+  {
+    id: 2,
+    title: "Backend Engineer",
+    position: "full-time",
+    description: "Maintain and build scalable RESTful APIs with Node.js.",
+    jobType: "onsite",
+    domain: "Backend",
+    salary: 95000,
+    requirements: ["Node.js", "Express", "MongoDB", "PostgreSQL"],
+    isArchived: false,
+    isDeleted: false,
+    createdAt: new Date("2025-01-10T12:30:00Z"),
+    updatedAt: new Date("2025-01-10T12:30:00Z"),
+  },
+  {
+    id: 3,
+    title: "UI/UX Design Intern",
+    position: "intern",
+    description: "Support the design team with mockups and wireframes.",
+    jobType: "hybrid",
+    domain: "Design",
+    salary: 15000,
+    requirements: ["Figma", "Adobe XD", "Basic HTML/CSS"],
+    isArchived: false,
+    isDeleted: false,
+    createdAt: new Date("2025-02-05T09:00:00Z"),
+    updatedAt: new Date("2025-02-05T09:00:00Z"),
+  },
+  {
+    id: 4,
+    title: "Data Analyst",
+    position: "contract",
+    description: "Analyze customer trends and provide business insights.",
+    jobType: "remote",
+    domain: "Data Analytics",
+    salary: 60000,
+    requirements: ["SQL", "PowerBI", "Excel"],
+    isArchived: false,
+    isDeleted: false,
+    createdAt: new Date("2025-03-15T11:45:00Z"),
+    updatedAt: new Date("2025-03-15T11:45:00Z"),
+  },
+  {
+    id: 5,
+    title: "Mobile App Developer",
+    position: "part-time",
+    description: "Build and maintain React Native applications.",
+    jobType: "remote",
+    domain: "Mobile Development",
+    salary: 45000,
+    requirements: ["React Native", "Firebase", "Redux"],
+    isArchived: true,
+    isDeleted: false,
+    createdAt: new Date("2025-04-01T14:00:00Z"),
+    updatedAt: new Date("2025-04-01T14:00:00Z"),
+  }
+];
+
+export const jobOpenings : JobOpening[] = [
   {
     id: '1',
     title: 'Senior Full Stack Developer',
@@ -50,39 +123,12 @@ export const jobOpenings: JobOpening[] = [
       'Excellent communication abilities'
     ],
     location: 'Remote / Hybrid',
-    salary: '$80,000 - $120,000'
+    salary: '$80,000 - $120,000',
+    isArchived: true
   },
-  {
-    id: '2',
-    title: 'UI/UX Design Intern',
-    type: 'internship',
-    department: 'design',
-    description: 'Learn and contribute to user interface design for innovative digital products.',
-    requirements: [
-      'Currently pursuing design or related degree',
-      'Proficiency in Figma or similar design tools',
-      'Portfolio showcasing design projects',
-      'Passion for user-centered design'
-    ],
-    location: 'On-site',
-    salary: '$2,000 - $3,000/month'
-  },
-  {
-    id: '3',
-    title: 'Digital Marketing Specialist',
-    type: 'contract',
-    department: 'marketing',
-    description: 'Drive our digital marketing initiatives and help grow our brand presence.',
-    requirements: [
-      '3+ years in digital marketing',
-      'Experience with SEO, SEM, and social media',
-      'Analytics and data-driven mindset',
-      'Creative content creation skills'
-    ],
-    location: 'Remote',
-    salary: '$50 - $75/hour'
-  }
 ];
+
+
 export const archivedJobs: JobOpening[] = [
   {
     id: '1',
@@ -252,7 +298,7 @@ export const fallbackTeamMembers: TeamMemberAttributes[] = [
     name: "Team Member 3",
     email: "member3@example.com",
     position: "Project Manager",
-    picture: "https://avatar.iran.liara.run/public/30",
+    picture: "https://avatar.iran.liara.run/public/",
     description: "This is a fallback description for Team Member 3.",
     isDeleted: false,
     pageId: 1,

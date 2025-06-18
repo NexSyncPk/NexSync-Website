@@ -85,6 +85,7 @@ export interface JobPosting {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
+  pageId: number;
 }
 
 export interface JobApplication {
@@ -157,5 +158,20 @@ export interface FindUs {
   endTime: Date;
   isDeleted: boolean;
     createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Job {
+  id: number;
+  title: string;
+  position: "full-time" | "part-time" | "intern" | "contract";
+  description: string;
+  jobType?: "remote" | "hybrid" | "onsite";
+  domain: string;
+  salary?: number;
+  requirements?: string[]; // Since Sequelize.JSON will store array or object
+  isArchived?: boolean;
+  isDeleted: boolean;
+  createdAt: Date;
   updatedAt: Date;
 }

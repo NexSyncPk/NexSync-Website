@@ -5,12 +5,14 @@ import Cookies from "js-cookie";
 
 const loginUser = async (data: IObjectProps) => {
   try {
+    console.log("Logging in user with data: ", data);
     const response = await api.post(adminLogin, data);
     const token = response?.data?.token;
 
+    console.log("Login response: ", response);
     // Set token in cookie with an expiration time (5 minutes)
-    await Cookies.set("token", token, { expires: 365 });
-
+    Cookies.set("admin_token", token, { expires: 365 });
+    Cookies.set("admin_user", JSON.stringify(response?.data?.user), { expires: 7 });
     return response;
   } catch (error) {
     console.log("error: ", error);
@@ -21,7 +23,7 @@ const loginUser = async (data: IObjectProps) => {
 const logOutUser = async () => {
   try {
     await api.post(adminLogout);
-    Cookies.remove("token");
+    Cookies.remove("admin_token");
     return true;
   } catch (error) {
     console.log("error: ", error);

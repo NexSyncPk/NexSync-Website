@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, Button } from "../components";
-import { jobOpenings, benefits } from "../data/mockData";
+import { benefits } from "../data/mockData";
 import { MapPin, DollarSign, Users, Home, BookOpen, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { Job, JobPosting } from "@/types";
+import { getJobs } from "@/api/services";
 
 const benefitIconMap = {
   Home,
@@ -12,18 +14,41 @@ const benefitIconMap = {
 };
 
 export const CareersPage: React.FC = () => {
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
-  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedDomain, setSelectedDomain] = useState<string>("all");
+  const [selectedPosition, setSelectedType] = useState<string>("all");
 
-  const filteredJobs = jobOpenings.filter((job) => {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  // Simulating fetching jobs from an API
+  const fetchJobs = async () => {
+    const response = await getJobs();
+    if (response && response.data) {
+      console.log("Fetched jobs:", response.data);
+      setJobs(response.data);
+    } else {
+      console.error("Failed to fetch job postings");
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchJobs();
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const filteredJobs = (jobs.length !== 0 ? jobs : jobs).filter((job: Job) => {
     const departmentMatch =
-      selectedDepartment === "all" || job.department === selectedDepartment;
-    const typeMatch = selectedType === "all" || job.type === selectedType;
+      selectedDomain === "all" || job.domain === selectedDomain;
+    const typeMatch =
+      selectedPosition === "all" || job.position === selectedPosition;
     return departmentMatch && typeMatch;
   });
 
-  const departments = ["all", "development", "design", "marketing"];
-  const types = ["all", "full-time", "internship", "contract"];
+  const domain = ["all", "development", "design", "marketing"];
+  const position = ["all", "full-time", "intern", "contract"];
 
   return (
     <div className="min-h-screen">
@@ -128,12 +153,12 @@ export const CareersPage: React.FC = () => {
                 <span className="text-secondary-steel font-medium">
                   Department:
                 </span>
-                {departments.map((dept) => (
+                {domain.map((dept) => (
                   <button
                     key={dept}
-                    onClick={() => setSelectedDepartment(dept)}
+                    onClick={() => setSelectedDomain(dept)}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      selectedDepartment === dept
+                      selectedDomain === dept
                         ? "bg-primary-blue text-white"
                         : "bg-white text-secondary-steel hover:bg-gray-100"
                     }`}
@@ -145,12 +170,12 @@ export const CareersPage: React.FC = () => {
 
               <div className="space-x-2">
                 <span className="text-secondary-steel font-medium">Type:</span>
-                {types.map((type) => (
+                {position.map((type) => (
                   <button
                     key={type}
                     onClick={() => setSelectedType(type)}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      selectedType === type
+                      selectedPosition === type
                         ? "bg-primary-orange text-white"
                         : "bg-white text-secondary-steel hover:bg-gray-100"
                     }`}
@@ -164,7 +189,7 @@ export const CareersPage: React.FC = () => {
           </motion.div>
 
           <div className="space-y-6">
-            {filteredJobs.map((job, index) => (
+            {filteredJobs.map((job: Job, index: number) => (
               <motion.div
                 key={job.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -181,14 +206,14 @@ export const CareersPage: React.FC = () => {
                         </h3>
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            job.type === "full-time"
+                            job.position === "full-time"
                               ? "bg-green-100 text-green-800"
-                              : job.type === "internship"
+                              : job.position === "intern"
                               ? "bg-blue-100 text-blue-800"
                               : "bg-purple-100 text-purple-800"
                           }`}
                         >
-                          {job.type.replace("-", " ").toUpperCase()}
+                          {job.position.replace("-", " ").toUpperCase()}
                         </span>
                       </div>
 
@@ -198,12 +223,8 @@ export const CareersPage: React.FC = () => {
 
                       <div className="flex flex-wrap gap-4 text-sm text-secondary-steel mb-4">
                         <div className="flex items-center gap-1">
-                          <MapPin size={16} />
-                          {job.location}
-                        </div>
-                        <div className="flex items-center gap-1">
                           <Users size={16} />
-                          {job.department}
+                          {job.domain}
                         </div>
                         {job.salary && (
                           <div className="flex items-center gap-1">
@@ -218,7 +239,7 @@ export const CareersPage: React.FC = () => {
                           Requirements:
                         </h4>
                         <ul className="list-disc list-inside text-secondary-steel space-y-1">
-                          {job.requirements.map((req, idx) => (
+                          {job?.requirements?.map((req, idx) => (
                             <li key={idx}>{req}</li>
                           ))}
                         </ul>

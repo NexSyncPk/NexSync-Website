@@ -8,7 +8,7 @@ export const JobApplicationSchema = z.object({
     message: "Please enter a valid email address.",
   }),
 
-  phone: z.string().regex(/^03\d{2}-\d{7}$/, {
+  phoneNumber: z.string().regex(/^03\d{2}-\d{7}$/, {
     message: "Phone number must be in format 03xx-xxxxxxx",
   }),
 
@@ -51,4 +51,7 @@ export const JobApplicationSchema = z.object({
   resume: z.instanceof(File, {
     message: "Please upload a valid resume file.",
   }),
+  jobPostingsId: z.number().int().positive({
+    message: "Job posting ID must be a positive integer.",
+  })
 });

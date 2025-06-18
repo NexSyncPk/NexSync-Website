@@ -32,9 +32,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="h-5 py-3 mb-2">
-          <h1 className="text-center border-b-2 border-slate-300  ">
-            Admin's Dashboard
-          </h1>
+          <Link to={"/admin/dashboard"}>
+            <h1 className="text-center border-b-2 border-slate-300  ">
+              Admin's Dashboard
+            </h1>
+          </Link>
         </div>
       </SidebarHeader>
       <SidebarContent className="gap-0">

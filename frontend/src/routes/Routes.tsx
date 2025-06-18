@@ -1,10 +1,12 @@
-import { Route, Routes as BrowserRoutes } from "react-router-dom";
+import { Route, Routes as BrowserRoutes, Navigate } from "react-router-dom";
 import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
 import { CareersPage } from "../pages/CareersPage";
 import { ContactPage } from "../pages/ContactPage";
 import MainLayout from "../components/layouts/MainLayout";
 import AdminDashboard from "../pages/AdminDashboard";
+import AdminLogin from "../pages/AdminLogin";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 import CurrentJobs from "../pages/CurrentJobs";
 import ArchivedJobs from "../pages/ArchivedJobs";
 import JobsOverview from "../pages/JobsOverview";
@@ -61,41 +63,50 @@ const Routes = () => {
             <JobApplicationPage />
           </MainLayout>
         }
-      />
-
-      {/* Admin Routes with AdminLayout */}
+      />{" "}
+      {/* Login Route (redirect to admin login) */}
+      <Route path="/login" element={<AdminLogin />} />
+      {/* Admin Login Route */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      {/* Admin Routes with AdminLayout and Authentication */}
       <Route
         path="/admin/dashboard"
         element={
-          <AdminLayout>
-            <AdminDashboard />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
-
       <Route
         path="/JobsManagement/ApplicationOverview"
         element={
-          <AdminLayout>
-            <JobsOverview />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <JobsOverview />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
-
       <Route
         path="/JobsManagement/CurrentJobs"
         element={
-          <AdminLayout>
-            <CurrentJobs />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <CurrentJobs />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/JobsManagement/ArchivedJobs"
         element={
-          <AdminLayout>
-            <ArchivedJobs />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <ArchivedJobs />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       {/* Routes for Media Management can be added here as needed */}
@@ -103,69 +114,86 @@ const Routes = () => {
       <Route
         path="/MediaManagement/HomePage"
         element={
-          <AdminLayout>
-            <MediaHomePage />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <MediaHomePage />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/MediaManagement/AboutPage"
         element={
-          <AdminLayout>
-            <MediaAboutPage />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <MediaAboutPage />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/MediaManagement/ContactPage"
         element={
-          <AdminLayout>
-            <MediaContactPage />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <MediaContactPage />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
-
       {/* Analytics Routes */}
       <Route
         path="/Analytics/AppliedJobs"
         element={
-          <AdminLayout>
-            <HighestAppliedJobs />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <HighestAppliedJobs />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/Analytics/Traffic"
         element={
-          <AdminLayout>
-            <Traffic />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <Traffic />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/Analytics/UserEngagement"
         element={
-          <AdminLayout>
-            <UserEngagement />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <UserEngagement />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/Analytics/BounceRate"
         element={
-          <AdminLayout>
-            <BounceRate />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <BounceRate />
+            </AdminLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/Analytics/ClickThroughRate"
         element={
-          <AdminLayout>
-            <ClickThroughRate />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <ClickThroughRate />
+            </AdminLayout>{" "}
+          </ProtectedRoute>
         }
       />
+      {/* Catch-all route - redirect unknown routes to home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </BrowserRoutes>
   );
 };

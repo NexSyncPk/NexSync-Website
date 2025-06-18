@@ -33,7 +33,7 @@ class JobApplicationsController extends BaseController {
     return this.successResponse(
       res,
       jobApplication,
-      "Job Application successfully created"
+      "Application submitted successfully! Thank you for applying. We will get back to you soon."
     );
   };
 

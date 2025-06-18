@@ -7,7 +7,7 @@
  */
 
 // Admin Auth endpoints (matches backend /adminAuth routes)
-export const adminLogin = "adminAuth/login";
+export const adminLogin = "adminAuth/";
 export const adminLogout = "adminAuth/logout"; 
 export const adminResetPassword = "adminAuth/reset-password";
 export const adminVerifyToken = "adminAuth/verify-token";
@@ -39,7 +39,7 @@ export const archiveJobPosting = "jobPosting/archive";
 
 // Job Applications endpoints (matches backend /jobApplication routes)
 export const getJobApplications = "jobApplication/";
-export const createJobApplication = "jobApplication/create";
+export const createJobApplication = "jobApplication/";
 export const updateJobApplication = "jobApplication/update";
 export const deleteJobApplication = "jobApplication/delete";
 export const getJobApplicationById = "jobApplication/get";
