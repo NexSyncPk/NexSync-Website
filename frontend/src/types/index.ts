@@ -147,3 +147,15 @@ export interface HeroSectionAttributes {
   satisfactionPercentage: number; // must be between 0 and 100
   isDeleted: boolean;
 }
+
+export interface FindUs {
+  pageId: number;
+  address: string;
+  startDay: string;
+  endDay: string;
+  startTime: Date;
+  endTime: Date;
+  isDeleted: boolean;
+    createdAt: Date;
+  updatedAt: Date;
+}

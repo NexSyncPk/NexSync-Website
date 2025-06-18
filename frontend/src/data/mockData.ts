@@ -1,29 +1,38 @@
-import type { Testimonial, JobOpening, Service, CompanyValue, Benefit } from '../types/index';
+import type { Testimonial, JobOpening, Service, CompanyValue, Benefit, TeamMemberAttributes } from '../types/index';
 
-export const testimonials: Testimonial[] = [
+export const fallbackTestimonials: Testimonial[] = [
   {
-    id: '1',
-    name: 'Sarah Johnson',
-    position: 'Senior Developer',
-    company: 'TechCorp',
-    quote: 'Working with NexSync transformed our development process. Their innovative solutions and dedicated team made all the difference.',
-    avatar: '/avatars/sarah.jpg'
+    id: 1,
+    name: "Ayesha Khan",
+    designation: "Software Engineer",
+    company: "TechNova Pvt Ltd",
+    feedback: "Working with this team has been a truly transformative experience. Their professionalism and creativity are unmatched.",
+    isDeleted: false,
+    createdAt: new Date("2024-12-10T10:15:00Z"),
+    updatedAt: new Date("2025-01-20T14:30:00Z"),
+    pageId: 1,
   },
   {
-    id: '2',
-    name: 'Michael Chen',
-    position: 'CTO',
-    company: 'StartupXYZ',
-    quote: 'NexSync delivered beyond our expectations. Their expertise in modern technologies helped us scale rapidly.',
-    avatar: '/avatars/michael.jpg'
+    id: 2,
+    name: "Ali Raza",
+    designation: "Product Manager",
+    company: "InnovateX Solutions",
+    feedback: "Excellent service and great communication. They delivered the project before the deadline with top quality.",
+    isDeleted: false,
+    createdAt: new Date("2025-02-01T09:00:00Z"),
+    updatedAt: new Date("2025-03-01T11:45:00Z"),
+    pageId: 1,
   },
   {
-    id: '3',
-    name: 'Emily Rodriguez',
-    position: 'Product Manager',
-    company: 'InnovateInc',
-    quote: 'The collaboration with NexSync was seamless. They understood our vision and brought it to life perfectly.',
-    avatar: '/avatars/emily.jpg'
+    id: 3,
+    name: "Fatima Sheikh",
+    designation: "UX Designer",
+    company: "DesignHive",
+    feedback: "Their attention to detail and understanding of user experience is exceptional. I highly recommend them.",
+    isDeleted: false,
+    createdAt: new Date("2025-01-05T08:20:00Z"),
+    updatedAt: new Date("2025-04-10T13:10:00Z"),
+    pageId: 2,
   }
 ];
 
@@ -209,5 +218,45 @@ export const benefits: Benefit[] = [
     title: 'Competitive Benefits',
     description: 'Comprehensive health insurance, retirement plans, and perks.',
     icon: 'Star'
+  }
+];
+
+
+export const fallbackTeamMembers: TeamMemberAttributes[] = [
+  {
+    id: 1,
+    name: "Team Member 1",
+    email: "member1@example.com",
+    position: "Developer",
+    picture: "https://avatar.iran.liara.run/public/27", // Placeholder image
+    description: "This is a fallback description for Team Member 1.",
+    isDeleted: false,
+    pageId: 1,
+    createdAt: new Date("2025-01-01T00:00:00Z"),
+    updatedAt: new Date("2025-01-01T00:00:00Z"),
+  },
+  {
+    id: 2,
+    name: "Team Member 2",
+    email: "member2@example.com",
+    position: "Designer",
+    picture: "https://avatar.iran.liara.run/public/29",
+    description: "This is a fallback description for Team Member 2.",
+    isDeleted: false,
+    pageId: 1,
+    createdAt: new Date("2025-01-01T00:00:00Z"),
+    updatedAt: new Date("2025-01-01T00:00:00Z"),
+  },
+  {
+    id: 3,
+    name: "Team Member 3",
+    email: "member3@example.com",
+    position: "Project Manager",
+    picture: "https://avatar.iran.liara.run/public/30",
+    description: "This is a fallback description for Team Member 3.",
+    isDeleted: false,
+    pageId: 1,
+    createdAt: new Date("2025-01-01T00:00:00Z"),
+    updatedAt: new Date("2025-01-01T00:00:00Z"),
   }
 ];

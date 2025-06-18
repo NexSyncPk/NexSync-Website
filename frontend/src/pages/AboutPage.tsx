@@ -5,6 +5,7 @@ import { companyValues } from "../data/mockData";
 import { Lightbulb, Award, Users, TrendingUp, Shield } from "lucide-react";
 import { getTeamSectionData } from "../api/services";
 import type { TeamMemberAttributes } from "@/types";
+import { fallbackTeamMembers } from "../data/mockData";
 const iconMap = {
   Lightbulb,
   Award,
@@ -33,7 +34,6 @@ export const AboutPage: React.FC = () => {
     const fetchData = async () => {
       const response = await fetchTeamSectionData();
       if (response && response.data) {
-        console.log("Team Section Data:", response);
         setTeamSectionData(response.data);
       }
     };
@@ -209,7 +209,10 @@ export const AboutPage: React.FC = () => {
               technology, design, and business strategy.
             </p>{" "}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
-              {teamSectionData.map((member, index) => (
+              {(teamSectionData.length !== 0
+                ? teamSectionData
+                : fallbackTeamMembers
+              ).map((member, index) => (
                 <motion.div
                   key={member.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -221,7 +224,7 @@ export const AboutPage: React.FC = () => {
                     <div className="w-24 h-24 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full mx-auto mb-4 overflow-hidden">
                       <img
                         src={member.picture}
-                        alt={member.name}
+                        alt=""
                         className="w-full h-full object-cover"
                       />
                     </div>

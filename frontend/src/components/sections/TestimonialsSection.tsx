@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { testimonials } from "../../data/mockData";
+import { fallbackTestimonials } from "../../data/mockData";
 import api from "@/api/interceptor";
 import { getTestimonialsData } from "@/api/services";
 import type { Testimonial } from "@/types";
@@ -13,7 +13,6 @@ export const TestimonialsSection: React.FC = () => {
     try {
       const response = await getTestimonialsData();
       if (response && response.data) {
-        console.log("Testimonials Data:", response);
         setTestimonials(response.data);
       }
     } catch (error) {
@@ -105,7 +104,10 @@ export const TestimonialsSection: React.FC = () => {
 
             {/* Dots */}
             <div className="flex space-x-2">
-              {testimonials.map((_, index) => (
+              {(testimonials.length !== 0
+                ? testimonials
+                : fallbackTestimonials
+              ).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}

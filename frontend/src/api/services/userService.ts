@@ -54,7 +54,8 @@ import {
     getPublicTestimonials,
     getPublicTeam,
     getPublicHero,
-    submitContactForm
+    submitContactForm,
+    getFindUsData
 } from "../endpoints";
 
 import { type IObjectProps } from "../../types/index";
@@ -92,4 +93,14 @@ export const getHeroSectionData = async ()=>{
     }
 }
 
+export const getFindUs = async ()=>{
+    try{
+        const response = await api.get(getFindUsData)
+        return response;
+    }
+    catch(error){
+        console.error("Error fetching find us data:", error);
+        return false;
+    }
+}
 

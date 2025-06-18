@@ -12,7 +12,6 @@ export const HeroSection: React.FC = () => {
     try {
       const response = await getHeroSectionData();
       if (response && response.data) {
-        console.log("Hero Section Data:", response.data);
         setHeroSection(response.data);
       }
     } catch (error) {
@@ -99,19 +98,19 @@ export const HeroSection: React.FC = () => {
             >
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-blue">
-                  {heroSection?.noOfProjects}+
+                  {heroSection?.noOfProjects || 50} +
                 </div>
                 <div className="text-secondary-steel">Projects</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-orange">
-                  {heroSection?.noOfClients}+
+                  {heroSection?.noOfClients || 50}+
                 </div>
                 <div className="text-secondary-steel">Clients</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-secondary-teal">
-                  {heroSection?.satisfactionPercentage}%
+                  {heroSection?.satisfactionPercentage || 99} %
                 </div>
                 <div className="text-secondary-steel">Satisfaction</div>
               </div>

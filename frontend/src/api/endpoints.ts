@@ -24,6 +24,11 @@ export const updateTeamMember = "teamSection/update";
 export const deleteTeamMember = "teamSection/delete";
 export const getTeamMemberById = "teamSection/get";
 
+// Findus endpoints (matches backend /teamSection routes)
+export const getFindUsData = "findUsSection/";
+export const createFindUsData = "findUsSection/create";
+export const updateFindUsData = "findUsSection/update";
+
 // Job Posting Section endpoints (matches backend /jobPosting routes)
 export const getJobPostings = "jobPosting/";
 export const createJobPosting = "jobPosting/create";

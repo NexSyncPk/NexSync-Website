@@ -1,10 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, Button } from "../components";
 import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
-import type { ContactFormData } from "../types";
+import { type FindUs, type ContactFormData } from "../types";
+import { getFindUs } from "@/api/services";
+import { getFindUsData } from "@/api/endpoints";
 
 export const ContactPage: React.FC = () => {
+  const [findUsInfo, setFindUsInfo] = useState<FindUs>();
+
+  const findUsData = async () => {
+    try {
+      const response = await getFindUs();
+      if (response && response.data) {
+        setFindUsInfo(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const getFindUsData = async () => {
+      try {
+        await findUsData();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getFindUsData();
+  }, []);
+
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
@@ -51,6 +77,7 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formData);
 
     if (validateForm()) {
       // Simulate form submission
@@ -333,7 +360,8 @@ export const ContactPage: React.FC = () => {
                       Address
                     </h4>
                     <p className="text-secondary-steel">
-                      National Incubation Center, NED University, Karachi, 75270
+                      {findUsInfo?.address ||
+                        "National Incubation Center, NED University, Karachi, 75270"}
                     </p>
                   </div>
                   <div>
@@ -341,7 +369,22 @@ export const ContactPage: React.FC = () => {
                       Business Hours
                     </h4>
                     <p className="text-secondary-steel">
-                      Monday - Friday: 8:00 AM - 6:00 PM
+                      {findUsInfo?.startDay || "Monday"} -{" "}
+                      {findUsInfo?.endDay || "Friday"}:{" "}
+                      {(findUsInfo?.startTime instanceof Date
+                        ? findUsInfo.startTime.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : findUsInfo?.startTime) || "9:00"}{" "}
+                      AM -{" "}
+                      {(findUsInfo?.endTime instanceof Date
+                        ? findUsInfo.endTime.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : findUsInfo?.endTime) || "6:00"}{" "}
+                      PM
                     </p>
                     <p className="text-secondary-steel">
                       Weekend: By appointment
