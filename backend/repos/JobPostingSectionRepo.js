@@ -10,8 +10,10 @@ class JobPostingSectionRepo extends BaseRepo {
     return await this.create(data);
   }
 
-  async getAllJobPostings(options) {
-    return await this.findAll(options);
+  async getAllJobPostings() {
+    return await this.findAll({
+      where: { isDeleted: false, isArchived: false },
+    });
   }
 
   async getJobPostingById(id) {

@@ -13,7 +13,7 @@ class TeamSectionRepo extends BaseRepo {
   }
 
   async getAllTeamMembers() {
-    return this.findAll({
+    return await this.findAll({
       where: { isDeleted: false },
     });
   }

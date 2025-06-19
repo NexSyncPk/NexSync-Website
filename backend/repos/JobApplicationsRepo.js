@@ -11,7 +11,9 @@ class JobApplicationsRepo extends BaseRepo {
     return await this.create(data);
   }
   async getAllJobApplications() {
-    return await this.findAll();
+    return await this.findAll({
+      where: { isDeleted: false },
+    });
   }
 
   async getJobApplicationById(id) {
