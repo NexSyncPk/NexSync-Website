@@ -126,3 +126,13 @@ export const applyForJob = async (data: IObjectProps) => {
         return false;
     }
 }
+
+export const createJob = async (data: IObjectProps) => {
+    try {
+        const response = await api.post(createJobPosting, data);
+        return response;
+    } catch (error) {
+        console.error("Error creating job posting:", error);
+        return false;
+    }
+}

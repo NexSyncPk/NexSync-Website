@@ -22,14 +22,21 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { BadgeX } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { createJob } from "@/api/services";
 
 type FormValues = z.infer<typeof JobCreationSchema>;
 
 interface CreatePostFormProps {
   setForm: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchJobs: () => Promise<void>;
 }
 
-const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
+const CreatePostForm: React.FC<CreatePostFormProps> = ({
+  setForm,
+  fetchJobs,
+}) => {
+  const { setIsFormOpen } = useAuth();
   const form = useForm<FormValues>({
     resolver: zodResolver(JobCreationSchema),
     defaultValues: {
@@ -46,26 +53,49 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
     control: form.control,
     name: "requirements" as FieldArrayPath<FormValues>,
   });
+  async function handleSubmit(values: FormValues) {
+    try {
+      // Filter out empty requirements and keep as array
+      const filteredRequirements = values.requirements.filter(
+        (req) => req.trim() !== ""
+      );
 
-  function handleSubmit(values: FormValues) {
-    const requirementsObj = values.requirements.reduce((acc, val, i) => {
-      acc[`req${i + 1}`] = val;
-      return acc;
-    }, {} as Record<string, string>);
+      const submissionData = {
+        ...values,
+        requirements: filteredRequirements, // Keep as JSON array
+        pageId: 3,
+      };
 
-    console.log({ ...values, requirements: requirementsObj });
+      console.log("Submitting job data:", submissionData);
+
+      const response = await createJob(submissionData);
+      if (response && response.status) {
+        console.log("Job created successfully:", response);
+        // Refresh job postings after successful creation
+        // Close the form and reset it
+        setIsFormOpen(false);
+        await fetchJobs();
+        form.reset();
+        setForm(false);
+      } else {
+        console.error("Failed to create job posting:", response);
+      }
+    } catch (error) {
+      console.error("Error creating job:", error);
+    }
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="relative space-y-6 w-4/5 mx-auto p-6 bg-white rounded-lg shadow-md mt-20 md:w-3/5 lg:w-2/5"
+        className="relative space-y-6 w-4/5 mx-auto p-6 bg-white rounded-lg shadow-md mt-20 md:w-3/5 lg:w-2/5 z-50"
       >
         <h1 className="text-center text-2xl font-bold">Create Job</h1>
         <div
           className="absolute top-0 right-4 cursor-pointer"
           onClick={() => {
+            setIsFormOpen(false);
             form.reset();
             setForm(false);
           }}
@@ -154,7 +184,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
                 <FormItem className="flex gap-2 items-center">
                   <FormControl>
                     <Input
-                      placeholder={`Requirement # ${index + 1}`}
+                      placeholder={`Requirement ${index + 1}`}
                       {...field}
                     />
                   </FormControl>
@@ -167,11 +197,12 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
                   >
                     <BadgeX className="w-4 h-4" />
                   </Button>
+                  <FormMessage />
                 </FormItem>
               )}
             />
           ))}
-          <Button type="button" onClick={() => append("")}>
+          <Button type="button" onClick={() => append("")} className="w-fit">
             + Add Requirement
           </Button>
         </div>
@@ -181,13 +212,22 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ setForm }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Domain</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., IT, Marketing" {...field} />
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Domain" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="development">Development</SelectItem>
+                  <SelectItem value="design">Design</SelectItem>
+                  <SelectItem value="marketing">Marketing</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
-        />
+        />{" "}
         <FormField
           control={form.control}
           name="salary"

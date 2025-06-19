@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 // import { Navigation } from "../Navigation";
 // import { Footer } from "../Footer";
 
@@ -24,7 +25,7 @@ const AdminLayout = ({ children }: Props) => {
   const location = useLocation();
   // Format the current path for display
   const formattedPath = formatPath(location.pathname);
-
+  const { isFormOpen } = useAuth();
   return (
     <>
       {/* <Navigation /> */}
@@ -32,12 +33,25 @@ const AdminLayout = ({ children }: Props) => {
         <div className="relative w-full h-fit  flex ">
           <AppSidebar className="fixed " />
           <main className="bg-background-ice w-full h-full ">
-            <div className="fixed w-full h-12 border-b-2 flex bg-white z-50 border-t">
-              <div className="w-14 h-full flex items-center justify-between border-r-2 border-slate-300">
+            <div
+              className={`fixed w-full h-12 border-b-2 flex bg-white z-45 border-t ${
+                isFormOpen &&
+                "bg-black/5 opacity-70 !text-white border-slate-600"
+              }`}
+            >
+              <div
+                className={`w-14 h-full flex items-center justify-between border-r-2 border-slate-300 ${
+                  isFormOpen ? "border-slate-600 text-slate-600" : ""
+                }`}
+              >
                 <SidebarTrigger className="absolute z-10 bg-transparent top-3 px-7 " />
               </div>
               <div className="flex items-center h-full w-[96%] px-8">
-                <h1>
+                <h1
+                // className={`${
+                //   isFormOpen ?
+                // } text-lg font-semibold`}
+                >
                   {formattedPath == "admin > dashboard" ? " " : formattedPath}
                 </h1>
               </div>

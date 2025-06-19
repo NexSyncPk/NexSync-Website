@@ -17,6 +17,8 @@ interface AuthContextType {
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isFormOpen: boolean;
+  setIsFormOpen: (open: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,23 +38,24 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   // Check if user is logged in on app start
-  //   const token = getToken();
-  //   const userData = Cookies.get("admin_user");
+  useEffect(() => {
+    // Check if user is logged in on app start
+    const token = getToken();
+    const userData = Cookies.get("admin_user");
 
-  //   if (token && userData) {
-  //     try {
-  //       setUser(JSON.parse(userData));
-  //     } catch (error) {
-  //       console.error("Error parsing user data:", error);
-  //       Cookies.remove("admin_token");
-  //       Cookies.remove("admin_user");
-  //     }
-  //   }
-  //   setIsLoading(false);
-  // }, []);
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        Cookies.remove("admin_token");
+        Cookies.remove("admin_user");
+      }
+    }
+    setIsLoading(false);
+  }, []);
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
@@ -88,6 +91,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     logout,
     isLoading,
     isAuthenticated: !!user,
+    isFormOpen,
+    setIsFormOpen: (open: boolean) => setIsFormOpen(open),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

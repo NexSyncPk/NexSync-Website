@@ -6,18 +6,60 @@ import { Link } from "react-router-dom";
 
 const ArchivedJobs = () => {
   const user = "admin";
+
+  // Container animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+  // Card animation variants
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 30,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94] as const,
+      },
+    },
+  };
+
   return (
     <div className="w-full h-full bg-background-ice flex flex-col items-center mt-10">
-      <h1 className="text-4xl font-bold mt-10">Archived Jobs</h1>
-      <div className="space-y-6 mt-10 w-full max-w-4xl px-4 pb-10">
-        {archivedJobs.map((job, index) => (
+      <motion.h1
+        className="text-4xl font-bold mt-10"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        Archived Jobs
+      </motion.h1>
+      <motion.div
+        className="space-y-6 mt-10 w-full max-w-4xl px-4 pb-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {archivedJobs.map((job) => (
           <motion.div
             key={job.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            viewport={{ once: true }}
+            variants={cardVariants}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
           >
+            {" "}
             <Card className="hover:border-primary-blue hover:scale-[1.02] transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex-1">
@@ -81,7 +123,7 @@ const ArchivedJobs = () => {
                   )}
                   <div className="mt-6 lg:mt-0 lg:ml-8">
                     {/* <Link to="/contact"> */}
-                    <Button className="w-full lg:w-auto btn-secondary lg:px-9">
+                    <Button className="w-full lg:w-auto btn-secondary lg:px-5">
                       Unarchived
                     </Button>
                     {/* </Link> */}
@@ -99,7 +141,7 @@ const ArchivedJobs = () => {
             </Card>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

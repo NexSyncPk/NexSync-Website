@@ -16,8 +16,11 @@ export const JobCreationSchema = z.object({
     .min(1, { message: "Salary is required." })
     .regex(/^[1-9]\d*$/, {
       message: "Salary must be a whole number without leading zeros or decimal points.",
-    }),
-  requirements: z
-    .array(z.string().min(1))
-    .min(1, "At least one requirement is required"),
+    }),  requirements: z
+    .array(z.string().min(1, "Requirement cannot be empty"))
+    .min(1, "At least one requirement is required")
+    .refine(
+      (requirements) => requirements.every(req => req.trim().length > 0),
+      "All requirements must have content"
+    ),
 });

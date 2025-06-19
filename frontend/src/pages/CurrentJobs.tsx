@@ -1,40 +1,45 @@
 import { motion } from "framer-motion";
 import { Card, Button } from "../components";
-import { MapPin, DollarSign, Users } from "lucide-react";
-import { jobOpenings } from "../data/mockData";
+import { DollarSign, Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import CreatePostForm from "../components/utils/CreatePostForm";
 import type { Job } from "@/types";
 import { getJobs } from "@/api/services";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const CurrentJobs: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
   const [selectedPosition, setSelectedType] = useState<string>("all");
-
+  const { setIsFormOpen } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
-  // Simulating fetching jobs from an API
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Fetch jobs from API
   const fetchJobs = async () => {
-    const response = await getJobs();
-    if (response && response.data) {
-      console.log("Fetched jobs:", response.data);
-      setJobs(response.data);
-    } else {
-      console.error("Failed to fetch job postings");
+    try {
+      setIsLoading(true);
+      const response = await getJobs();
+      if (response && response.data) {
+        console.log("Fetched jobs:", response.data);
+        setJobs(response.data);
+      } else {
+        console.error("Failed to fetch job postings");
+        setJobs([]);
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setJobs([]);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchJobs();
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-      }
-    };
-    fetchData();
+    fetchJobs();
   }, []);
 
-  const filteredJobs = (jobs.length !== 0 ? jobs : jobs).filter((job: Job) => {
+  // Filter jobs based on selected criteria
+  const filteredJobs = jobs.filter((job: Job) => {
     const departmentMatch =
       selectedDomain === "all" || job.domain === selectedDomain;
     const typeMatch =
@@ -44,15 +49,18 @@ export const CurrentJobs: React.FC = () => {
 
   const domain = ["all", "development", "design", "marketing"];
   const position = ["all", "full-time", "intern", "contract"];
-
   const [form, setForm] = useState(false);
 
-  const user = "admin";
-
   return (
-    <section className="py-20 bg-background-ice ">
+    <section className=" py-20 bg-background-ice">
       <div className="absolute w-28 h-14 bg-red-200 top-14 right-2">
-        <Button className="w-full h-full" onClick={() => setForm(true)}>
+        <Button
+          className="w-full h-full"
+          onClick={() => {
+            setIsFormOpen(true);
+            setForm(true);
+          }}
+        >
           Create
         </Button>
       </div>
@@ -69,7 +77,6 @@ export const CurrentJobs: React.FC = () => {
             <h2 className="text-4xl lg:text-5xl font-bold text-secondary-navy mb-6 text-center">
               Open Positions
             </h2>
-
             {/* Filters */}
             <div className="flex flex-wrap gap-4 justify-center mb-8">
               <div className="space-x-2">
@@ -108,98 +115,109 @@ export const CurrentJobs: React.FC = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </div>{" "}
           </motion.div>
 
-          <div className="space-y-6">
-            {filteredJobs.map((job: Job, index: number) => (
-              <motion.div
-                key={job.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="hover:border-primary-blue hover:scale-[1.02] transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <h3 className="text-2xl font-semibold text-secondary-navy">
-                          {job.title}
-                        </h3>
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            job.position === "full-time"
-                              ? "bg-green-100 text-green-800"
-                              : job.position === "intern"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-purple-100 text-purple-800"
-                          }`}
-                        >
-                          {job.position.replace("-", " ").toUpperCase()}
-                        </span>
-                      </div>
-
-                      <p className="text-secondary-steel mb-4">
-                        {job.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-4 text-sm text-secondary-steel mb-4">
-                        <div className="flex items-center gap-1">
-                          <Users size={16} />
-                          {job.domain}
-                        </div>
-                        {job.salary && (
-                          <div className="flex items-center gap-1">
-                            <DollarSign size={16} />
-                            {job.salary}
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-blue"></div>
+              <span className="ml-3 text-lg text-secondary-steel">
+                Loading jobs...
+              </span>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-6">
+                {filteredJobs.map((job: Job, index: number) => (
+                  <motion.div
+                    key={job.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <Card className="hover:border-primary-blue hover:scale-[1.02] transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-4 mb-4">
+                            <h3 className="text-2xl font-semibold text-secondary-navy">
+                              {job.title}
+                            </h3>
+                            <span
+                              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                job.position === "full-time"
+                                  ? "bg-green-100 text-green-800"
+                                  : job.position === "intern"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : "bg-purple-100 text-purple-800"
+                              }`}
+                            >
+                              {job.position.replace("-", " ").toUpperCase()}
+                            </span>
                           </div>
-                        )}
+
+                          <p className="text-secondary-steel mb-4">
+                            {job.description}
+                          </p>
+
+                          <div className="flex flex-wrap gap-4 text-sm text-secondary-steel mb-4">
+                            <div className="flex items-center gap-1">
+                              <Users size={16} />
+                              {job.domain}
+                            </div>
+                            {job.salary && (
+                              <div className="flex items-center gap-1">
+                                <DollarSign size={16} />
+                                {job.salary}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="space-y-2">
+                            <h4 className="font-medium text-secondary-navy">
+                              Requirements:
+                            </h4>
+                            <ul className="list-disc list-inside text-secondary-steel space-y-1">
+                              {job?.requirements?.map((req, idx) => (
+                                <li key={idx}>{req}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="mt-6 lg:mt-0 lg:ml-8 flex flex-col lg:flex-row gap-4">
+                          <Button className="w-full lg:w-auto">Archived</Button>
+                          <Button className="w-full lg:w-auto bg-red-500">
+                            Delete
+                          </Button>
+                        </div>{" "}
                       </div>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
 
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-secondary-navy">
-                          Requirements:
-                        </h4>
-                        <ul className="list-disc list-inside text-secondary-steel space-y-1">
-                          {job?.requirements?.map((req, idx) => (
-                            <li key={idx}>{req}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 lg:mt-0 lg:ml-8 flex flex-col lg:flex-row gap-4">
-                      <Button className="w-full lg:w-auto">Archived</Button>
-                      <Button className="w-full lg:w-auto bg-red-500">
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {filteredJobs.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center py-12"
-            >
-              <p className="text-xl text-secondary-steel">
-                No positions match your current filters. Try adjusting your
-                search criteria.
-              </p>
-            </motion.div>
+              {!isLoading && filteredJobs.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="text-center py-12"
+                >
+                  <p className="text-xl text-secondary-steel">
+                    No positions match your current filters. Try adjusting your
+                    search criteria.
+                  </p>
+                </motion.div>
+              )}
+            </>
           )}
         </div>
       </section>
       {form && (
         <div className="absolute top-0 left-0 w-full h-full bg-black/50 z-20">
-          <CreatePostForm setForm={setForm} />
+          <CreatePostForm setForm={setForm} fetchJobs={fetchJobs} />
         </div>
       )}
     </section>

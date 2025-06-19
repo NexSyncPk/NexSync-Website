@@ -31,7 +31,7 @@ export const updateFindUsData = "findUsSection/update";
 
 // Job Posting Section endpoints (matches backend /jobPosting routes)
 export const getJobPostings = "jobPosting/";
-export const createJobPosting = "jobPosting/create";
+export const createJobPosting = "jobPosting/";
 export const updateJobPosting = "jobPosting/update";
 export const deleteJobPosting = "jobPosting/delete";
 export const getJobPostingById = "jobPosting/get";
