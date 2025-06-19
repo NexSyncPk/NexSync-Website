@@ -10,7 +10,7 @@ router.post(
 );
 
 router.get("/", JobPostingSectionController.getAllJobPostings);
-
+router.get("/archive", JobPostingSectionController.getArchivedJobs);
 router.get("/:id", JobPostingSectionController.getJobPostingById);
 
 router.put(
@@ -24,9 +24,11 @@ router.delete(
   authenticateAdmin,
   JobPostingSectionController.deleteJobPosting
 );
+
 router.put(
   "/archive",
   authenticateAdmin,
   JobPostingSectionController.archiveJobPosting
 );
+
 module.exports = router;
