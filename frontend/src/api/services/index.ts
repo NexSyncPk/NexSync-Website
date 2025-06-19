@@ -17,5 +17,5 @@ export {
   toggleJobArchive,
   getAllJobApplications,
   downloadResume,
-  deleteJobAppliation
+  deleteJobApp
 } from "./userService";

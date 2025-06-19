@@ -9,8 +9,12 @@ class JobApplicationsRepo extends BaseRepo {
 
   async createJobApplication(data) {
     return await this.create(data);
-  }  async getAllJobApplications() {
+  }  
+  async getAllJobApplications() {
     const applications = await this.model.findAll({
+      where: {
+        isDeleted: false,
+      },
       include: [
         {
           model: db.JobPostingSection,

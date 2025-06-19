@@ -205,9 +205,9 @@ export const downloadResume = async (filename: string, applicantName: string) =>
     }
 };
 
-export const deleteJobAppliation = async (id:string, type: "soft" | "hard" = "soft")=>{
+export const deleteJobApp = async (id:string, type: "soft" | "hard" = "soft")=>{
     try{
-        const response =  await api.delete(`${deleteJobApplication}/?id=${id}&&type=${type}`);
+        const response =  await api.delete(`${deleteJobApplication}/?id=${id}&type=${type}`);
         return response;
     }catch(error){
         console.log("Error in deleting job application", error)

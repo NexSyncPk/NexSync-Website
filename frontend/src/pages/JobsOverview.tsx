@@ -1,4 +1,5 @@
-import { getAllJobApplications } from "@/api/services";
+import { deleteJobApp, getAllJobApplications } from "@/api/services";
+import { ConfirmationModal } from "@/components";
 import {
   User,
   Mail,
@@ -13,6 +14,7 @@ import {
   Download,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 // Types based on the migration schema
 interface JobApplication {
@@ -194,6 +196,14 @@ const JobsOverview = () => {
   };
   const [JobApplications, setJobApplications] = useState(mockJobApplications);
 
+  // Delete modal state management
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [applicationToDelete, setApplicationToDelete] =
+    useState<JobApplication | null>(null);
+  const [deletingApplicationId, setDeletingApplicationId] = useState<
+    number | null
+  >(null);
+
   const fetchJobApplications = async () => {
     try {
       const response = await getAllJobApplications();
@@ -235,7 +245,6 @@ const JobsOverview = () => {
   useEffect(() => {
     fetchJobApplications();
   }, []);
-
   const formatSalary = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -245,9 +254,54 @@ const JobsOverview = () => {
     }).format(amount);
   };
 
-  // const handleRemoveApplication = async (id:string)=>{
+  // Handle delete modal
+  const handleDeleteClick = (application: JobApplication) => {
+    setApplicationToDelete(application);
+    setShowDeleteModal(true);
+  };
 
-  // }
+  const handleDeleteConfirm = async () => {
+    if (!applicationToDelete) return;
+
+    if (deletingApplicationId === applicationToDelete.id) return; // Prevent multiple clicks
+
+    setDeletingApplicationId(applicationToDelete.id);
+    try {
+      // Call API to delete job application
+      const response = await deleteJobApp(
+        applicationToDelete.id.toString(),
+        "soft"
+      );
+      if (response && response.status) {
+        console.log("Job Application deleted successfully:", response.data);
+        toast.success("Job Application deleted successfully");
+        // Refresh applications list after deletion
+        await fetchJobApplications();
+        setShowDeleteModal(false);
+        setApplicationToDelete(null);
+      } else {
+        throw new Error("Failed to delete application");
+      }
+    } catch (error) {
+      console.error("Error deleting job application:", error);
+      toast.error("Failed to delete job application");
+    } finally {
+      setDeletingApplicationId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setApplicationToDelete(null);
+  };
+
+  // Legacy function for backward compatibility (should be replaced with handleDeleteClick)
+  const handleRemoveApplication = (id: number) => {
+    const application = JobApplications.find((app) => app.id === id);
+    if (application) {
+      handleDeleteClick(application);
+    }
+  };
 
   return (
     <div className="py-10 bg-background-ice mt-10">
@@ -337,7 +391,6 @@ const JobsOverview = () => {
             </div>
           </div>
         </div>
-
         {/* Applications Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {JobApplications.map((application) => (
@@ -526,7 +579,10 @@ const JobsOverview = () => {
               <div className="bg-gray-50 px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-3">
-                    <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                    <button
+                      onClick={() => handleRemoveApplication(application?.id)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
+                    >
                       Remove Application
                     </button>
                     {/* <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
@@ -541,10 +597,22 @@ const JobsOverview = () => {
               </div>
             </div>
           ))}
-        </div>
-
+        </div>{" "}
         {/* Summary Cards */}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Job Application"
+        message={`Are you sure you want to delete the job application from "${applicationToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deletingApplicationId === applicationToDelete?.id}
+        variant="danger"
+      />
     </div>
   );
 };
