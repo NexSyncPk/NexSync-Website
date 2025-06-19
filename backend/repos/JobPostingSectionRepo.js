@@ -11,7 +11,9 @@ class JobPostingSectionRepo extends BaseRepo {
   }
 
   async getAllJobPostings(options) {
-    return await this.findAll(options);
+    return await this.findAll({
+      where: {isDeleted: false, isArchived: false}
+    });
   }
 
   async getJobPostingById(id) {
@@ -25,8 +27,20 @@ class JobPostingSectionRepo extends BaseRepo {
   async deleteJobPosting(id, type) {
     return await this.delete(id, type);
   }
-  async toggleArchive(id, isArchived) {
-    return this.model.update({ isArchived }, { where: { id } });
+  async toggleArchive(id) {
+    const job = await this.model.findOne({ where: { id } });
+    if (!job) return null;
+
+    const newStatus = !job.isArchived;
+    await this.model.update({ isArchived: newStatus }, { where: { id } });
+
+    return newStatus; // Optional: return new state if needed
+  }
+  async getArchivedJobs() {
+    return  this.model.findAll({
+      where: { isArchived: true, isDeleted: false },
+            order: [["updatedAt", "DESC"]],
+    });
   }
 }
 module.exports = new JobPostingSectionRepo();

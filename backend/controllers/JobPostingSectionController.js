@@ -133,14 +133,9 @@ class JobPostingSectionController extends BaseController {
   };
   archiveJobPosting = async (req, res) => {
     const { id } = req.query;
-    const { archived } = req.body;
-    console.log("DEBUG BODY >>>", req.body); // add this line
 
-    if (archived === undefined) {
-      return this.validationErrorResponse(
-        res,
-        "'archived' (true/false) is required in request body"
-      );
+    if (!id) {
+      return this.validationErrorResponse(res, "ID is required in query");
     }
 
     const target = await JobPostingSectionRepo.getJobPostingById(id);
@@ -148,12 +143,25 @@ class JobPostingSectionController extends BaseController {
       return this.errorResponse(res, "Job posting not found", 400);
     }
 
-    const updated = await JobPostingSectionRepo.toggleArchive(id, archived);
+    const newArchivedStatus = await JobPostingSectionRepo.toggleArchive(id);
 
     return this.successResponse(
       res,
       null,
-      `Job posting ${archived ? "archived" : "unarchived"} successfully`
+      `Job posting has been ${
+        newArchivedStatus ? "archived" : "unarchived"
+      } successfully`
+    );
+  };
+  getArchivedJobs = async (req, res) => {
+    const archivedJobs = await JobPostingSectionRepo.getArchivedJobs();
+    if (!archivedJobs || archivedJobs.length === 0) {
+      return this.errorResponse(res, "No archived jobs found");
+    }
+    return this.successResponse(
+      res,
+      archivedJobs,
+      "Archived jobs fetched successfully"
     );
   };
 }

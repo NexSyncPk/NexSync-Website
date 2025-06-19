@@ -32,16 +32,16 @@ export const updateFindUsData = "findUsSection/update";
 // Job Posting Section endpoints (matches backend /jobPosting routes)
 export const getJobPostings = "jobPosting/";
 export const createJobPosting = "jobPosting/";
-export const updateJobPosting = "jobPosting/update";
-export const deleteJobPosting = "jobPosting/delete";
-export const getJobPostingById = "jobPosting/get";
+export const updateJobPosting = "jobPosting/"; // Will use PUT with ID in URL
+export const deleteJobPosting = "jobPosting/"; // Will use DELETE with ID in URL
+export const getJobPostingById = "jobPosting/"; // Will append ID
 export const archiveJobPosting = "jobPosting/archive";
 
 // Job Applications endpoints (matches backend /jobApplication routes)
 export const getJobApplications = "jobApplication/";
 export const createJobApplication = "jobApplication/";
 export const updateJobApplication = "jobApplication/update";
-export const deleteJobApplication = "jobApplication/delete";
+export const deleteJobApplication = "jobApplication/";
 export const getJobApplicationById = "jobApplication/get";
 export const getJobApplicationsByPosting = "jobApplication/by-posting";
 

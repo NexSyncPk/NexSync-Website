@@ -5,6 +5,8 @@ const {
 
 const JobApplicationsRepo = require("../repos/JobApplicationsRepo");
 const { Op } = require("sequelize");
+const path = require("path");
+const fs = require("fs");
 // const db = require("sequelize");
 const db = require("../models/index.js");
 const JobApplications = db.JobApplications;
@@ -128,6 +130,68 @@ class JobApplicationsController extends BaseController {
       null,
       `Job Application deleted successfully`
     );
+  };  // Download resume file
+  downloadResume = async (req, res) => {
+    try {
+      const { filename } = req.params;
+
+      // Security check: prevent directory traversal attacks
+      if (
+        filename.includes("..") ||
+        filename.includes("/") ||
+        filename.includes("\\")
+      ) {
+        return this.errorResponse(res, "Invalid filename", 400);
+      }
+
+      const filePath = path.join(__dirname, "../uploads/resumes", filename);
+
+      // Check if file exists
+      if (!fs.existsSync(filePath)) {
+        return this.errorResponse(res, "Resume file not found", 404);
+      }
+
+      // Get file extension to set proper Content-Type
+      const fileExtension = path.extname(filename).toLowerCase();
+      let contentType = "application/octet-stream"; // Default fallback
+      
+      switch (fileExtension) {
+        case ".pdf":
+          contentType = "application/pdf";
+          break;
+        case ".doc":
+          contentType = "application/msword";
+          break;
+        case ".docx":
+          contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+          break;
+        case ".txt":
+          contentType = "text/plain";
+          break;
+        default:
+          contentType = "application/octet-stream";
+      }
+
+      // Set proper headers for file download
+      res.setHeader("Content-Type", contentType);
+      res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Pragma", "no-cache");
+
+      // Send file
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          console.error("Error sending file:", err);
+          if (!res.headersSent) {
+            return this.errorResponse(res, "Error downloading resume", 500);
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error downloading resume:", error);
+      return this.errorResponse(res, "Error downloading resume", 500);
+    }
   };
 }
+
 module.exports = new JobApplicationsController();

@@ -10,7 +10,7 @@ router.post(
 );
 
 router.get("/", JobPostingSectionController.getAllJobPostings);
-
+router.get("/archive", JobPostingSectionController.getArchivedJobs);
 router.get("/:id", JobPostingSectionController.getJobPostingById);
 
 router.put(

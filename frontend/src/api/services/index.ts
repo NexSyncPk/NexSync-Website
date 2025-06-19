@@ -11,5 +11,11 @@ export {
  getFindUs,
   getJobs,
   applyForJob,
-  createJob
+  createJob,
+  getArchivedJobs,
+  deleteJobById,
+  toggleJobArchive,
+  getAllJobApplications,
+  downloadResume,
+  deleteJobAppliation
 } from "./userService";

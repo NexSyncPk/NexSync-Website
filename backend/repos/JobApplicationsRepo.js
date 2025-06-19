@@ -9,9 +9,31 @@ class JobApplicationsRepo extends BaseRepo {
 
   async createJobApplication(data) {
     return await this.create(data);
-  }
-  async getAllJobApplications() {
-    return await this.findAll();
+  }  async getAllJobApplications() {
+    const applications = await this.model.findAll({
+      include: [
+        {
+          model: db.JobPostingSection,
+          as: "jobPosting",
+          attributes: ["id", "title", "position", "description", "jobType", "domain", "salary"],
+        },
+      ],
+    });
+
+    // Add download URL for resumes
+    return applications.map(application => {
+      const appData = application.toJSON();
+      
+      // Extract filename from resume path and create download URL
+      if (appData.resume) {
+        const filename = appData.resume.split('/').pop(); // Get filename from path
+        // Provide both download API and direct static file access
+        appData.resumeDownloadUrl = `/api/jobApplication/download/resume/${filename}`; // API route
+        appData.resumeDirectUrl = `/uploads/resumes/${filename}`; // Direct static file access
+      }
+      
+      return appData;
+    });
   }
 
   async getJobApplicationById(id) {

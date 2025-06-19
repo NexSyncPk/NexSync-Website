@@ -1,3 +1,4 @@
+import { getAllJobApplications } from "@/api/services";
 import {
   User,
   Mail,
@@ -11,6 +12,7 @@ import {
   Clock,
   Download,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 // Types based on the migration schema
 interface JobApplication {
@@ -23,6 +25,8 @@ interface JobApplication {
   yearOfPassing: number;
   address: string;
   resume: string;
+  resumeDownloadUrl?: string; // API download URL
+  resumeDirectUrl?: string; // Direct static file URL
   availability: "remote" | "hybrid" | "onsite";
   jobPostingsId: number;
   jobPosting: {
@@ -188,6 +192,49 @@ const JobsOverview = () => {
       minute: "2-digit",
     });
   };
+  const [JobApplications, setJobApplications] = useState(mockJobApplications);
+
+  const fetchJobApplications = async () => {
+    try {
+      const response = await getAllJobApplications();
+      if (response && response.data) {
+        console.log("Job Applications fetched successfully:", response.data);
+        setJobApplications(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching job applications:", error);
+    }
+  };
+
+  // Function to handle resume download
+  const handleResumeDownload = (application: JobApplication) => {
+    const baseUrl = "http://localhost:3000";
+    const downloadUrl =
+      application.resumeDirectUrl || application.resumeDownloadUrl;
+
+    if (!downloadUrl) {
+      alert("Resume not available for download");
+      return;
+    }
+
+    const fileExtension = application.resume.split(".").pop() || "pdf";
+    const cleanName = application.name
+      .replace(/[^a-zA-Z0-9\s]/g, "_")
+      .replace(/\s+/g, "_");
+    const downloadFilename = `${cleanName}_resume.${fileExtension}`;
+
+    const link = document.createElement("a");
+    link.href = `${baseUrl}${downloadUrl}`;
+    link.download = downloadFilename;
+    link.target = "_blank";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  useEffect(() => {
+    fetchJobApplications();
+  }, []);
 
   const formatSalary = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -197,6 +244,10 @@ const JobsOverview = () => {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
+  // const handleRemoveApplication = async (id:string)=>{
+
+  // }
 
   return (
     <div className="py-10 bg-background-ice mt-10">
@@ -211,7 +262,7 @@ const JobsOverview = () => {
             various positions
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
+          <div className="grid grid-cols-2 md:grid-cols-2 max-sm:grid-cols-1 gap-6 mt-12 place-items-center">
             <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-primary-blue/10 rounded-lg flex items-center justify-center">
@@ -219,7 +270,7 @@ const JobsOverview = () => {
                 </div>
                 <div className="ml-4">
                   <p className="text-2xl font-bold text-secondary-navy">
-                    {mockJobApplications.length}
+                    {JobApplications.length}
                   </p>
                   <p className="text-sm text-secondary-steel">
                     Total Applications
@@ -235,7 +286,7 @@ const JobsOverview = () => {
                 </div>
                 <div className="ml-4">
                   <p className="text-2xl font-bold text-secondary-navy">
-                    {mockJobApplications.filter((app) => !app.isDeleted).length}
+                    {JobApplications.filter((app) => !app.isDeleted).length}
                   </p>
                   <p className="text-sm text-secondary-steel">
                     Active Applications
@@ -252,7 +303,7 @@ const JobsOverview = () => {
                 <div className="ml-4">
                   <p className="text-2xl font-bold text-secondary-navy">
                     {
-                      mockJobApplications.filter(
+                      JobApplications.filter(
                         (app) => app.availability === "remote"
                       ).length
                     }
@@ -272,10 +323,10 @@ const JobsOverview = () => {
                 <div className="ml-4">
                   <p className="text-2xl font-bold text-secondary-navy">
                     {formatSalary(
-                      mockJobApplications.reduce(
+                      JobApplications.reduce(
                         (avg, app) => avg + app.expectedSalary,
                         0
-                      ) / mockJobApplications.length
+                      ) / JobApplications.length
                     )}
                   </p>
                   <p className="text-sm text-secondary-steel">
@@ -289,7 +340,7 @@ const JobsOverview = () => {
 
         {/* Applications Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {mockJobApplications.map((application) => (
+          {JobApplications.map((application) => (
             <div
               key={application.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
@@ -353,7 +404,7 @@ const JobsOverview = () => {
                       {application.email}
                     </span>
                   </div>
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center justify-end text-gray-600">
                     <Phone className="w-4 h-4 mr-3 text-primary-blue" />
                     <span className="text-sm">{application.phoneNumber}</span>
                   </div>
@@ -376,7 +427,7 @@ const JobsOverview = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center text-gray-600">
+                  <div className="flex items-center justify-end text-gray-600">
                     <DollarSign className="w-4 h-4 mr-3 text-secondary-teal" />
                     <div>
                       <p className="text-sm font-medium">
@@ -389,7 +440,7 @@ const JobsOverview = () => {
 
                 {/* Salary Comparison */}
                 <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex max-sm:flex-col max-sm:items-start max-sm:gap-y-2 items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-700">
                         Salary Comparison
@@ -409,7 +460,7 @@ const JobsOverview = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="max-sm:text-left text-right">
                       <p className="text-xs text-gray-500">Difference</p>
                       <p
                         className={`text-sm font-semibold ${
@@ -433,7 +484,7 @@ const JobsOverview = () => {
                 </div>
 
                 {/* Resume & Application Date */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-6 max-sm:flex-col max-sm:items-start max-sm:gap-y-2">
                   <div className="flex items-center text-gray-600">
                     <FileText className="w-4 h-4 mr-3 text-primary-orange" />
                     <div>
@@ -442,8 +493,15 @@ const JobsOverview = () => {
                       </p>
                       <p className="text-xs text-gray-500">Resume</p>
                     </div>
-                  </div>
-                  <button className="flex items-center text-primary-blue hover:text-primary-blue/80 transition-colors">
+                  </div>{" "}
+                  <button
+                    onClick={() => handleResumeDownload(application)}
+                    className="flex items-center text-primary-blue hover:text-primary-blue/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={
+                      !application.resumeDownloadUrl &&
+                      !application.resumeDirectUrl
+                    }
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     <span className="text-sm font-medium">Download</span>
                   </button>

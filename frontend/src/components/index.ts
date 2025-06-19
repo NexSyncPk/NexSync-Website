@@ -1,4 +1,4 @@
-export { Button, Card } from "./ui/index.tsx";
+export { Button, Card, ConfirmationModal } from "./ui/index.tsx";
 export { Navigation } from "./Navigation";
 export { Footer } from "./Footer";
 export { HeroSection } from "./sections/HeroSection";

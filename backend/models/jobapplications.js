@@ -40,9 +40,12 @@ module.exports = (sequelize, DataTypes) => {
       address: {
         type: DataTypes.TEXT,
         allowNull: true, // optional
-      },
-      resume: {
+      },      resume: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      availability: {
+        type: DataTypes.ENUM("remote", "hybrid", "onsite"),
         allowNull: false,
       },
       isDeleted: {

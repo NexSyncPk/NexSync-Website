@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { Card, Button } from "../components";
+import { Card, Button, ConfirmationModal } from "../components";
 import { DollarSign, Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import CreatePostForm from "../components/utils/CreatePostForm";
 import type { Job } from "@/types";
-import { getJobs } from "@/api/services";
+import { deleteJobById, getJobs, toggleJobArchive } from "@/api/services";
 import { useAuth } from "@/contexts/AuthContext";
+import toast from "react-hot-toast";
 
 export const CurrentJobs: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
@@ -46,10 +47,61 @@ export const CurrentJobs: React.FC = () => {
       selectedPosition === "all" || job.position === selectedPosition;
     return departmentMatch && typeMatch;
   });
-
   const domain = ["all", "development", "design", "marketing"];
   const position = ["all", "full-time", "intern", "contract"];
   const [form, setForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
+  const [deletingJobId, setDeletingJobId] = useState<number | null>(null);
+
+  // Handle delete modal
+  const handleDeleteClick = (job: Job) => {
+    setJobToDelete(job);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!jobToDelete) return;
+
+    if (deletingJobId === jobToDelete.id) return; // Prevent multiple clicks
+
+    setDeletingJobId(jobToDelete.id);
+    try {
+      // Call API to delete job by ID
+      await deleteJobById(jobToDelete.id.toString());
+      console.log("Job deleted successfully");
+      toast.success("Job deleted successfully");
+      // Refresh job list after deletion
+      await fetchJobs();
+      setShowDeleteModal(false);
+      setJobToDelete(null);
+    } catch (error) {
+      console.error("Error deleting job:", error);
+      toast.error("Failed to delete job");
+    } finally {
+      setDeletingJobId(null);
+    }
+  };
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setJobToDelete(null);
+  };
+
+  const handleToggleArchive = async (jobId: number) => {
+    try {
+      const response = await toggleJobArchive(jobId.toString());
+      if (response) {
+        console.log("Job archive status toggled successfully:", response);
+        // Refresh job list after toggling archive status
+        toast.success("Job archive status updated successfully");
+        fetchJobs();
+      } else {
+        console.error("Failed to toggle job archive status");
+      }
+    } catch (error) {
+      console.error("Error toggling job archive status:", error);
+    }
+  };
 
   return (
     <section className=" py-20 bg-background-ice">
@@ -186,9 +238,20 @@ export const CurrentJobs: React.FC = () => {
                           </div>
                         </div>
                         <div className="mt-6 lg:mt-0 lg:ml-8 flex flex-col lg:flex-row gap-4">
-                          <Button className="w-full lg:w-auto">Archived</Button>
-                          <Button className="w-full lg:w-auto bg-red-500">
-                            Delete
+                          <Button
+                            className="w-full lg:w-auto"
+                            onClick={() => handleToggleArchive(job?.id)}
+                          >
+                            Archived
+                          </Button>{" "}
+                          <Button
+                            className="w-full lg:w-auto bg-red-500 hover:bg-red-600"
+                            onClick={() => handleDeleteClick(job)}
+                            disabled={deletingJobId === job.id}
+                          >
+                            {deletingJobId === job.id
+                              ? "Deleting..."
+                              : "Delete"}
                           </Button>
                         </div>{" "}
                       </div>
@@ -214,12 +277,24 @@ export const CurrentJobs: React.FC = () => {
             </>
           )}
         </div>
-      </section>
+      </section>{" "}
       {form && (
         <div className="absolute top-0 left-0 w-full h-full bg-black/50 z-20">
           <CreatePostForm setForm={setForm} fetchJobs={fetchJobs} />
         </div>
       )}
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Job"
+        message={`Are you sure you want to delete the job "${jobToDelete?.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deletingJobId === jobToDelete?.id}
+        variant="danger"
+      />
     </section>
   );
 };
