@@ -1,4 +1,8 @@
-import { deleteJobApp, getAllJobApplications } from "@/api/services";
+import {
+  deleteJobApp,
+  getAllJobApplications,
+  handleResumeDownload,
+} from "@/api/services";
 import { ConfirmationModal } from "@/components";
 import {
   User,
@@ -15,185 +19,21 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  getAvailabilityBadge,
+  getEducationLabel,
+  getPositionBadge,
+  formatDate,
+  formatSalary,
+} from "@/components/utils/helpers";
+import type { JobApplication } from "@/types";
+import { mockJobApplications } from "@/data/mockData";
 
 // Types based on the migration schema
-interface JobApplication {
-  id: number;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  lastEducation: "intermediate" | "diploma" | "undergraduate" | "masters";
-  expectedSalary: number;
-  yearOfPassing: number;
-  address: string;
-  resume: string;
-  resumeDownloadUrl?: string; // API download URL
-  resumeDirectUrl?: string; // Direct static file URL
-  availability: "remote" | "hybrid" | "onsite";
-  jobPostingsId: number;
-  jobPosting: {
-    id: number;
-    title: string;
-    position: "full-time" | "part-time" | "intern" | "contract";
-    description: string;
-    jobType: "remote" | "hybrid" | "onsite";
-    domain: string;
-    salary: number;
-  };
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
 
 // Mock data for demonstration
-const mockJobApplications: JobApplication[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john.doe@email.com",
-    phoneNumber: "+1-234-567-8900",
-    lastEducation: "undergraduate",
-    expectedSalary: 75000,
-    yearOfPassing: 2023,
-    address: "123 Main St, New York, NY 10001",
-    resume: "john_doe_resume.pdf",
-    availability: "hybrid",
-    jobPostingsId: 1,
-    jobPosting: {
-      id: 1,
-      title: "Frontend Developer",
-      position: "full-time",
-      description: "Develop modern web applications using React and TypeScript",
-      jobType: "hybrid",
-      domain: "Web Development",
-      salary: 80000,
-    },
-    isDeleted: false,
-    createdAt: "2025-06-10T10:30:00Z",
-    updatedAt: "2025-06-10T10:30:00Z",
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    email: "sarah.johnson@email.com",
-    phoneNumber: "+1-555-123-4567",
-    lastEducation: "masters",
-    expectedSalary: 95000,
-    yearOfPassing: 2022,
-    address: "456 Oak Ave, San Francisco, CA 94102",
-    resume: "sarah_johnson_resume.pdf",
-    availability: "remote",
-    jobPostingsId: 2,
-    jobPosting: {
-      id: 2,
-      title: "UX/UI Designer",
-      position: "full-time",
-      description: "Design intuitive user interfaces and experiences",
-      jobType: "remote",
-      domain: "Design",
-      salary: 85000,
-    },
-    isDeleted: false,
-    createdAt: "2025-06-09T14:20:00Z",
-    updatedAt: "2025-06-09T14:20:00Z",
-  },
-  {
-    id: 3,
-    name: "Michael Chen",
-    email: "michael.chen@email.com",
-    phoneNumber: "+1-777-888-9999",
-    lastEducation: "undergraduate",
-    expectedSalary: 60000,
-    yearOfPassing: 2024,
-    address: "789 Pine St, Seattle, WA 98101",
-    resume: "michael_chen_resume.pdf",
-    availability: "onsite",
-    jobPostingsId: 3,
-    jobPosting: {
-      id: 3,
-      title: "Backend Developer Intern",
-      position: "intern",
-      description: "Learn and contribute to backend systems using Node.js",
-      jobType: "onsite",
-      domain: "Backend Development",
-      salary: 45000,
-    },
-    isDeleted: false,
-    createdAt: "2025-06-08T09:15:00Z",
-    updatedAt: "2025-06-08T09:15:00Z",
-  },
-  {
-    id: 4,
-    name: "Emily Rodriguez",
-    email: "emily.rodriguez@email.com",
-    phoneNumber: "+1-333-444-5555",
-    lastEducation: "diploma",
-    expectedSalary: 55000,
-    yearOfPassing: 2023,
-    address: "321 Elm St, Austin, TX 73301",
-    resume: "emily_rodriguez_resume.pdf",
-    availability: "hybrid",
-    jobPostingsId: 4,
-    jobPosting: {
-      id: 4,
-      title: "Digital Marketing Specialist",
-      position: "part-time",
-      description: "Manage digital marketing campaigns and social media",
-      jobType: "hybrid",
-      domain: "Marketing",
-      salary: 50000,
-    },
-    isDeleted: false,
-    createdAt: "2025-06-07T16:45:00Z",
-    updatedAt: "2025-06-07T16:45:00Z",
-  },
-];
 
 const JobsOverview = () => {
-  const getEducationLabel = (education: string) => {
-    const labels = {
-      intermediate: "Intermediate",
-      diploma: "Diploma",
-      undergraduate: "Bachelor's Degree",
-      masters: "Master's Degree",
-    };
-    return labels[education as keyof typeof labels] || education;
-  };
-
-  const getAvailabilityBadge = (availability: string) => {
-    const styles = {
-      remote: "bg-green-100 text-green-800 border-green-200",
-      hybrid: "bg-blue-100 text-blue-800 border-blue-200",
-      onsite: "bg-orange-100 text-orange-800 border-orange-200",
-    };
-    return (
-      styles[availability as keyof typeof styles] ||
-      "bg-gray-100 text-gray-800 border-gray-200"
-    );
-  };
-
-  const getPositionBadge = (position: string) => {
-    const styles = {
-      "full-time": "bg-purple-100 text-purple-800 border-purple-200",
-      "part-time": "bg-yellow-100 text-yellow-800 border-yellow-200",
-      intern: "bg-indigo-100 text-indigo-800 border-indigo-200",
-      contract: "bg-pink-100 text-pink-800 border-pink-200",
-    };
-    return (
-      styles[position as keyof typeof styles] ||
-      "bg-gray-100 text-gray-800 border-gray-200"
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
   const [JobApplications, setJobApplications] = useState(mockJobApplications);
 
   // Delete modal state management
@@ -217,42 +57,10 @@ const JobsOverview = () => {
   };
 
   // Function to handle resume download
-  const handleResumeDownload = (application: JobApplication) => {
-    const baseUrl = "http://localhost:3000";
-    const downloadUrl =
-      application.resumeDirectUrl || application.resumeDownloadUrl;
 
-    if (!downloadUrl) {
-      alert("Resume not available for download");
-      return;
-    }
-
-    const fileExtension = application.resume.split(".").pop() || "pdf";
-    const cleanName = application.name
-      .replace(/[^a-zA-Z0-9\s]/g, "_")
-      .replace(/\s+/g, "_");
-    const downloadFilename = `${cleanName}_resume.${fileExtension}`;
-
-    const link = document.createElement("a");
-    link.href = `${baseUrl}${downloadUrl}`;
-    link.download = downloadFilename;
-    link.target = "_blank";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
   useEffect(() => {
     fetchJobApplications();
   }, []);
-  const formatSalary = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "PKR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
 
   // Handle delete modal
   const handleDeleteClick = (application: JobApplication) => {

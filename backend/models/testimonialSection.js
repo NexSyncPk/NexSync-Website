@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
 
   TestimonialSection.init(
     {
+      pageId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,

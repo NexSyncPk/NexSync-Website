@@ -14,7 +14,7 @@ export const adminVerifyToken = "adminAuth/verify-token";
 
 // Hero Section endpoints (matches backend /heroSection routes)
 export const getHeroSection = "heroSection/";
-export const updateHeroSection = "heroSection/update";
+export const updateHeroSection = "heroSection/";
 export const createHeroSection = "heroSection/create";
 
 // Team Section endpoints (matches backend /teamSection routes)
@@ -47,9 +47,9 @@ export const getJobApplicationsByPosting = "jobApplication/by-posting";
 
 // Testimonial Section endpoints (matches backend /testimonialSection routes)
 export const getTestimonials = "testimonialSection/";
-export const createTestimonial = "testimonialSection/create";
-export const updateTestimonial = "testimonialSection/update";
-export const deleteTestimonial = "testimonialSection/delete";
+export const createTestimonial = "testimonialSection/";
+export const updateTestimonial = "testimonialSection/";
+export const deleteTestimonial = "testimonialSection/";
 export const getTestimonialById = "testimonialSection/get";
 
 // Analytics endpoints (for admin dashboard)

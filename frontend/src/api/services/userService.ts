@@ -58,7 +58,7 @@ import {
     getFindUsData
 } from "../endpoints";
 
-import { type IObjectProps } from "../../types/index";
+import { type IObjectProps, type JobApplication } from "../../types/index";
 import { ca } from "zod/v4/locales";
 
 export const getTeamSectionData = async ()=>{
@@ -208,6 +208,78 @@ export const downloadResume = async (filename: string, applicantName: string) =>
 export const deleteJobApp = async (id:string, type: "soft" | "hard" = "soft")=>{
     try{
         const response =  await api.delete(`${deleteJobApplication}/?id=${id}&type=${type}`);
+        return response;
+    }catch(error){
+        console.log("Error in deleting job application", error)
+        throw error;
+    }
+}
+
+export const handleResumeDownload = (application: JobApplication) => {
+    const baseUrl = "http://localhost:3000";
+    const downloadUrl =
+      application.resumeDirectUrl || application.resumeDownloadUrl;
+
+    if (!downloadUrl) {
+      alert("Resume not available for download");
+      return;
+    }
+
+    const fileExtension = application.resume.split(".").pop() || "pdf";
+    const cleanName = application.name
+      .replace(/[^a-zA-Z0-9\s]/g, "_")
+      .replace(/\s+/g, "_");
+    const downloadFilename = `${cleanName}_resume.${fileExtension}`;
+
+    const link = document.createElement("a");
+    link.href = `${baseUrl}${downloadUrl}`;
+    link.download = downloadFilename;
+    link.target = "_blank";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  export const updateHeroSectionDetails = async (data: FormData | IObjectProps, id?: number) => {
+    try {
+        // If data is FormData, use id parameter for URL, otherwise extract from data object
+        const heroId = id || (data as IObjectProps)?.id;
+        const response = await api.put(`${updateHeroSection}?id=${heroId}`, data);
+        return response;
+    } catch (error) {
+        console.error("Error updating hero section:", error);
+        return false;
+    }
+}
+
+
+export const addTestimonial = async (data: IObjectProps)=>{
+    try{
+        const response = await api.post(createTestimonial, data)
+    return response
+    }
+    catch(error){
+        console.error("Error in Creating Testimonial")
+        return false
+    }
+}
+
+export const updateTestimonialDetails = async(data: FormData | IObjectProps, id?: number)=>{
+    try {
+        // If data is FormData, use id parameter for URL, otherwise extract from data object
+        const testId = id || (data as IObjectProps)?.id;
+        const response = await api.put(`${updateTestimonial}?id=${testId}`, data);
+        return response;
+    } catch (error) {
+        console.error("Error updating testimonials:", error);
+        return false;
+    }
+}
+
+export const deleteTestimonialDetails = async(id?:number, type: "soft" | "hard" = "soft" )=>{
+    console.log("Deleting testimonial with ID:", id, "and type:", type);
+    try{
+        const response =  await api.delete(`${deleteTestimonial}/?id=${id}&type=${type}`);
         return response;
     }catch(error){
         console.log("Error in deleting job application", error)

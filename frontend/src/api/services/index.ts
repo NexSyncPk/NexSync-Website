@@ -17,5 +17,10 @@ export {
   toggleJobArchive,
   getAllJobApplications,
   downloadResume,
-  deleteJobApp
+  deleteJobApp,
+  handleResumeDownload,
+  updateHeroSectionDetails,
+  addTestimonial,
+  updateTestimonialDetails,
+  deleteTestimonialDetails
 } from "./userService";

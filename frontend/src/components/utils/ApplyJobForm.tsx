@@ -245,7 +245,7 @@ const ApplyJobForm: React.FC = () => {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="bachelors">Bachelors</SelectItem>
+                    <SelectItem value="undergraduate">Undergraduate</SelectItem>
                     <SelectItem value="masters">Masters</SelectItem>
                     <SelectItem value="diploma">Diploma</SelectItem>
                   </SelectContent>

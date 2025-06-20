@@ -1,58 +1,165 @@
 import { Edit, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getHeroSectionData, updateHeroSectionDetails } from "@/api/services";
 
 const HeroSection = () => {
   const [heroEdit, setHeroEdit] = useState(false);
-
-  // Hero Schema
+  const [previewImage, setPreviewImage] = useState<string | null>(null); // Hero Schema
   const heroSchema = z.object({
-    heroImage: z.string().url({ message: "Must be a valid URL" }),
-    projects: z.number().min(0, "Must be at least 0"),
-    clients: z.number().min(0, "Must be at least 0"),
-    satisfaction: z
+    id: z.number(), // Optional for new entries, required for updates
+    heroImage: z
+      .instanceof(File)
+      .refine((file) => file.size > 0, { message: "Image is required" })
+      .refine(
+        (file) => {
+          const validTypes = [
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/gif",
+            "image/webp",
+          ];
+          return validTypes.includes(file.type);
+        },
+        { message: "Only image files (JPEG, PNG, GIF, WebP) are allowed" }
+      )
+      .optional(), // Make it optional for updates
+    noOfProjects: z.number().min(0, "Must be at least 0"),
+    noOfClients: z.number().min(0, "Must be at least 0"),
+    satisfactionPercentage: z
       .number()
       .min(0, "Must be at least 0")
       .max(100, "Cannot exceed 100"),
   });
+  const [heroDetails, setHeroDetails] = useState<HeroFormValues | null>(null);
+  const fetchHeroDetails = async () => {
+    try {
+      // Replace this URL with your actual backend endpoint to fetch hero details
+      const response = await getHeroSectionData(); // Example ID
+      if (response && response.data) {
+        setHeroDetails(response.data);
+        console.log("Fetched Hero Details:", response.data);
+
+        // Update form values with fetched data
+        reset({
+          id: response.data.id,
+          noOfProjects: response.data.noOfProjects,
+          noOfClients: response.data.noOfClients,
+          satisfactionPercentage: response.data.satisfactionPercentage,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching hero details:", error);
+    }
+  };
+  useEffect(() => {
+    // Fetch hero details when the component mounts
+    fetchHeroDetails();
+  }, []);
 
   type HeroFormValues = z.infer<typeof heroSchema>;
-
   const {
     register: registerHero,
     handleSubmit: handleHeroSubmit,
     formState: { errors: errorsHero },
+    setValue,
+    reset,
   } = useForm<HeroFormValues>({
     resolver: zodResolver(heroSchema),
     defaultValues: {
-      heroImage: "/Hero.jpg",
-      projects: 50,
-      clients: 20,
-      satisfaction: 90,
+      id: 1,
+      noOfProjects: 50,
+      noOfClients: 20,
+      satisfactionPercentage: 90,
     },
   });
-
-  const onSubmitHero = (data: HeroFormValues) => {
+  const onSubmitHero = async (data: HeroFormValues) => {
     console.log("Hero Data Submitted:", data);
-    // Here you would call your HERO UPDATE API
-    setHeroEdit(false);
+
+    // Create FormData to handle file upload
+    const formData = new FormData();
+
+    // Only append the file if it exists and is not the placeholder
+    if (
+      data.heroImage &&
+      data.heroImage.size > 0 &&
+      data.heroImage.name !== ""
+    ) {
+      formData.append("heroImage", data.heroImage);
+    }
+
+    // Append other form fields
+    formData.append("noOfProjects", data.noOfProjects.toString());
+    formData.append("noOfClients", data.noOfClients.toString());
+    formData.append(
+      "satisfactionPercentage",
+      data.satisfactionPercentage.toString()
+    );
+
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+    try {
+      // Use the ID from the form data for the API call
+      const response = await updateHeroSectionDetails(formData, data.id);
+
+      if (response && response.data) {
+        console.log("Hero section updated successfully:", response);
+        // Refresh the hero details after successful update
+        await fetchHeroDetails();
+        handleEditToggle(false);
+      } else {
+        console.error("Failed to update hero section");
+      }
+    } catch (error) {
+      console.error("Error updating hero section:", error);
+    }
+  };
+
+  // Cleanup preview URL when component unmounts or edit mode changes
+  useEffect(() => {
+    return () => {
+      if (previewImage) {
+        URL.revokeObjectURL(previewImage);
+      }
+    };
+  }, [previewImage]);
+  // Reset preview when exiting edit mode
+  const handleEditToggle = (editMode: boolean) => {
+    setHeroEdit(editMode);
+
+    if (editMode && heroDetails) {
+      // Pre-populate form when entering edit mode
+      reset({
+        id: heroDetails.id,
+        noOfProjects: heroDetails.noOfProjects,
+        noOfClients: heroDetails.noOfClients,
+        satisfactionPercentage: heroDetails.satisfactionPercentage,
+      });
+    }
+
+    if (!editMode && previewImage) {
+      URL.revokeObjectURL(previewImage);
+      setPreviewImage(null);
+    }
   };
 
   return (
     <section className="w-full h-fit bg-white rounded-md shadow-lg mb-6">
       <div className="flex items-center justify-between p-4 border-b-2 border-slate-200">
-        <h1 className="text-2xl font-bold">Hero Section</h1>
+        <h1 className="text-2xl font-bold">Hero Section</h1>{" "}
         {!heroEdit ? (
           <Edit
             className="w-6 h-6 text-secondary-navy cursor-pointer"
-            onClick={() => setHeroEdit(true)}
+            onClick={() => handleEditToggle(true)}
           />
         ) : (
           <X
             className="w-6 h-6 text-secondary-navy cursor-pointer"
-            onClick={() => setHeroEdit(false)}
+            onClick={() => handleEditToggle(false)}
           />
         )}
       </div>
@@ -60,25 +167,35 @@ const HeroSection = () => {
       {!heroEdit ? (
         <div>
           <div className="w-full h-fit p-6 relative ">
-            <h2 className="text-2xl py-2 ">Hero Image</h2>
-            <img src="/Hero.jpg" alt="" className="w-11/12 mx-auto md:w-2/4" />
+            <h2 className="text-2xl py-2 ">Hero Image</h2>{" "}
+            <img
+              src={
+                heroDetails?.heroImage
+                  ? typeof heroDetails.heroImage === "string"
+                    ? heroDetails.heroImage
+                    : URL.createObjectURL(heroDetails.heroImage)
+                  : "Hero.jpg"
+              }
+              alt="Hero Image"
+              className="w-11/12 mx-auto md:w-2/4"
+            />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
             <div className="flex flex-col items-center ">
               <span className="text-3xl font-extrabold text-secondary-navy">
-                50+
+                {heroDetails?.noOfProjects || 50}+
               </span>
               <span className="mt-2 text-lg text-gray-600 ">Projects</span>
             </div>
             <div className="flex flex-col items-center ">
               <span className="text-3xl font-extrabold text-secondary-navy">
-                20+
+                {heroDetails?.noOfClients || 30}+
               </span>
               <span className="mt-2 text-lg text-gray-600">Clients</span>
             </div>
             <div className="flex flex-col items-center ">
               <span className="text-3xl font-extrabold text-secondary-navy">
-                90%
+                {heroDetails?.satisfactionPercentage || 90}%
               </span>
               <span className="mt-2 text-lg text-gray-600">Satisfaction</span>
             </div>
@@ -87,10 +204,27 @@ const HeroSection = () => {
       ) : (
         <div className="w-full h-fit p-6 relative ">
           <form onSubmit={handleHeroSubmit(onSubmitHero)} className="space-y-4">
+            {" "}
             <div>
               <label className="block font-semibold mb-1">
                 Hero Image Upload
               </label>
+              {/* Current Image Display */}
+              {heroDetails?.heroImage && !previewImage && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-2">Current Image:</p>
+                  <img
+                    src={
+                      typeof heroDetails.heroImage === "string"
+                        ? heroDetails.heroImage
+                        : URL.createObjectURL(heroDetails.heroImage)
+                    }
+                    alt="Current hero image"
+                    className="w-48 h-32 object-cover border rounded"
+                  />
+                </div>
+              )}
+
               <input
                 type="file"
                 accept="image/*"
@@ -98,16 +232,29 @@ const HeroSection = () => {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
+                    // Set the actual File object in react-hook-form
+                    setValue("heroImage", file, { shouldValidate: true });
+
+                    // Create preview URL
                     const url = URL.createObjectURL(file);
-                    // Set the value in react-hook-form
-                    // Since react-hook-form expects a string, we use setValue
-                    // @ts-ignore
-                    registerHero("heroImage").onChange({
-                      target: { name: "heroImage", value: url },
-                    });
+                    setPreviewImage(url);
                   }
                 }}
               />
+
+              {/* New Image Preview */}
+              {previewImage && (
+                <div className="mt-4">
+                  <p className="text-sm text-gray-600 mb-2">
+                    New Image Preview:
+                  </p>
+                  <img
+                    src={previewImage}
+                    alt="Hero image preview"
+                    className="w-48 h-32 object-cover border rounded"
+                  />
+                </div>
+              )}
 
               {errorsHero.heroImage && (
                 <span className="text-red-500 text-sm">
@@ -119,12 +266,13 @@ const HeroSection = () => {
               <label className="block font-semibold mb-1">Projects</label>
               <input
                 type="number"
-                {...registerHero("projects", { valueAsNumber: true })}
+                {...registerHero("noOfProjects", { valueAsNumber: true })}
+                defaultValue={heroDetails?.noOfProjects}
                 className="w-full border rounded px-3 py-2"
               />
-              {errorsHero.projects && (
+              {errorsHero.noOfProjects && (
                 <span className="text-red-500 text-sm">
-                  {errorsHero.projects.message}
+                  {errorsHero.noOfProjects.message}
                 </span>
               )}
             </div>
@@ -132,12 +280,13 @@ const HeroSection = () => {
               <label className="block font-semibold mb-1">Clients</label>
               <input
                 type="number"
-                {...registerHero("clients", { valueAsNumber: true })}
+                {...registerHero("noOfClients", { valueAsNumber: true })}
+                defaultValue={heroDetails?.noOfClients}
                 className="w-full border rounded px-3 py-2"
               />
-              {errorsHero.clients && (
+              {errorsHero.noOfClients && (
                 <span className="text-red-500 text-sm">
-                  {errorsHero.clients.message}
+                  {errorsHero.noOfClients.message}
                 </span>
               )}
             </div>
@@ -147,12 +296,15 @@ const HeroSection = () => {
               </label>
               <input
                 type="number"
-                {...registerHero("satisfaction", { valueAsNumber: true })}
+                {...registerHero("satisfactionPercentage", {
+                  valueAsNumber: true,
+                })}
+                defaultValue={heroDetails?.satisfactionPercentage}
                 className="w-full border rounded px-3 py-2"
               />
-              {errorsHero.satisfaction && (
+              {errorsHero.satisfactionPercentage && (
                 <span className="text-red-500 text-sm">
-                  {errorsHero.satisfaction.message}
+                  {errorsHero.satisfactionPercentage.message}
                 </span>
               )}
             </div>

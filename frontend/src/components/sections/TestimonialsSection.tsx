@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { fallbackTestimonials } from "../../data/mockData";
-import api from "@/api/interceptor";
 import { getTestimonialsData } from "@/api/services";
 import type { Testimonial } from "@/types";
 
 export const TestimonialsSection: React.FC = () => {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials, setTestimonials] =
+    useState<Testimonial[]>(fallbackTestimonials);
 
   const getTestimonials = async () => {
     try {

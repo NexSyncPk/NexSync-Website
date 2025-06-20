@@ -34,7 +34,7 @@ const AdminLayout = ({ children }: Props) => {
           <AppSidebar className="fixed " />
           <main className="bg-background-ice w-full h-full ">
             <div
-              className={`fixed w-full h-12 border-b-2 flex bg-white z-45 border-t ${
+              className={`fixed w-full h-12 border-b-2 flex bg-white z-50 border-t ${
                 isFormOpen &&
                 "bg-black/5 opacity-70 !text-white border-slate-600"
               }`}

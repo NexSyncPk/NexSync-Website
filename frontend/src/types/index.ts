@@ -93,14 +93,24 @@ export interface JobApplication {
   name: string;
   email: string;
   phoneNumber: string;
-  lastEducation: 'intermediate' | 'diploma' | 'undergraduate' | 'masters';
+  lastEducation: "intermediate" | "diploma" | "undergraduate" | "masters";
   expectedSalary: number;
   yearOfPassing: number;
   address: string;
   resume: string;
-  availability: 'remote' | 'hybrid' | 'onsite';
+  resumeDownloadUrl?: string; // API download URL
+  resumeDirectUrl?: string; // Direct static file URL
+  availability: "remote" | "hybrid" | "onsite";
   jobPostingsId: number;
-  jobPosting?: JobPosting;
+  jobPosting: {
+    id: number;
+    title: string;
+    position: "full-time" | "part-time" | "intern" | "contract";
+    description: string;
+    jobType: "remote" | "hybrid" | "onsite";
+    domain: string;
+    salary: number;
+  };
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
@@ -175,3 +185,5 @@ export interface Job {
   createdAt: Date;
   updatedAt: Date;
 }
+
+

@@ -24,6 +24,10 @@ class TestimonialSectionRepo extends BaseRepo {
   }
 
   async deleteTestimonial(id, type) {
+    if (type === "soft") {
+      // Soft delete
+      return await this.update({ isDeleted: true }, { id });
+    }
     return await this.delete({ id, type });
   }
 }

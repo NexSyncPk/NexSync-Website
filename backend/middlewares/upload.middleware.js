@@ -33,10 +33,28 @@ const resumeStorage = multer.diskStorage({
   },
 });
 
+// Hero Image Storage
+const heroImageStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/heroImages/"); // Folder for hero images
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      Date.now() +
+        "-" +
+        Math.round(Math.random() * 1e9) +
+        path.extname(file.originalname)
+    );
+  },
+});
+
 const uploadPicture = multer({ storage: pictureStorage });
 const uploadResume = multer({ storage: resumeStorage });
+const uploadHeroImage = multer({ storage: heroImageStorage });
 
 module.exports = {
   uploadPicture,
   uploadResume,
+  uploadHeroImage,
 };

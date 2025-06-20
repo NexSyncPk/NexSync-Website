@@ -1,8 +1,18 @@
 import { Delete, Edit, UserPlus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { fallbackTestimonials } from "@/data/mockData";
+import type { Testimonial } from "@/types";
+import {
+  addTestimonial,
+  deleteTestimonialDetails,
+  getTestimonialsData,
+  updateTestimonialDetails,
+} from "@/api/services";
+import toast from "react-hot-toast";
+import ConfirmationModal from "../../components/ui/ConfirmationModal";
 
 const TestimonialSection = () => {
   const [testimonialEdit, setTestimonialEdit] = useState(false);
@@ -10,13 +20,40 @@ const TestimonialSection = () => {
   const [editingTestimonialIndex, setEditingTestimonialIndex] = useState<
     number | null
   >(null);
+  const [testimonialId, setTestimonialId] = useState<number | null>(null);
+
+  // Delete modal state management
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [testimonialToDelete, setTestimonialToDelete] =
+    useState<Testimonial | null>(null);
+  const [deletingTestimonialId, setDeletingTestimonialId] = useState<
+    number | null
+  >(null);
+
+  const [testimonials, setTestimonials] =
+    useState<Testimonial[]>(fallbackTestimonials);
 
   // Testimonial Schema for both add and edit
+
+  const getTestimonials = async () => {
+    try {
+      const response = await getTestimonialsData();
+      if (response && response.data) {
+        setTestimonials(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching testimonials data:", error);
+    }
+  };
+
+  // Fetch testimonials on component mount
+  useEffect(() => {
+    getTestimonials();
+  }, []);
+
   const testimonialSchema = z.object({
     name: z.string().min(1, "Name is required"),
-    testimonial: z
-      .string()
-      .min(10, "Testimonial must be at least 10 characters"),
+    feedback: z.string().min(1, "Testimonial is required"),
     designation: z.string().min(1, "Designation is required"),
     company: z.string().min(1, "Company is required"),
   });
@@ -33,7 +70,7 @@ const TestimonialSection = () => {
     resolver: zodResolver(testimonialSchema),
     defaultValues: {
       name: "",
-      testimonial: "",
+      feedback: "",
       designation: "",
       company: "",
     },
@@ -50,39 +87,62 @@ const TestimonialSection = () => {
     resolver: zodResolver(testimonialSchema),
     defaultValues: {
       name: "",
-      testimonial: "",
+      feedback: "",
       designation: "",
       company: "",
     },
   });
 
-  const onSubmitTestimonialAdd = (data: TestimonialFormValues) => {
+  const onSubmitTestimonialAdd = async (data: TestimonialFormValues) => {
     console.log("Testimonial Add Data Submitted:", data);
+    const updatedValues = {
+      ...data,
+      pageId: 1,
+    };
+
+    try {
+      const response = await addTestimonial(updatedValues);
+      if (response && response.data) {
+        getTestimonials();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     // Here you would call your ADD API
     resetAddForm();
     setTestimonialAdd(false);
   };
-
-  const onSubmitTestimonialEdit = (data: TestimonialFormValues) => {
+  const onSubmitTestimonialEdit = async (data: TestimonialFormValues) => {
     console.log(
       "Testimonial Edit Data Submitted:",
-      data,
       "Index:",
       editingTestimonialIndex
     );
+
     // Here you would call your EDIT API with editingTestimonialIndex
+    try {
+      const response = await updateTestimonialDetails(data, testimonialId!);
+      if (response && response.data) {
+        toast.success("Testimonial Updated Succesfully");
+        getTestimonials();
+      }
+    } catch (error) {
+      console.log(error);
+    }
     resetEditForm();
     setTestimonialEdit(false);
     setEditingTestimonialIndex(null);
   };
 
   const handleEditTestimonial = (index: number) => {
-    const testimonialToEdit = testimonial[index];
+    const testimonialToEdit = testimonials[index];
+    console.log("Editing Testimonial:", testimonialToEdit);
     setEditingTestimonialIndex(index);
 
     // Prepopulate the edit form with existing values
     setEditValue("name", testimonialToEdit.name);
-    setEditValue("testimonial", testimonialToEdit.testimonial);
+    setEditValue("feedback", testimonialToEdit.feedback);
     setEditValue("designation", testimonialToEdit.designation);
     setEditValue("company", testimonialToEdit.company);
 
@@ -93,36 +153,63 @@ const TestimonialSection = () => {
     resetAddForm(); // Ensure form is empty
     setTestimonialAdd(true);
   };
+  const handleDeleteTestimonial = async (id: number) => {
+    try {
+      console.log("Deleting Testimonial with ID:", id);
+      const response = await deleteTestimonialDetails(id, "soft");
+      if (response) {
+        toast.success("Testimonial Deleted Successfully");
+        getTestimonials();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const testimonial = [
-    {
-      name: "Jane Doe",
-      testimonial:
-        "Working with this team was a fantastic experience. Highly professional and always on time.",
-      designation: "Marketing Manager",
-      company: "CreativeCorp",
-    },
-    {
-      name: "John Smith",
-      testimonial:
-        "The results exceeded our expectations. Great communication and support throughout.",
-      designation: "CTO",
-      company: "TechWave",
-    },
-    {
-      name: "Alice Johnson",
-      testimonial:
-        "Exceptional quality and attention to detail. Will collaborate again!",
-      designation: "CEO",
-      company: "InnovateX",
-    },
-  ];
+  // Handle delete modal
+  const handleDeleteClick = (testimonial: Testimonial) => {
+    setTestimonialToDelete(testimonial);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!testimonialToDelete) return;
+
+    if (deletingTestimonialId === testimonialToDelete.id) return; // Prevent multiple clicks
+
+    setDeletingTestimonialId(testimonialToDelete.id);
+    try {
+      console.log("Deleting Testimonial with ID:", testimonialToDelete.id);
+      const response = await deleteTestimonialDetails(
+        testimonialToDelete.id,
+        "soft"
+      );
+      if (response) {
+        toast.success("Testimonial Deleted Successfully");
+        await getTestimonials();
+        setShowDeleteModal(false);
+        setTestimonialToDelete(null);
+      } else {
+        throw new Error("Failed to delete testimonial");
+      }
+    } catch (error) {
+      console.error("Error deleting testimonial:", error);
+      toast.error("Failed to delete testimonial");
+    } finally {
+      setDeletingTestimonialId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setTestimonialToDelete(null);
+  };
 
   return (
     <section className="w-full h-fit bg-white rounded-md shadow-lg mb-6">
       <div className="flex items-center justify-between p-4 border-b-2 border-slate-200">
         <h1 className="text-2xl font-bold">Testimonial Section</h1>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 ">
           {(testimonialEdit || testimonialAdd) && (
             <X
               className="w-6 h-6 text-secondary-navy cursor-pointer"
@@ -145,13 +232,13 @@ const TestimonialSection = () => {
       </div>
 
       {!testimonialEdit && !testimonialAdd ? (
-        testimonial.length === 0 ? (
+        testimonials.length === 0 ? (
           <div className="p-6 text-gray-500 italic">
             No testimonials to show. Click the plus icon to add one.
           </div>
         ) : (
-          <div className="p-6 space-y-4">
-            {testimonial.map((item, index) => (
+          <div className="p-6 space-y-4  h-96 overflow-auto">
+            {testimonials.map((item: Testimonial, index: number) => (
               <div
                 key={index}
                 className="border rounded p-4 shadow-sm hover:shadow-md transition-shadow flex justify-between items-center gap-x-4"
@@ -160,7 +247,7 @@ const TestimonialSection = () => {
                   <h3 className="text-lg font-semibold text-secondary-navy">
                     {item.name}
                   </h3>
-                  <p className="text-gray-600">{item.testimonial}</p>
+                  <p className="text-gray-600">{item.feedback}</p>
                   <p className="text-sm text-secondary-steel">
                     {item.designation}, {item.company}
                   </p>
@@ -168,14 +255,14 @@ const TestimonialSection = () => {
                 <div className="flex items-center space-x-2">
                   <Edit
                     className="w-6 h-6 text-secondary-navy cursor-pointer"
-                    onClick={() => handleEditTestimonial(index)}
-                  />
+                    onClick={() => {
+                      handleEditTestimonial(index),
+                        setTestimonialId(testimonials[index]?.id);
+                    }}
+                  />{" "}
                   <Delete
                     className="w-6 h-6 text-red-500 cursor-pointer ml-2"
-                    onClick={() => {
-                      // Handle delete logic here
-                      console.log("Delete testimonial:", item.name);
-                    }}
+                    onClick={() => handleDeleteClick(item)}
                   />
                 </div>
               </div>
@@ -207,13 +294,13 @@ const TestimonialSection = () => {
             <div>
               <label className="block font-semibold mb-1">Testimonial</label>
               <textarea
-                {...registerTestimonialEdit("testimonial")}
+                {...registerTestimonialEdit("feedback")}
                 className="w-full border rounded px-3 py-2 h-24"
                 rows={4}
               />
-              {errorsTestimonialEdit.testimonial && (
+              {errorsTestimonialEdit.feedback && (
                 <span className="text-red-500 text-sm">
-                  {errorsTestimonialEdit.testimonial.message}
+                  {errorsTestimonialEdit.feedback.message}
                 </span>
               )}
             </div>
@@ -274,15 +361,15 @@ const TestimonialSection = () => {
               )}
             </div>
             <div>
-              <label className="block font-semibold mb-1">Testimonial</label>
+              <label className="block font-semibold mb-1">Feedback</label>
               <textarea
-                {...registerTestimonialAdd("testimonial")}
+                {...registerTestimonialAdd("feedback")}
                 className="w-full border rounded px-3 py-2 h-24"
                 rows={4}
               />
-              {errorsTestimonialAdd.testimonial && (
+              {errorsTestimonialAdd.feedback && (
                 <span className="text-red-500 text-sm">
-                  {errorsTestimonialAdd.testimonial.message}
+                  {errorsTestimonialAdd.feedback.message}
                 </span>
               )}
             </div>
@@ -317,10 +404,23 @@ const TestimonialSection = () => {
               className="bg-secondary-navy text-white px-4 py-2 rounded hover:bg-secondary-navy/80"
             >
               Add Testimonial
-            </button>
+            </button>{" "}
           </form>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Testimonial"
+        message={`Are you sure you want to delete the testimonial from "${testimonialToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deletingTestimonialId === testimonialToDelete?.id}
+        variant="danger"
+      />
     </section>
   );
 };

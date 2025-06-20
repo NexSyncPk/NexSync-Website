@@ -55,9 +55,11 @@ class TestimonialSectionController extends BaseController {
     const where = {
       ...searchCondition,
       ...filterConditions,
+      isDeleted: false,
     };
     const testimonials = await TestimonialSectionRepo.getAllTestimonials({
       where,
+
       offset: parseInt(offset),
       limit: parseInt(limit),
       order: [[sortBy, sortOrder.toUpperCase()]],
@@ -102,6 +104,7 @@ class TestimonialSectionController extends BaseController {
 
   deleteTestimonial = async (req, res) => {
     const { id, type } = req.query;
+    console.log("ID: ",id, "Type: ", type);
     if (!id) {
       return this.errorResponse(res, "id is required", 400);
     }
@@ -112,12 +115,13 @@ class TestimonialSectionController extends BaseController {
       );
     }
 
-    const testimonial = await TestimonialSectionRepo.deleteTestimonial(id);
+    const testimonial = await TestimonialSectionRepo.getTestimonialById(id);
+    console.log(testimonial)
     if (!testimonial) {
       return this.errorResponse(res, "Testimonial not found", 400);
     }
 
-    await TestimonialSectionRepo.deletetestimonial(id, type || "soft");
+    await TestimonialSectionRepo.deleteTestimonial(id, type || "soft");
     return this.successResponse(res, null, `Testimonial deleted successfully`);
   };
 }

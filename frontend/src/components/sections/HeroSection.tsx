@@ -135,7 +135,7 @@ export const HeroSection: React.FC = () => {
                     </div>
                   </div> */}
                   <img
-                    src={"Hero.jpg"}
+                    src={heroSection?.heroImage || "Hero.jpg"}
                     alt=""
                     className="w-full h-full rounded-xl object-cover"
                   />

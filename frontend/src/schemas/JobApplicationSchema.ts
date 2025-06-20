@@ -19,7 +19,7 @@ export const JobApplicationSchema = z.object({
     })
     .optional(),
 
-  lastEducation: z.enum(["intermediate", "bachelors", "masters", "diploma"], {
+  lastEducation: z.enum(["intermediate", "undergraduate", "masters", "diploma"], {
     message: "Please select your last education level.",
   }),
 
