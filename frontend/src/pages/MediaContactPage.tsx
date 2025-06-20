@@ -1,18 +1,75 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit, Save, X, MapPin, Clock } from "lucide-react";
 import { Card } from "../components";
+import {
+  getFindUsSectionAddress,
+  getFindUsSectionBusinessHours,
+  updateFindUsSectionAddress,
+  updateFindUsSectionBusinessHours,
+} from "@/api/services";
+import toast from "react-hot-toast";
 
 const MediaContactPage = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [isEditingHours, setIsEditingHours] = useState(false);
+  const [findUsData, setFindUsData] = useState({
+    address: {
+      id: null,
+      address: "",
+      pageId: null,
+    },
+    businessHours: {
+      id: null,
+      startDay: "",
+      endDay: "",
+      startTime: "",
+      endTime: "",
+      pageId: null,
+    },
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
+  const getFindUs = async () => {
+    try {
+      setIsLoading(true);
+      const [addressResponse, businessHoursResponse] = await Promise.all([
+        getFindUsSectionAddress(),
+        getFindUsSectionBusinessHours(),
+      ]);
+
+      if (addressResponse && addressResponse.data) {
+        setFindUsData((prev) => ({
+          ...prev,
+          address: addressResponse.data,
+        }));
+      }
+
+      if (businessHoursResponse && businessHoursResponse.data) {
+        setFindUsData((prev) => ({
+          ...prev,
+          businessHours: businessHoursResponse.data,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching find us data:", error);
+      toast.error("Failed to fetch contact information");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch initial data when component mounts
+  useEffect(() => {
+    getFindUs();
+  }, []);
   // Schema for address form
   const addressSchema = z.object({
     address: z.string().min(1, "Address is required"),
   });
+
   // Schema for business hours form
   const businessHoursSchema = z.object({
     startDay: z.string().min(1, "Start day is required"),
@@ -23,17 +80,6 @@ const MediaContactPage = () => {
 
   type AddressFormValues = z.infer<typeof addressSchema>;
   type BusinessHoursFormValues = z.infer<typeof businessHoursSchema>;
-  // Current data (this would typically come from an API)
-  const [contactData, setContactData] = useState({
-    address: "National Incubation Center, NED University, Karachi, 75270",
-    businessHours: "Monday - Friday: 8:00 AM - 6:00 PM",
-    // Separate fields for editing
-    startDay: "Monday",
-    endDay: "Friday",
-    startTime: "08:00",
-    endTime: "18:00",
-  });
-
   // Address form
   const {
     register: registerAddress,
@@ -44,9 +90,10 @@ const MediaContactPage = () => {
   } = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      address: contactData.address,
+      address: "",
     },
   });
+
   // Business hours form
   const {
     register: registerHours,
@@ -57,20 +104,41 @@ const MediaContactPage = () => {
   } = useForm<BusinessHoursFormValues>({
     resolver: zodResolver(businessHoursSchema),
     defaultValues: {
-      startDay: contactData.startDay,
-      endDay: contactData.endDay,
-      startTime: contactData.startTime,
-      endTime: contactData.endTime,
+      startDay: "",
+      endDay: "",
+      startTime: "",
+      endTime: "",
     },
   });
+  const onSubmitAddress = async (data: AddressFormValues) => {
+    try {
+      setIsLoading(true);
+      const response = await updateFindUsSectionAddress(
+        data,
+        findUsData.address.id!
+      );
 
-  const onSubmitAddress = (data: AddressFormValues) => {
-    console.log("Address Update Data:", data);
-    // Here you would call your API to update address
-    setContactData((prev) => ({ ...prev, address: data.address }));
-    setIsEditingAddress(false);
+      if (response && response.data) {
+        toast.success("Address updated successfully");
+        setFindUsData((prev) => ({
+          ...prev,
+          address: response.data,
+        }));
+        setIsEditingAddress(false);
+        resetAddressForm();
+      } else {
+        throw new Error("Failed to update address");
+      }
+    } catch (error) {
+      console.error("Error updating address:", error);
+      toast.error("Failed to update address");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const convertTo12Hour = (time24: string) => {
+    if (!time24) return "";
     const [hours, minutes] = time24.split(":");
     const hour = parseInt(hours, 10);
     const ampm = hour >= 12 ? "PM" : "AM";
@@ -78,34 +146,42 @@ const MediaContactPage = () => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
-  const onSubmitHours = (data: BusinessHoursFormValues) => {
-    console.log("Business Hours Update Data:", data);
-    // Convert 24-hour time to 12-hour format and merge the separate fields
-    const startTime12 = convertTo12Hour(data.startTime);
-    const endTime12 = convertTo12Hour(data.endTime);
-    const mergedHours = `${data.startDay} - ${data.endDay}: ${startTime12} - ${endTime12}`;
+  const onSubmitHours = async (data: BusinessHoursFormValues) => {
+    try {
+      setIsLoading(true);
+      const response = await updateFindUsSectionBusinessHours(
+        data,
+        findUsData.businessHours.id!
+      );
 
-    // Here you would call your API to update business hours
-    setContactData((prev) => ({
-      ...prev,
-      businessHours: mergedHours,
-      startDay: data.startDay,
-      endDay: data.endDay,
-      startTime: data.startTime,
-      endTime: data.endTime,
-    }));
-    setIsEditingHours(false);
+      if (response && response.data) {
+        toast.success("Business hours updated successfully");
+        setFindUsData((prev) => ({
+          ...prev,
+          businessHours: response.data,
+        }));
+        setIsEditingHours(false);
+        resetHoursForm();
+      } else {
+        throw new Error("Failed to update business hours");
+      }
+    } catch (error) {
+      console.error("Error updating business hours:", error);
+      toast.error("Failed to update business hours");
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   const handleEditAddress = () => {
-    setAddressValue("address", contactData.address);
+    setAddressValue("address", findUsData.address.address);
     setIsEditingAddress(true);
   };
+
   const handleEditHours = () => {
-    setHoursValue("startDay", contactData.startDay);
-    setHoursValue("endDay", contactData.endDay);
-    setHoursValue("startTime", contactData.startTime);
-    setHoursValue("endTime", contactData.endTime);
+    setHoursValue("startDay", findUsData.businessHours.startDay);
+    setHoursValue("endDay", findUsData.businessHours.endDay);
+    setHoursValue("startTime", findUsData.businessHours.startTime);
+    setHoursValue("endTime", findUsData.businessHours.endTime);
     setIsEditingHours(true);
   };
 
@@ -149,9 +225,10 @@ const MediaContactPage = () => {
               <div>
                 <h4 className="font-semibold text-secondary-navy mb-2">
                   Address
-                </h4>
+                </h4>{" "}
                 <p className="text-secondary-steel text-lg">
-                  {contactData.address}
+                  {findUsData.address.address ||
+                    "No address available. Click edit to add one."}
                 </p>
               </div>
             ) : (
@@ -195,7 +272,6 @@ const MediaContactPage = () => {
             )}
           </div>
         </Card>
-
         {/* Business Hours Section */}
         <Card className="w-full bg-white rounded-md shadow-lg transition-all duration-300 ease-in-out">
           <div className="flex items-center justify-between p-4 border-b-2 border-slate-200">
@@ -224,9 +300,24 @@ const MediaContactPage = () => {
                 <div>
                   <h4 className="font-semibold text-secondary-navy mb-2">
                     Business Hours
-                  </h4>
+                  </h4>{" "}
                   <p className="text-secondary-steel text-lg">
-                    {contactData.businessHours}
+                    {findUsData.businessHours.startDay &&
+                    findUsData.businessHours.endDay
+                      ? `${findUsData.businessHours.startDay} - ${
+                          findUsData.businessHours.endDay
+                        }: ${
+                          findUsData.businessHours.startTime
+                            ? convertTo12Hour(
+                                findUsData.businessHours.startTime
+                              )
+                            : "Not set"
+                        } - ${
+                          findUsData.businessHours.endTime
+                            ? convertTo12Hour(findUsData.businessHours.endTime)
+                            : "Not set"
+                        }`
+                      : "No business hours available. Click edit to add them."}
                   </p>
                 </div>
               </div>
@@ -334,8 +425,7 @@ const MediaContactPage = () => {
               </form>
             )}
           </div>
-        </Card>
-
+        </Card>{" "}
         {/* Preview Section */}
         <Card className="w-full bg-white rounded-md shadow-lg transition-all duration-300 ease-in-out">
           <div className="p-4 border-b-2 border-slate-200">
@@ -347,20 +437,43 @@ const MediaContactPage = () => {
             </p>
           </div>
           <div className="p-6">
-            <div className="mt-6 space-y-4">
-              <div>
-                <h4 className="font-semibold text-secondary-navy">Address</h4>
-                <p className="text-secondary-steel">{contactData.address}</p>
-              </div>{" "}
-              <div>
-                <h4 className="font-semibold text-secondary-navy">
-                  Business Hours
-                </h4>
-                <p className="text-secondary-steel">
-                  {contactData.businessHours}
-                </p>
+            {isLoading ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-navy"></div>
               </div>
-            </div>
+            ) : (
+              <div className="mt-6 space-y-4">
+                <div>
+                  <h4 className="font-semibold text-secondary-navy">Address</h4>
+                  <p className="text-secondary-steel">
+                    {findUsData.address.address || "No address available"}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-secondary-navy">
+                    Business Hours
+                  </h4>
+                  <p className="text-secondary-steel">
+                    {findUsData.businessHours.startDay &&
+                    findUsData.businessHours.endDay
+                      ? `${findUsData.businessHours.startDay} - ${
+                          findUsData.businessHours.endDay
+                        }: ${
+                          findUsData.businessHours.startTime
+                            ? convertTo12Hour(
+                                findUsData.businessHours.startTime
+                              )
+                            : "Not set"
+                        } - ${
+                          findUsData.businessHours.endTime
+                            ? convertTo12Hour(findUsData.businessHours.endTime)
+                            : "Not set"
+                        }`
+                      : "No business hours available"}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
       </div>

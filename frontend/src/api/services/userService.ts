@@ -51,11 +51,14 @@ import {
     
     // Public endpoints
     getPublicJobs,
-    getPublicTestimonials,
-    getPublicTeam,
+    getPublicTestimonials,    getPublicTeam,
     getPublicHero,
     submitContactForm,
-    getFindUsData
+    getFindUsData,
+    getFindUsAddress,
+    getFindUsBusinessHours,
+    updateFindUsAddress,
+    updateFindUsBusinessHours
 } from "../endpoints";
 
 import { type IObjectProps, type JobApplication } from "../../types/index";
@@ -283,6 +286,74 @@ export const deleteTestimonialDetails = async(id?:number, type: "soft" | "hard" 
         return response;
     }catch(error){
         console.log("Error in deleting job application", error)
+        throw error;
+    }
+}
+
+export const getFindUsSectionAddress= async ()=>{
+    try {
+        const response = await api.get(getFindUsAddress);
+        return response;
+    } catch (error) {
+        console.error("Error fetching find us section data:", error);
+        return false;
+    }
+}
+export const getFindUsSectionBusinessHours = async ()=>{
+    try {
+        const response = await api.get(getFindUsBusinessHours);
+        return response;
+    } catch (error) {
+        console.error("Error fetching find us section data:", error);
+        return false;
+    }
+}
+export const updateFindUsSectionAddress = async (data: any, id: string | number) => {
+    try {
+        const response = await api.put(`${updateFindUsAddress}?id=${id}`, data);
+        return response;
+    } catch (error) {
+        console.error("Error updating find us section address:", error);
+        return false;
+    }
+}
+
+export const updateFindUsSectionBusinessHours = async (data: any, id: string | number) => {
+    try {
+        const response = await api.put(`${updateFindUsBusinessHours}?id=${id}`, data);
+        return response;
+    } catch (error) {
+        console.error("Error updating find us section business hours:", error);
+        return false;
+    }
+}
+
+export const createTeamsMember = async (data: IObjectProps) => {
+    try {
+        const response = await api.post(createTeamMember, data);
+        return response;
+    } catch (error) {
+        console.error("Error creating team member:", error);
+        return false;
+    }
+}
+
+export const updateTeamMemberDetails = async (id: number, data: FormData | IObjectProps) => {
+    try {
+        const response = await api.put(`${updateTeamMember}?id=${id}`, data);
+        return response;
+    } catch (error) {
+        console.error("Error updating team member:", error);
+        return false;
+    }
+}
+
+export const deleteTeamMemberDetails = async (id: number, type: "soft" | "hard" = "soft") => {
+    try {
+        const response = await api.delete(`${deleteTeamMember}/?id=${id}&type=${type}`);
+        return response;
+    } catch (error) {
+        console.error("Error deleting team member:", error);
         throw error;
     }
 }

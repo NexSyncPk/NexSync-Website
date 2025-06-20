@@ -19,13 +19,17 @@ export const createHeroSection = "heroSection/create";
 
 // Team Section endpoints (matches backend /teamSection routes)
 export const getTeamSection = "teamSection/";
-export const createTeamMember = "teamSection/create";
+export const createTeamMember = "teamSection/";
 export const updateTeamMember = "teamSection/update";
 export const deleteTeamMember = "teamSection/delete";
 export const getTeamMemberById = "teamSection/get";
 
 // Findus endpoints (matches backend /teamSection routes)
 export const getFindUsData = "findUsSection/";
+export const getFindUsAddress = "findUsSection/address";
+export const getFindUsBusinessHours = "findUsSection/business-hours";
+export const updateFindUsAddress = "findUsSection/address";
+export const updateFindUsBusinessHours = "findUsSection/business-hours";
 export const createFindUsData = "findUsSection/create";
 export const updateFindUsData = "findUsSection/update";
 

@@ -220,7 +220,7 @@ export const AboutPage: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="text-center transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl h-72">
+                  <Card className="text-center transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl h-80">
                     <div className="w-24 h-24 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full mx-auto mb-4 overflow-hidden">
                       <img
                         src={member.picture}
@@ -234,6 +234,7 @@ export const AboutPage: React.FC = () => {
                     <p className="text-secondary-steel mb-4">
                       {member.position}
                     </p>
+                    <p className="text-secondary-steel mb-4">{member.email}</p>
                     <p className="text-sm text-secondary-steel">
                       {member.description ||
                         "Passionate team member contributing to our success!"}

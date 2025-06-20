@@ -164,10 +164,10 @@ export interface FindUs {
   address: string;
   startDay: string;
   endDay: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: string | Date; // Can be either string (HH:MM) or Date
+  endTime: string | Date;   // Can be either string (HH:MM) or Date
   isDeleted: boolean;
-    createdAt: Date;
+  createdAt: Date;
   updatedAt: Date;
 }
 

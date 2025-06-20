@@ -153,19 +153,6 @@ const TestimonialSection = () => {
     resetAddForm(); // Ensure form is empty
     setTestimonialAdd(true);
   };
-  const handleDeleteTestimonial = async (id: number) => {
-    try {
-      console.log("Deleting Testimonial with ID:", id);
-      const response = await deleteTestimonialDetails(id, "soft");
-      if (response) {
-        toast.success("Testimonial Deleted Successfully");
-        getTestimonials();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // Handle delete modal
   const handleDeleteClick = (testimonial: Testimonial) => {
     setTestimonialToDelete(testimonial);

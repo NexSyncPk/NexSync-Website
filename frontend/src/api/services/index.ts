@@ -16,11 +16,17 @@ export {
   deleteJobById,
   toggleJobArchive,
   getAllJobApplications,
-  downloadResume,
-  deleteJobApp,
+  downloadResume,  deleteJobApp,
   handleResumeDownload,
   updateHeroSectionDetails,
   addTestimonial,
   updateTestimonialDetails,
-  deleteTestimonialDetails
+  deleteTestimonialDetails,
+  getFindUsSectionAddress,
+  getFindUsSectionBusinessHours,
+  updateFindUsSectionAddress,
+  updateFindUsSectionBusinessHours,
+  createTeamsMember,
+  updateTeamMemberDetails,
+  deleteTeamMemberDetails
 } from "./userService";

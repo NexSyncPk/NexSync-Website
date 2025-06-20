@@ -10,8 +10,7 @@ const { Op } = require("sequelize");
 class TeamSectionController extends BaseController {
   constructor() {
     super();
-  }
-  createTeamMember = async (req, res) => {
+  }  createTeamMember = async (req, res) => {
     if (!req.file) {
       return this.validationErrorResponse(res, "Picture is required");
     }
@@ -20,7 +19,8 @@ class TeamSectionController extends BaseController {
       return this.validationErrorResponse(res, validationResult.message);
     }
 
-    const picture = `/uploads/teamMembers/${req.file.filename}`;
+    // Store full URL instead of relative path
+    const picture = `${req.protocol}://${req.get('host')}/uploads/teamMembers/${req.file.filename}`;
     const teamMemberData = {
       ...req.body,
       pageId: parseInt(req.body.pageId),
@@ -71,11 +71,10 @@ class TeamSectionController extends BaseController {
 
     return this.successResponse(res, members, "Team members fetched");
   };
-
   getTeamMemberById = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.query;
     if (!id) {
-      return this.validationErrorResponse(res, "ID is required in params");
+      return this.validationErrorResponse(res, "ID is required in query");
     }
     const member = await TeamSectionRepo.getTeamMemberById(id);
     if (!member) {
@@ -83,7 +82,6 @@ class TeamSectionController extends BaseController {
     }
     return this.successResponse(res, member, "Team member fetched");
   };
-
   updateTeamMember = async (req, res) => {
     const { id } = req.query;
     if (!id) {
@@ -93,9 +91,13 @@ class TeamSectionController extends BaseController {
     const validationResult = validateUpdatedTeamMember(req.body);
     if (!validationResult.status) {
       return this.validationErrorResponse(res, validationResult.message);
+    }    // Handle picture upload if a new file is provided
+    let updateData = { ...req.body };
+    if (req.file) {
+      updateData.picture = `${req.protocol}://${req.get('host')}/uploads/teamMembers/${req.file.filename}`;
     }
 
-    await TeamSectionRepo.updateTeamMember(req.body, id);
+    await TeamSectionRepo.updateTeamMember(updateData, id);
     const updatedMember = await TeamSectionRepo.getTeamMemberById(id);
     return this.successResponse(
       res,

@@ -11,11 +11,22 @@ class TeamSectionRepo extends BaseRepo {
   async createTeamMember(data) {
     return this.create(data);
   }
-
-  async getAllTeamMembers() {
-    return this.findAll({
+  async getAllTeamMembers(options = {}) {
+    const defaultOptions = {
       where: { isDeleted: false },
-    });
+    };
+    
+    // Merge with provided options
+    const queryOptions = {
+      ...defaultOptions,
+      ...options,
+      where: {
+        ...defaultOptions.where,
+        ...options.where,
+      },
+    };
+    
+    return this.findAll(queryOptions);
   }
 
   async getTeamMemberById(id) {

@@ -8,15 +8,48 @@ import { getFindUsData } from "@/api/endpoints";
 
 export const ContactPage: React.FC = () => {
   const [findUsInfo, setFindUsInfo] = useState<FindUs>();
+  // Function to convert 24-hour time to 12-hour format with AM/PM
+  const convertTo12Hour = (time24: string | Date | undefined | null) => {
+    if (!time24) return "";
 
+    let timeString = "";
+    try {
+      if (time24 instanceof Date) {
+        timeString = time24.toTimeString().slice(0, 5); // Get HH:MM format
+      } else {
+        timeString = String(time24);
+      }
+
+      // Handle if timeString doesn't contain ":"
+      if (!timeString.includes(":")) {
+        return timeString; // Return as is if it's not a time format
+      }
+
+      const [hours, minutes] = timeString.split(":");
+      const hour = parseInt(hours, 10);
+
+      // Validate hour and minutes
+      if (isNaN(hour) || hour < 0 || hour > 23) {
+        return timeString; // Return original if invalid
+      }
+
+      const ampm = hour >= 12 ? "PM" : "AM";
+      const hour12 = hour % 12 || 12; // Convert 0 to 12 for midnight
+      return `${hour12}:${minutes} ${ampm}`;
+    } catch (error) {
+      console.warn("Error converting time:", error);
+      return String(time24); // Return original value if conversion fails
+    }
+  };
   const findUsData = async () => {
     try {
       const response = await getFindUs();
       if (response && response.data) {
+        console.log("FindUs API Response:", response.data); // Debug log
         setFindUsInfo(response.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching FindUs data:", error);
     }
   };
 
@@ -367,24 +400,12 @@ export const ContactPage: React.FC = () => {
                   <div>
                     <h4 className="font-semibold text-secondary-navy">
                       Business Hours
-                    </h4>
+                    </h4>{" "}
                     <p className="text-secondary-steel">
                       {findUsInfo?.startDay || "Monday"} -{" "}
                       {findUsInfo?.endDay || "Friday"}:{" "}
-                      {(findUsInfo?.startTime instanceof Date
-                        ? findUsInfo.startTime.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : findUsInfo?.startTime) || "9:00"}{" "}
-                      AM -{" "}
-                      {(findUsInfo?.endTime instanceof Date
-                        ? findUsInfo.endTime.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : findUsInfo?.endTime) || "6:00"}{" "}
-                      PM
+                      {convertTo12Hour(findUsInfo?.startTime) || "9:00 AM"} -{" "}
+                      {convertTo12Hour(findUsInfo?.endTime) || "6:00 PM"}
                     </p>
                     <p className="text-secondary-steel">
                       Weekend: By appointment
