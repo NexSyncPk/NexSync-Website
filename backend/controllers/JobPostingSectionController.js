@@ -163,6 +163,18 @@ class JobPostingSectionController extends BaseController {
       archivedJobs,
       "Archived jobs fetched successfully"
     );
+  };  getTotalJobPostings = async (req, res) => {
+    try {
+      const count = await JobPostingSectionRepo.getJobPostingsCount();
+      return this.successResponse(
+        res,
+        { count },
+        "Total job postings fetched successfully"
+      );
+    } catch (error) {
+      console.error("Error fetching total job postings:", error);
+      return this.errorResponse(res, "Error fetching total job postings", 500);
+    }
   };
 }
 

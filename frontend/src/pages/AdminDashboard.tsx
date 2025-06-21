@@ -1,96 +1,96 @@
 import { useAuth } from "../contexts/AuthContext";
 import {
   BarChart3,
-  Users,
   Briefcase,
-  FileText,
   TrendingUp,
-  Settings,
-  Bell,
-  Search,
   Calendar,
   Activity,
   Award,
-  Target,
   MessageSquare,
   Globe,
   ChevronRight,
-  Eye,
   Clock,
-  DollarSign,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { dashboardCards, quickStats, recentActivities } from "@/data/mockData";
+import { useState, useEffect } from "react";
+import {
+  getAllJobApplicationsCount,
+  getTotalActiveJobsCount,
+} from "../api/services/userService";
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  // Dashboard state
+  const [totalApplications, setTotalApplications] = useState(0);
+  const [activeJobs, setActiveJobs] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const dashboardCards = [
-    {
-      title: "Jobs Management",
-      description: "Manage job postings, applications, and recruitment process",
-      icon: Briefcase,
-      color: "bg-blue-500",
-      lightColor: "bg-blue-50",
-      textColor: "text-blue-600",
-      features: ["Current Jobs", "Archived Jobs", "Application Overview"],
-      route: "/JobsManagement/ApplicationOverview",
-    },
-    {
-      title: "Media Management",
-      description: "Control website content, images, and media assets",
-      icon: Globe,
-      color: "bg-purple-500",
-      lightColor: "bg-purple-50",
-      textColor: "text-purple-600",
-      features: ["Homepage Content", "About Page", "Contact Page"],
-      route: "/MediaManagement/HomePage",
-    },
-    {
-      title: "Analytics & Reports",
-      description: "Track performance metrics and generate insights",
-      icon: BarChart3,
-      color: "bg-green-500",
-      lightColor: "bg-green-50",
-      textColor: "text-green-600",
-      features: ["Traffic Analysis", "User Engagement", "Application Stats"],
-      route: "/Analytics/AppliedJobs",
-    },
-    {
-      title: "User Management",
-      description: "Manage admin users and access permissions",
-      icon: Users,
-      color: "bg-orange-500",
-      lightColor: "bg-orange-50",
-      textColor: "text-orange-600",
-      features: ["Admin Users", "Role Management", "Access Control"],
-      route: "/admin/users",
-    },
-  ];
+      // Use Promise.all to fetch all dashboard data concurrently
+      // This pattern allows you to add more API calls in the future easily
+      const [
+        applicationsCountResponse,
+        jobPostingsCountResponse,
+        // Future API calls can be added here:
+        // teamMembersCountResponse,
+        // testimonialsCountResponse,
+        // analyticsResponse,
+        // pageViewsResponse,
+        // userEngagementResponse,
+      ] = await Promise.all([
+        getAllJobApplicationsCount(),
+        getTotalActiveJobsCount(),
+        // Future function calls:
+        // getTeamMembersCount(),
+        // getTestimonialsCount(),
+        // getAnalyticsData(),
+        // getPageViewsCount(),
+        // getUserEngagementData(),
+      ]); // Update state with fetched data
+      if (applicationsCountResponse && applicationsCountResponse.data) {
+        console.log("Applications response:", applicationsCountResponse);
+        setTotalApplications(applicationsCountResponse.data.count || 0);
+      }
 
-  const quickStats = [
-    {
-      label: "Total Applications",
-      value: "247",
-      change: "+12%",
-      icon: FileText,
-    },
-    { label: "Active Jobs", value: "15", change: "+3", icon: Briefcase },
-    { label: "Page Views", value: "12.5K", change: "+18%", icon: Eye },
-    { label: "Response Rate", value: "85%", change: "+5%", icon: Target },
-  ];
+      if (jobPostingsCountResponse && jobPostingsCountResponse.data) {
+        console.log("Job postings response:", jobPostingsCountResponse);
+        setActiveJobs(jobPostingsCountResponse.data.count || 0);
+      }
 
-  const recentActivities = [
-    {
-      action: "New job application received",
-      time: "2 minutes ago",
-      type: "application",
-    },
-    { action: "Homepage content updated", time: "1 hour ago", type: "content" },
-    { action: "New job posting published", time: "3 hours ago", type: "job" },
-    { action: "Analytics report generated", time: "1 day ago", type: "report" },
-  ];
+      // Future API integrations can be added here:
+      // if (teamMembersCountResponse && teamMembersCountResponse.data) {
+      //   setTeamMembersCount(teamMembersCountResponse.data.count || 0);
+      // }
+
+      // if (testimonialsCountResponse && testimonialsCountResponse.data) {
+      //   setTestimonialsCount(testimonialsCountResponse.data.count || 0);
+      // }
+
+      // if (analyticsResponse && analyticsResponse.data) {
+      //   setAnalyticsData(analyticsResponse.data);
+      // }
+
+      console.log("Dashboard data fetched successfully");
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      setError("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch dashboard data on component mount
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 mt-10">
@@ -105,16 +105,31 @@ const AdminDashboard = () => {
               <p className="text-gray-600 mt-1">
                 Here's what's happening with your platform today
               </p>
-            </div>
+            </div>{" "}
             <div className="flex items-center gap-4">
-              {/* <Button
+              {error && (
+                <div className="text-sm text-red-600 bg-red-50 px-3 py-1 rounded-lg">
+                  {error}
+                  <button
+                    onClick={fetchDashboardData}
+                    className="ml-2 text-red-700 hover:text-red-800"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
+              <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2"
+                onClick={fetchDashboardData}
+                disabled={loading}
+                className="text-blue-600 border-blue-200 hover:bg-blue-50"
               >
-                <Bell className="w-4 h-4" />
-                Notifications
-              </Button> */}
+                <RefreshCw
+                  className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                />
+                Refresh
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -129,10 +144,26 @@ const AdminDashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {" "}
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
+
+            // Use real data for specific stats, fallback to mock data
+            let displayValue = stat.value;
+            if (
+              stat.label === "Total Applications" ||
+              stat.label.includes("Application")
+            ) {
+              displayValue = loading ? "..." : totalApplications.toString();
+            } else if (
+              stat.label === "Active Jobs" ||
+              stat.label.includes("Job")
+            ) {
+              displayValue = loading ? "..." : activeJobs.toString();
+            }
+
             return (
               <div
                 key={index}
@@ -144,7 +175,7 @@ const AdminDashboard = () => {
                       {stat.label}
                     </p>
                     <p className="text-2xl font-bold text-gray-900 mt-1">
-                      {stat.value}
+                      {displayValue}
                     </p>
                     <p className="text-sm text-green-600 mt-1">{stat.change}</p>
                   </div>
@@ -156,7 +187,6 @@ const AdminDashboard = () => {
             );
           })}
         </div>
-
         {/* Main Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Management Cards */}
@@ -277,7 +307,6 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-
         {/* Performance Overview */}
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">

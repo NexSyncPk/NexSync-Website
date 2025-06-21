@@ -13,6 +13,7 @@ import {
 } from "@/api/services";
 import toast from "react-hot-toast";
 import ConfirmationModal from "../../components/ui/ConfirmationModal";
+import { MediaTeamSchema } from "@/schemas/MediaTeamSection";
 
 const TeamsSection = () => {
   const [teamEdit, setTeamEdit] = useState(false);
@@ -43,28 +44,15 @@ const TeamsSection = () => {
   }, []);
 
   // Team Schema for both add and edit
-  const teamSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    position: z.string().min(1, "Position is required"),
-    email: z.string().email("Must be a valid email"),
-    description: z.string().min(1, "Description is required"),
-    picture: z
-      .any()
-      .refine((file) => {
-        if (!file || file.length === 0) return false;
-        return file[0]?.type?.startsWith("image/");
-      }, "Please select a valid image file")
-      .optional(),
-  });
 
-  type TeamFormValues = z.infer<typeof teamSchema>; // Form for adding team details
+  type TeamFormValues = z.infer<typeof MediaTeamSchema>; // Form for adding team details
   const {
     register: registerTeamAdd,
     handleSubmit: handleTeamAddSubmit,
     formState: { errors: errorsTeamAdd },
     reset: resetAddForm,
   } = useForm<TeamFormValues>({
-    resolver: zodResolver(teamSchema),
+    resolver: zodResolver(MediaTeamSchema),
     defaultValues: {
       name: "",
       position: "",
@@ -79,7 +67,7 @@ const TeamsSection = () => {
     reset: resetEditForm,
     setValue: setEditValue,
   } = useForm<TeamFormValues>({
-    resolver: zodResolver(teamSchema),
+    resolver: zodResolver(MediaTeamSchema),
     defaultValues: {
       name: "",
       position: "",

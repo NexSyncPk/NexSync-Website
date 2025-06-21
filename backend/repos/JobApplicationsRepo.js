@@ -45,7 +45,14 @@ class JobApplicationsRepo extends BaseRepo {
   }
   async deleteJobApplication(id, type) {
     await this.delete(id, type);
+  
+  }
+  async getTotalJobApplications() {
+    return await this.model.count({
+      where: { isDeleted: false },
+    });
   }
 }
+
 
 module.exports = new JobApplicationsRepo();

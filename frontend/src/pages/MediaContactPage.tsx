@@ -11,6 +11,8 @@ import {
   updateFindUsSectionBusinessHours,
 } from "@/api/services";
 import toast from "react-hot-toast";
+import { MediaAddressSchema } from "@/schemas/MediaAddressScema";
+import { MediaBusinessHoursSchema } from "@/schemas/MediaBusinessHoursSchema";
 
 const MediaContactPage = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
@@ -65,21 +67,9 @@ const MediaContactPage = () => {
   useEffect(() => {
     getFindUs();
   }, []);
-  // Schema for address form
-  const addressSchema = z.object({
-    address: z.string().min(1, "Address is required"),
-  });
 
-  // Schema for business hours form
-  const businessHoursSchema = z.object({
-    startDay: z.string().min(1, "Start day is required"),
-    endDay: z.string().min(1, "End day is required"),
-    startTime: z.string().min(1, "Start time is required"),
-    endTime: z.string().min(1, "End time is required"),
-  });
-
-  type AddressFormValues = z.infer<typeof addressSchema>;
-  type BusinessHoursFormValues = z.infer<typeof businessHoursSchema>;
+  type AddressFormValues = z.infer<typeof MediaAddressSchema>;
+  type BusinessHoursFormValues = z.infer<typeof MediaBusinessHoursSchema>;
   // Address form
   const {
     register: registerAddress,
@@ -88,7 +78,7 @@ const MediaContactPage = () => {
     reset: resetAddressForm,
     setValue: setAddressValue,
   } = useForm<AddressFormValues>({
-    resolver: zodResolver(addressSchema),
+    resolver: zodResolver(MediaAddressSchema),
     defaultValues: {
       address: "",
     },
@@ -102,7 +92,7 @@ const MediaContactPage = () => {
     reset: resetHoursForm,
     setValue: setHoursValue,
   } = useForm<BusinessHoursFormValues>({
-    resolver: zodResolver(businessHoursSchema),
+    resolver: zodResolver(MediaBusinessHoursSchema),
     defaultValues: {
       startDay: "",
       endDay: "",

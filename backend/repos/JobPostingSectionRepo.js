@@ -42,5 +42,10 @@ class JobPostingSectionRepo extends BaseRepo {
             order: [["updatedAt", "DESC"]],
     });
   }
+  async getJobPostingsCount() {
+    return await this.model.count({
+      where: { isDeleted: false, isArchived: false },
+    });
+  }
 }
 module.exports = new JobPostingSectionRepo();

@@ -16,13 +16,9 @@ import {
 import { Input } from "../components/ui/input";
 import { Eye, EyeOff, Lock, Mail, Shield } from "lucide-react";
 import toast from "react-hot-toast";
+import { AdminLoginSchema } from "@/schemas/AdminLoginSchema";
 
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<typeof AdminLoginSchema>;
 
 const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +26,7 @@ const AdminLogin = () => {
   const { login, isAuthenticated } = useAuth();
 
   const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(AdminLoginSchema),
     defaultValues: {
       email: "",
       password: "",

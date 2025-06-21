@@ -11,6 +11,7 @@ router.post(
 
 router.get("/", JobPostingSectionController.getAllJobPostings);
 router.get("/archive", JobPostingSectionController.getArchivedJobs);
+router.get("/count", JobPostingSectionController.getTotalJobPostings);
 router.get("/:id", JobPostingSectionController.getJobPostingById);
 
 router.put(

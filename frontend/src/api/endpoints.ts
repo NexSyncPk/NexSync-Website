@@ -40,6 +40,7 @@ export const updateJobPosting = "jobPosting/"; // Will use PUT with ID in URL
 export const deleteJobPosting = "jobPosting/"; // Will use DELETE with ID in URL
 export const getJobPostingById = "jobPosting/"; // Will append ID
 export const archiveJobPosting = "jobPosting/archive";
+export const getJobPostingsCount = "jobPosting/count";
 
 // Job Applications endpoints (matches backend /jobApplication routes)
 export const getJobApplications = "jobApplication/";
@@ -48,6 +49,7 @@ export const updateJobApplication = "jobApplication/update";
 export const deleteJobApplication = "jobApplication/";
 export const getJobApplicationById = "jobApplication/get";
 export const getJobApplicationsByPosting = "jobApplication/by-posting";
+export const getJobApplicationsCount = "jobApplication/count";
 
 // Testimonial Section endpoints (matches backend /testimonialSection routes)
 export const getTestimonials = "testimonialSection/";

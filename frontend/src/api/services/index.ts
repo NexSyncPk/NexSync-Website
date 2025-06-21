@@ -28,5 +28,7 @@ export {
   updateFindUsSectionBusinessHours,
   createTeamsMember,
   updateTeamMemberDetails,
-  deleteTeamMemberDetails
+  deleteTeamMemberDetails,
+  getAllJobApplicationsCount,
+  getTotalActiveJobsCount
 } from "./userService";

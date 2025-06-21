@@ -1,3 +1,4 @@
+import { BarChartData } from "@/data/mockData";
 import React from "react";
 import {
   BarChart,
@@ -12,38 +13,6 @@ import {
 } from "recharts";
 
 // Chart data
-const data = [
-  {
-    name: "Senior Software Engineer",
-    jobsApplied: 40,
-    openings: 10,
-  },
-  {
-    name: "Sales Executive",
-    jobsApplied: 30,
-    openings: 12,
-  },
-  {
-    name: "UI/UX Designer",
-    jobsApplied: 25,
-    openings: 8,
-  },
-  {
-    name: "Product Manager",
-    jobsApplied: 32,
-    openings: 5,
-  },
-  {
-    name: "Data Analyst",
-    jobsApplied: 28,
-    openings: 7,
-  },
-  {
-    name: "HR Specialist",
-    jobsApplied: 15,
-    openings: 3,
-  },
-];
 
 // Functional Component
 const BarChartExample: React.FC = () => {
@@ -51,7 +20,7 @@ const BarChartExample: React.FC = () => {
     <div style={{ width: "100%", height: 400 }}>
       <ResponsiveContainer>
         <BarChart
-          data={data}
+          data={BarChartData}
           margin={{
             top: 5,
             right: 30,

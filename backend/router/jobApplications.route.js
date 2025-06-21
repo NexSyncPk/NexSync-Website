@@ -12,10 +12,14 @@ router.post(
 
 router.get("/", JobApplicationsController.getAllJobApplications);
 
+router.get("/count", JobApplicationsController.getJobApplicationCount);
+
 // Add route for downloading resume files - must come before /:id route
 router.get("/download/resume/:filename", JobApplicationsController.downloadResume);
 
+
 router.get("/:id", JobApplicationsController.getJobApplicationById);
+
 
 router.delete(
   "/",

@@ -58,7 +58,9 @@ import {
     getFindUsAddress,
     getFindUsBusinessHours,
     updateFindUsAddress,
-    updateFindUsBusinessHours
+    updateFindUsBusinessHours,
+    getJobApplicationsCount,
+    getJobPostingsCount
 } from "../endpoints";
 
 import { type IObjectProps, type JobApplication } from "../../types/index";
@@ -355,5 +357,25 @@ export const deleteTeamMemberDetails = async (id: number, type: "soft" | "hard" 
     } catch (error) {
         console.error("Error deleting team member:", error);
         throw error;
+    }
+}
+
+export const getAllJobApplicationsCount= async ()=>{
+    try {
+        const response = await api.get(getJobApplicationsCount);
+        return response;
+    } catch (error) {
+        console.error("Error fetching job applications count:", error);
+        return false;
+    }
+} 
+
+export const getTotalActiveJobsCount =async ()=>{
+    try {
+        const response = await api.get(getJobPostingsCount);
+        return response;
+    } catch (error) {
+        console.error("Error fetching total active jobs count:", error);
+        return false;
     }
 }

@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
                 <span className="text-gray-300">0324-3240157</span>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin size={30} className="text-primary-blue" />
+                <MapPin size={20} className="text-primary-blue" />
                 <span className="text-gray-300">
                   National Incubation Center, NED University, Karachi, 75270
                 </span>
