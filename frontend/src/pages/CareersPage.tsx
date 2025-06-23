@@ -67,9 +67,22 @@ export const CareersPage: React.FC = () => {
             <p className="text-xl lg:text-2xl opacity-90 mb-8">
               Build the future with us. We're looking for passionate individuals
               who want to make a difference.
-            </p>
+            </p>{" "}
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-md:items-center ">
-              <Button className="btn-secondary ">View Open Positions</Button>
+              <Button
+                className="btn-secondary"
+                onClick={() => {
+                  const jobSection = document.getElementById("open-positions");
+                  if (jobSection) {
+                    jobSection.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                }}
+              >
+                View Open Positions
+              </Button>
               <Link to="/contact">
                 <Button className="border-white text-white hover:bg-white hover:text-secondary-navy px-14 bg-transparent border-2 ">
                   Contact Us
@@ -79,7 +92,6 @@ export const CareersPage: React.FC = () => {
           </motion.div>
         </div>
       </section>
-
       {/* Why Work With Us */}
       <section className="py-20 bg-white">
         <div className="section-container">
@@ -131,10 +143,9 @@ export const CareersPage: React.FC = () => {
             })}
           </div>
         </div>
-      </section>
-
+      </section>{" "}
       {/* Job Listings */}
-      <section className="py-20 bg-background-ice">
+      <section id="open-positions" className="py-20 bg-background-ice">
         <div className="section-container">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
