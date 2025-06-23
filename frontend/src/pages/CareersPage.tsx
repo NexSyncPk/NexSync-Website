@@ -16,30 +16,49 @@ const benefitIconMap = {
 export const CareersPage: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState<string>("all");
   const [selectedPosition, setSelectedType] = useState<string>("all");
-
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   // Simulating fetching jobs from an API
   const fetchJobs = async () => {
-    const response = await getJobs();
-    if (response && response.data) {
-      console.log("Fetched jobs:", response.data);
-      setJobs(response.data);
-    } else {
-      console.error("Failed to fetch job postings");
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getJobs();
+      if (response && response.data) {
+        console.log("Fetched jobs:", response.data);
+        setJobs(response.data);
+      } else {
+        console.error("Failed to fetch job postings");
+        setError("Failed to load job postings");
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setError("Error loading job postings");
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchJobs();
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-      }
-    };
-    fetchData();
+    fetchJobs();
   }, []);
 
-  const filteredJobs = (jobs.length !== 0 ? jobs : jobs).filter((job: Job) => {
+  // Re-fetch jobs when component becomes visible again (when navigating back)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && jobs.length === 0) {
+        fetchJobs();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [jobs.length]);
+  const filteredJobs = jobs.filter((job: Job) => {
     const departmentMatch =
       selectedDomain === "all" || job.domain === selectedDomain;
     const typeMatch =
@@ -70,7 +89,7 @@ export const CareersPage: React.FC = () => {
             </p>{" "}
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-md:items-center ">
               <Button
-                className="btn-secondary"
+                className="btn-seconda`ry"
                 onClick={() => {
                   const jobSection = document.getElementById("open-positions");
                   if (jobSection) {
@@ -157,7 +176,6 @@ export const CareersPage: React.FC = () => {
             <h2 className="text-4xl lg:text-5xl font-bold text-secondary-navy mb-6 text-center">
               Open Positions
             </h2>
-
             {/* Filters */}
             <div className="flex flex-wrap gap-4 justify-center mb-8">
               <div className="space-x-2">
@@ -196,80 +214,105 @@ export const CareersPage: React.FC = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </div>{" "}
           </motion.div>
 
-          <div className="space-y-6">
-            {filteredJobs.map((job: Job, index: number) => (
-              <motion.div
-                key={job.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
+          {loading && (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue"></div>
+              <p className="mt-4 text-lg text-secondary-steel">
+                Loading positions...
+              </p>
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-xl text-red-600 mb-4">{error}</p>
+              <Button
+                onClick={fetchJobs}
+                className="bg-primary-blue text-white hover:bg-primary-blue/90"
               >
-                <Card className="hover:border-primary-blue hover:scale-[1.02] transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <h3 className="text-2xl font-semibold text-secondary-navy">
-                          {job.title}
-                        </h3>
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            job.position === "full-time"
-                              ? "bg-green-100 text-green-800"
-                              : job.position === "intern"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-purple-100 text-purple-800"
-                          }`}
-                        >
-                          {job.position.replace("-", " ").toUpperCase()}
-                        </span>
-                      </div>
+                Try Again
+              </Button>
+            </div>
+          )}
 
-                      <p className="text-secondary-steel mb-4">
-                        {job.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-4 text-sm text-secondary-steel mb-4">
-                        <div className="flex items-center gap-1">
-                          <Users size={16} />
-                          {job.domain}
+          {!loading && !error && (
+            <div className="space-y-6">
+              {filteredJobs.map((job: Job, index: number) => (
+                <motion.div
+                  key={job.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="hover:border-primary-blue hover:scale-[1.02] transition-all ease-linear duration-200 ring-1 ring-slate-200 shadow-xl">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h3 className="text-2xl font-semibold text-secondary-navy">
+                            {job.title}
+                          </h3>
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              job.position === "full-time"
+                                ? "bg-green-100 text-green-800"
+                                : job.position === "intern"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-purple-100 text-purple-800"
+                            }`}
+                          >
+                            {job.position.replace("-", " ").toUpperCase()}
+                          </span>
                         </div>
-                        {job.salary && (
+
+                        <p className="text-secondary-steel mb-4">
+                          {job.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-4 text-sm text-secondary-steel mb-4">
                           <div className="flex items-center gap-1">
-                            <DollarSign size={16} />
-                            {job.salary}
+                            <Users size={16} />
+                            {job.domain}
                           </div>
-                        )}
+                          {job.salary && (
+                            <div className="flex items-center gap-1">
+                              <DollarSign size={16} />
+                              {job.salary}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-secondary-navy">
+                            Requirements:
+                          </h4>
+                          <ul className="list-disc list-inside text-secondary-steel space-y-1">
+                            {job?.requirements?.map((req, idx) => (
+                              <li key={idx}>{req}</li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-secondary-navy">
-                          Requirements:
-                        </h4>
-                        <ul className="list-disc list-inside text-secondary-steel space-y-1">
-                          {job?.requirements?.map((req, idx) => (
-                            <li key={idx}>{req}</li>
-                          ))}
-                        </ul>
+                      <div className="mt-6 lg:mt-0 lg:ml-8">
+                        <Link to={`/job/${job.id}`}>
+                          {" "}
+                          <Button className="w-full lg:w-auto">
+                            Apply Now
+                          </Button>
+                        </Link>
                       </div>
                     </div>
+                  </Card>{" "}
+                </motion.div>
+              ))}
+            </div>
+          )}
 
-                    <div className="mt-6 lg:mt-0 lg:ml-8">
-                      <Link to={`/job/${job.id}`}>
-                        {" "}
-                        <Button className="w-full lg:w-auto">Apply Now</Button>
-                      </Link>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {filteredJobs.length === 0 && (
+          {!loading && !error && filteredJobs.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}

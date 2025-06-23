@@ -108,17 +108,6 @@ const ApplyJobForm: React.FC = () => {
       if (values.resume) {
         formData.append("resume", values.resume);
       }
-
-      console.log("Form submitted with data:");
-      // Log form data entries for debugging
-      for (const [key, value] of formData.entries()) {
-        if (value instanceof File) {
-          console.log(`${key}:`, value.name, value.size, value.type);
-        } else {
-          console.log(`${key}:`, value);
-        }
-      }
-
       // Call the actual API
       const response = await applyForJob(formData);
 
@@ -131,12 +120,12 @@ const ApplyJobForm: React.FC = () => {
           setSubmitStatus("idle");
         }, 2000);
       } else {
-        throw new Error("Failed to submit application");
+        console.log("Failed to submit application");
       }
     } catch (error) {
       console.error("Form submission failed:", error);
       setSubmitStatus("error");
-      toast.error("Failed to submit application. Please try again.");
+      console.error("Failed to submit application. Please try again.");
 
       // Reset error status after 3 seconds
       setTimeout(() => {

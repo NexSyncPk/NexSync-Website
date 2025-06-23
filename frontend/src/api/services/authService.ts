@@ -24,17 +24,19 @@ const logOutUser = async () => {
   try {
     await api.post(adminLogout);
     Cookies.remove("admin_token");
+    Cookies.remove("admin_user");
     return true;
   } catch (error) {
     console.log("error: ", error);
-    Cookies.remove("token"); // Remove token even if logout API fails
+    Cookies.remove("admin_token"); // Remove token even if logout API fails
+    Cookies.remove("admin_user");
     return true;
   }
 };
 
 const verifyUserToken = async () => {
   try {
-    const token = Cookies.get("token");
+    const token = Cookies.get("admin_token");
     if (!token) return false;
     
     const response = await api.get("adminAuth/verify-token");

@@ -53,6 +53,7 @@ export const CurrentJobs: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
   const [deletingJobId, setDeletingJobId] = useState<number | null>(null);
+  const [archivingJobId, setArchivingJobId] = useState<number | null>(null);
 
   // Handle delete modal
   const handleDeleteClick = (job: Job) => {
@@ -86,8 +87,10 @@ export const CurrentJobs: React.FC = () => {
     setShowDeleteModal(false);
     setJobToDelete(null);
   };
-
   const handleToggleArchive = async (jobId: number) => {
+    if (archivingJobId === jobId) return; // Prevent multiple clicks
+
+    setArchivingJobId(jobId);
     try {
       const response = await toggleJobArchive(jobId.toString());
       if (response) {
@@ -97,9 +100,13 @@ export const CurrentJobs: React.FC = () => {
         fetchJobs();
       } else {
         console.error("Failed to toggle job archive status");
+        toast.error("Failed to toggle job archive status");
       }
     } catch (error) {
       console.error("Error toggling job archive status:", error);
+      toast.error("Error toggling job archive status. Please try again.");
+    } finally {
+      setArchivingJobId(null);
     }
   };
 
@@ -236,13 +243,18 @@ export const CurrentJobs: React.FC = () => {
                               ))}
                             </ul>
                           </div>
-                        </div>
+                        </div>{" "}
                         <div className="mt-6 lg:mt-0 lg:ml-8 flex flex-col lg:flex-row gap-4">
                           <Button
                             className="w-full lg:w-auto"
                             onClick={() => handleToggleArchive(job?.id)}
+                            disabled={archivingJobId === job.id}
                           >
-                            Archived
+                            {archivingJobId === job.id
+                              ? "Processing..."
+                              : job.isArchived
+                              ? "Unarchive"
+                              : "Archive"}
                           </Button>{" "}
                           <Button
                             className="w-full lg:w-auto bg-red-500 hover:bg-red-600"

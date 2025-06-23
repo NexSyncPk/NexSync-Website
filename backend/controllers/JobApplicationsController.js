@@ -14,8 +14,31 @@ const JobPosting = db.JobPosting;
 class JobApplicationsController extends BaseController {
   constructor() {
     super();
-  }
-  createJobApplication = async (req, res) => {
+  }  createJobApplication = async (req, res) => {
+    // Check if user already applied for the job
+    const { jobPostingsId, email } = req.body;
+    console.log(req.body);
+    if (!jobPostingsId || !email) {
+      return this.validationErrorResponse(
+        res,
+        "JobPostingId and email are required"
+      );
+    }
+
+    const existingApplication = await JobApplicationsRepo.findOne({
+      jobPostingsId, 
+      email,
+      isDeleted: false
+    });
+
+    if (existingApplication) {
+      return this.errorResponse(
+        res,
+        "You have already applied for this job. Please check your email for updates.",
+        400
+      );
+    }
+
     if (!req.file) {
       return this.validationErrorResponse(res, "Resume is required");
     }

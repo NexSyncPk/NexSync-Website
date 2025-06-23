@@ -7,6 +7,7 @@ import config from "../../config";
 import { getToken } from "../components/utils/helpers";
 import { routes } from "../components/utils/constants";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const api = axios.create({
   baseURL: config.SERVER_URL,
@@ -43,7 +44,9 @@ api.interceptors.response.use(
       );      if (error?.config && error?.config?.method === "post") {
         toast.error(data?.message || "An error occurred. Please try again.");
       }      if (status === 401) {
-        localStorage.removeItem("token");
+        localStorage.removeItem("admin_token");
+        Cookies.remove("admin_token");
+        Cookies.remove("admin_user");
         window.location.href = routes.login; // Redirect to login page on unauthorized
       }} else if (error.request) {
       console.error("No response from server. Please try again later.");

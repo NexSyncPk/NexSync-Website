@@ -3,6 +3,8 @@ import { z } from "zod";
 export const JobApplicationSchema = z.object({
   name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
+  }).refine((val) => !/\d/.test(val), {
+    message: "Username must not contain numbers.",
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -32,9 +34,9 @@ export const JobApplicationSchema = z.object({
       (val) => {
         const year = Number(val);
         const currentYear = new Date().getFullYear();
-        return year > 1980 && year < currentYear;
+        return year > 1980 && year <= currentYear;
       },      {
-        message: "Year of passing must be greater than 1980 and less than the current year.",
+        message: "Year of passing must be greater than 1980 and less than or equal to the current year.",
       }
     ),
 
