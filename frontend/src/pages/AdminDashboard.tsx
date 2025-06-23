@@ -1,25 +1,25 @@
 import { useAuth } from "../contexts/AuthContext";
 import {
-  BarChart3,
   Briefcase,
   TrendingUp,
   Calendar,
   Activity,
-  Award,
   MessageSquare,
   Globe,
   ChevronRight,
   Clock,
   RefreshCw,
+  FileText,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { dashboardCards, quickStats, recentActivities } from "@/data/mockData";
+import { dashboardCards, recentActivities } from "@/data/mockData";
 import { useState, useEffect } from "react";
 import {
   getAllJobApplicationsCount,
   getTotalActiveJobsCount,
 } from "../api/services/userService";
+import BarChartExample from "@/components/utils/BarChartExample";
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -34,49 +34,23 @@ const AdminDashboard = () => {
       setLoading(true);
       setError(null);
 
-      // Use Promise.all to fetch all dashboard data concurrently
-      // This pattern allows you to add more API calls in the future easily
-      const [
-        applicationsCountResponse,
-        jobPostingsCountResponse,
-        // Future API calls can be added here:
-        // teamMembersCountResponse,
-        // testimonialsCountResponse,
-        // analyticsResponse,
-        // pageViewsResponse,
-        // userEngagementResponse,
-      ] = await Promise.all([
-        getAllJobApplicationsCount(),
-        getTotalActiveJobsCount(),
-        // Future function calls:
-        // getTeamMembersCount(),
-        // getTestimonialsCount(),
-        // getAnalyticsData(),
-        // getPageViewsCount(),
-        // getUserEngagementData(),
-      ]); // Update state with fetched data
+      const [applicationsCountResponse, jobPostingsCountResponse] =
+        await Promise.all([
+          getAllJobApplicationsCount(),
+          getTotalActiveJobsCount(),
+        ]);
+
       if (applicationsCountResponse && applicationsCountResponse.data) {
-        console.log("Applications response:", applicationsCountResponse);
-        setTotalApplications(applicationsCountResponse.data.count || 0);
+        console.log(applicationsCountResponse);
+        setTotalApplications(
+          applicationsCountResponse.data.totalApplications || 0
+        );
       }
 
       if (jobPostingsCountResponse && jobPostingsCountResponse.data) {
-        console.log("Job postings response:", jobPostingsCountResponse);
+        console.log(jobPostingsCountResponse);
         setActiveJobs(jobPostingsCountResponse.data.count || 0);
       }
-
-      // Future API integrations can be added here:
-      // if (teamMembersCountResponse && teamMembersCountResponse.data) {
-      //   setTeamMembersCount(teamMembersCountResponse.data.count || 0);
-      // }
-
-      // if (testimonialsCountResponse && testimonialsCountResponse.data) {
-      //   setTestimonialsCount(testimonialsCountResponse.data.count || 0);
-      // }
-
-      // if (analyticsResponse && analyticsResponse.data) {
-      //   setAnalyticsData(analyticsResponse.data);
-      // }
 
       console.log("Dashboard data fetched successfully");
     } catch (error) {
@@ -86,11 +60,29 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
-
   // Fetch dashboard data on component mount
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  // Simplified quick stats focused on job applications
+  const quickStats = [
+    {
+      label: "Total Applications",
+      value: loading ? "..." : totalApplications.toString(),
+      icon: FileText,
+    },
+    {
+      label: "Active Jobs",
+      value: loading ? "..." : activeJobs.toString(),
+      icon: Briefcase,
+    },
+    {
+      label: "Response Rate",
+      value: "85%",
+      icon: MessageSquare,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 mt-10">
@@ -146,23 +138,9 @@ const AdminDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {" "}
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
-
-            // Use real data for specific stats, fallback to mock data
-            let displayValue = stat.value;
-            if (
-              stat.label === "Total Applications" ||
-              stat.label.includes("Application")
-            ) {
-              displayValue = loading ? "..." : totalApplications.toString();
-            } else if (
-              stat.label === "Active Jobs" ||
-              stat.label.includes("Job")
-            ) {
-              displayValue = loading ? "..." : activeJobs.toString();
-            }
 
             return (
               <div
@@ -175,9 +153,9 @@ const AdminDashboard = () => {
                       {stat.label}
                     </p>
                     <p className="text-2xl font-bold text-gray-900 mt-1">
-                      {displayValue}
+                      {stat.value}
                     </p>
-                    <p className="text-sm text-green-600 mt-1">{stat.change}</p>
+                    {/* <p className="text-sm text-green-600 mt-1">{stat.change}</p> */}
                   </div>
                   <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
                     <Icon className="w-6 h-6 text-blue-600" />
@@ -274,10 +252,10 @@ const AdminDashboard = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 mt-6">
+            {/* <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 mt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Quick Actions
-              </h3>
+              </h3>{" "}
               <div className="space-y-3">
                 <Button
                   className="w-full justify-start"
@@ -290,10 +268,12 @@ const AdminDashboard = () => {
                 <Button
                   className="w-full justify-start"
                   variant="outline"
-                  onClick={() => navigate("/Analytics/AppliedJobs")}
+                  onClick={() =>
+                    navigate("/JobsManagement/ApplicationOverview")
+                  }
                 >
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  View Analytics
+                  <FileText className="w-4 h-4 mr-2" />
+                  View Applications
                 </Button>
                 <Button
                   className="w-full justify-start"
@@ -304,22 +284,22 @@ const AdminDashboard = () => {
                   Update Content
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* Performance Overview */}
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            {" "}
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">
-                Platform Overview
+                Job Management Overview
               </h3>
               <Button variant="outline" size="sm">
                 <Calendar className="w-4 h-4 mr-2" />
                 Last 30 days
               </Button>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <TrendingUp className="w-8 h-8 text-blue-600 mx-auto mb-2" />
@@ -327,17 +307,26 @@ const AdminDashboard = () => {
                 <p className="text-sm text-gray-600">Application Growth</p>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
-                <Award className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-green-600">92%</p>
-                <p className="text-sm text-gray-600">System Uptime</p>
+                <Briefcase className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-green-600">
+                  {activeJobs}
+                </p>
+                <p className="text-sm text-gray-600">Active Job Postings</p>
               </div>
               <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <MessageSquare className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-purple-600">4.8/5</p>
-                <p className="text-sm text-gray-600">User Satisfaction</p>
+                <FileText className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-purple-600">
+                  {totalApplications}
+                </p>
+                <p className="text-sm text-gray-600">Total Applications</p>
               </div>
             </div>
           </div>
+        </div>
+        {/* Job Applieds */}
+        <div className="w-full h-fit mt-8 bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+          <h1 className="text-lg font-semibold text-gray-900">Job Applieds</h1>
+          <BarChartExample />
         </div>
       </div>
     </div>

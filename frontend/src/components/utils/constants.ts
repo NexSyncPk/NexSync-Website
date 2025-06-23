@@ -41,18 +41,10 @@ export const routes = {
   jobsApplicationOverview: "/JobsManagement/ApplicationOverview",
   jobsCurrentJobs: "/JobsManagement/CurrentJobs",
   jobsArchivedJobs: "/JobsManagement/ArchivedJobs",
-  
-  // Media Management routes
+    // Media Management routes
   mediaHomePage: "/MediaManagement/HomePage",
   mediaAboutPage: "/MediaManagement/AboutPage",
   mediaContactPage: "/MediaManagement/ContactPage",
-  
-  // Analytics routes
-  analyticsAppliedJobs: "/Analytics/AppliedJobs",
-  analyticsTraffic: "/Analytics/Traffic",
-  analyticsUserEngagement: "/Analytics/UserEngagement",
-  analyticsBounceRate: "/Analytics/BounceRate",
-  analyticsClickThroughRate: "/Analytics/ClickThroughRate",
   
   // Fallback route
   noRoute: "/*",
@@ -75,18 +67,7 @@ export const Sidebar_Data = {
       title: "Media Management",
       items: [
         { title: "Home Page", url: "/MediaManagement/HomePage" },
-        { title: "About Page", url: "/MediaManagement/AboutPage" },
-        { title: "Contact Page", url: "/MediaManagement/ContactPage" },
-      ],
-    },
-    {
-      title: "Analytics",
-      items: [
-        { title: "Applied Jobs", url: "/Analytics/AppliedJobs" },
-        { title: "Traffic", url: "/Analytics/Traffic" },
-        { title: "User Engagement", url: "/Analytics/UserEngagement" },
-        { title: "Bounce Rate", url: "/Analytics/BounceRate" },
-        { title: "Click Through Rate", url: "/Analytics/ClickThroughRate" },
+        { title: "About Page", url: "/MediaManagement/AboutPage" },        { title: "Contact Page", url: "/MediaManagement/ContactPage" },
       ],
     },
   ],

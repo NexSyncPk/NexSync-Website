@@ -186,4 +186,27 @@ export interface Job {
   updatedAt: Date;
 }
 
+export interface QuickStat {
+  label: string;
+  value: string;
+  change: string;
+  icon: any; // Lucide React icon component
+}
+
+export interface DashboardCard {
+  title: string;
+  description: string;
+  icon: any; // Lucide React icon component
+  lightColor: string;
+  textColor: string;
+  features: string[];
+  route: string;
+}
+
+export interface RecentActivity {
+  action: string;
+  time: string;
+  type: string;
+}
+
 

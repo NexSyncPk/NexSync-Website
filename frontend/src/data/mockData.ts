@@ -1,4 +1,4 @@
-import { BarChart3, Briefcase, Eye, FileText, Globe, Target, Users } from 'lucide-react';
+import { Briefcase, Globe, Users } from 'lucide-react';
 import type { Testimonial, JobOpening, Service, CompanyValue, Benefit, TeamMemberAttributes, Job, JobApplication } from '../types/index';
 
 export const fallbackTestimonials: Testimonial[] = [
@@ -466,43 +466,11 @@ export const mockJobApplications: JobApplication[] = [
       icon: Globe,
       color: "bg-purple-500",
       lightColor: "bg-purple-50",
-      textColor: "text-purple-600",
-      features: ["Homepage Content", "About Page", "Contact Page"],
+      textColor: "text-purple-600",      features: ["Homepage Content", "About Page", "Contact Page"],
       route: "/MediaManagement/HomePage",
     },
-    {
-      title: "Analytics & Reports",
-      description: "Track performance metrics and generate insights",
-      icon: BarChart3,
-      color: "bg-green-500",
-      lightColor: "bg-green-50",
-      textColor: "text-green-600",
-      features: ["Traffic Analysis", "User Engagement", "Application Stats"],
-      route: "/Analytics/AppliedJobs",
-    },
-    {
-      title: "User Management",
-      description: "Manage admin users and access permissions",
-      icon: Users,
-      color: "bg-orange-500",
-      lightColor: "bg-orange-50",
-      textColor: "text-orange-600",
-      features: ["Admin Users", "Role Management", "Access Control"],
-      route: "/admin/users",
-    },
   ];
-
-  export const quickStats = [
-    {
-      label: "Total Applications",
-      value: "247",
-      icon: FileText,
-    },
-    { label: "Active Jobs", value: "15", icon: Briefcase },
-    { label: "Page Views", value: "12.5K",  icon: Eye },
-    { label: "Response Rate", value: "85%", icon: Target },
-  ];
-
+  
   export const recentActivities = [
     {
       action: "New job application received",
@@ -511,38 +479,34 @@ export const mockJobApplications: JobApplication[] = [
     },
     { action: "Homepage content updated", time: "1 hour ago", type: "content" },
     { action: "New job posting published", time: "3 hours ago", type: "job" },
-    { action: "Analytics report generated", time: "1 day ago", type: "report" },
+    { action: "Job application reviewed", time: "1 day ago", type: "review" },
   ];
+  
 
   export const BarChartData = [
     {
       name: "Senior Software Engineer",
       jobsApplied: 40,
-      openings: 10,
-    },
+          },
     {
       name: "Sales Executive",
       jobsApplied: 30,
-      openings: 12,
+
     },
     {
       name: "UI/UX Designer",
       jobsApplied: 25,
-      openings: 8,
     },
     {
       name: "Product Manager",
       jobsApplied: 32,
-      openings: 5,
     },
     {
       name: "Data Analyst",
       jobsApplied: 28,
-      openings: 7,
     },
     {
       name: "HR Specialist",
       jobsApplied: 15,
-      openings: 3,
-    },
+      },
   ];

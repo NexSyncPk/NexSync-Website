@@ -14,11 +14,6 @@ import AdminLayout from "../components/layouts/AdminLayout";
 import MediaHomePage from "../pages/MediaHomePage/MediaHomePage";
 import MediaAboutPage from "../pages/Media About Page/MediaAboutPage";
 import MediaContactPage from "../pages/MediaContactPage";
-import HighestAppliedJobs from "../components/sections/AppliedJobs";
-import Traffic from "../pages/Traffic";
-import UserEngagement from "../pages/UserEngagement";
-import BounceRate from "../components/sections/BounceRate";
-import ClickThroughRate from "../components/sections/ClickThroughRate";
 import JobApplicationPage from "../pages/JobApplicationPage";
 
 const Routes = () => {
@@ -136,59 +131,8 @@ const Routes = () => {
         element={
           <ProtectedRoute>
             <AdminLayout>
-              <MediaContactPage />
+              <MediaContactPage />{" "}
             </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
-      {/* Analytics Routes */}
-      <Route
-        path="/Analytics/AppliedJobs"
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <HighestAppliedJobs />
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Analytics/Traffic"
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <Traffic />
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Analytics/UserEngagement"
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <UserEngagement />
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Analytics/BounceRate"
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <BounceRate />
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/Analytics/ClickThroughRate"
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <ClickThroughRate />
-            </AdminLayout>{" "}
           </ProtectedRoute>
         }
       />

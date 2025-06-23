@@ -301,12 +301,12 @@ const JobsOverview = () => {
 
                 {/* Salary Comparison */}
                 <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                  <div className="flex max-sm:flex-col max-sm:items-start max-sm:gap-y-2 items-center justify-between">
+                  <div className="flex max-sm:flex-col max-sm:items-start max-sm:gap-y-2 items-center justify-between flex-wrap gap-y-2">
                     <div>
                       <p className="text-sm font-medium text-gray-700">
                         Salary Comparison
                       </p>
-                      <div className="flex items-center space-x-4 mt-2">
+                      <div className="flex items-center space-x-4 mt-2 ">
                         <div>
                           <p className="text-xs text-gray-500">Expected</p>
                           <p className="text-sm font-semibold text-primary-blue">
@@ -322,7 +322,9 @@ const JobsOverview = () => {
                       </div>
                     </div>
                     <div className="max-sm:text-left text-right">
-                      <p className="text-xs text-gray-500">Difference</p>
+                      <p className="text-xs text-gray-500 text-left">
+                        Difference
+                      </p>
                       <p
                         className={`text-sm font-semibold ${
                           application.expectedSalary <=
@@ -345,7 +347,7 @@ const JobsOverview = () => {
                 </div>
 
                 {/* Resume & Application Date */}
-                <div className="flex items-center justify-between mb-6 max-sm:flex-col max-sm:items-start max-sm:gap-y-2">
+                <div className="flex items-center justify-between mb-6 max-sm:flex-col max-sm:items-start max-sm:gap-y-2 flex-wrap gap-y-2">
                   <div className="flex items-center text-gray-600">
                     <FileText className="w-4 h-4 mr-3 text-primary-orange" />
                     <div>

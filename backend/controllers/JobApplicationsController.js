@@ -105,10 +105,11 @@ class JobApplicationsController extends BaseController {
     }
     return this.successResponse(res, jobApplication, "Job Application fetched");
   };
+
   getJobApplicationCount = async (req, res) =>{
     try {
-      const count = await JobApplicationsRepo.getTotalJobApplications();
-      return this.successResponse(res, { count }, "Total applications fetched successfully");
+      const totalApplications = await JobApplicationsRepo.getTotalJobApplications();
+      return this.successResponse(res, { totalApplications }, "Total applications fetched successfully");
     } catch (error) {
       console.error("Error fetching total job applications:", error);
       return this.errorResponse(res, "Error fetching total job applications", 500);

@@ -58,13 +58,6 @@ export const updateTestimonial = "testimonialSection/";
 export const deleteTestimonial = "testimonialSection/";
 export const getTestimonialById = "testimonialSection/get";
 
-// Analytics endpoints (for admin dashboard)
-export const getJobAnalytics = "analytics/jobs";
-export const getTrafficAnalytics = "analytics/traffic";
-export const getUserEngagementAnalytics = "analytics/user-engagement";
-export const getBounceRateAnalytics = "analytics/bounce-rate";
-export const getClickThroughRateAnalytics = "analytics/click-through-rate";
-
 // Public endpoints for main website
 export const getPublicJobs = "public/jobs";
 export const getPublicTestimonials = "public/testimonials";

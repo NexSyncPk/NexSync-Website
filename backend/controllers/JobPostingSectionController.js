@@ -165,10 +165,10 @@ class JobPostingSectionController extends BaseController {
     );
   };  getTotalJobPostings = async (req, res) => {
     try {
-      const count = await JobPostingSectionRepo.getJobPostingsCount();
+      const totalPostings = await JobPostingSectionRepo.getJobPostingsCount();
       return this.successResponse(
         res,
-        { count },
+        { count: totalPostings },
         "Total job postings fetched successfully"
       );
     } catch (error) {

@@ -1,3 +1,4 @@
+import type { JobApplication } from "@/types";
 import Cookies from "js-cookie";
 
 export const getToken = () => {
@@ -90,3 +91,22 @@ export const getEducationLabel = (education: string) => {
           return String(time24); // Return original value if conversion fails
         }
       };
+
+  export function summarizeJobApplications(applications: JobApplication[]) {
+  const summaryMap: Record<string, number> = {};
+
+  for (const app of applications) {
+    const title = app.jobPosting?.title || "Unknown";
+
+    if (summaryMap[title]) {
+      summaryMap[title]++;
+    } else {
+      summaryMap[title] = 1;
+    }
+  }
+
+  return Object.entries(summaryMap).map(([name, jobsApplied]) => ({
+    name,
+    jobsApplied,
+  }));
+}

@@ -39,19 +39,12 @@ import {
     getTestimonials,
     createTestimonial,
     updateTestimonial,
-    deleteTestimonial,
-    getTestimonialById,
-    
-    // Analytics endpoints
-    getJobAnalytics,
-    getTrafficAnalytics,
-    getUserEngagementAnalytics,
-    getBounceRateAnalytics,
-    getClickThroughRateAnalytics,
+    deleteTestimonial,    getTestimonialById,
     
     // Public endpoints
     getPublicJobs,
-    getPublicTestimonials,    getPublicTeam,
+    getPublicTestimonials,
+    getPublicTeam,
     getPublicHero,
     submitContactForm,
     getFindUsData,

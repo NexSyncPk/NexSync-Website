@@ -1,5 +1,5 @@
-import { BarChartData } from "@/data/mockData";
-import React from "react";
+import { getAllJobApplications } from "@/api/services";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -11,16 +11,35 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
+import { summarizeJobApplications } from "./helpers";
+import { BarChartData as mockBarChartData } from "@/data/mockData";
 // Chart data
 
 // Functional Component
 const BarChartExample: React.FC = () => {
+  const [barChartData, setBarChartData] = useState<any[]>(
+    mockBarChartData || []
+  );
+  const fetchJobDetails = async () => {
+    const response = await getAllJobApplications();
+    if (response && response.data) {
+      console.log("Job Details:", response.data);
+      setBarChartData(
+        summarizeJobApplications(response.data) || mockBarChartData
+      );
+    } else {
+      console.error("Failed to fetch job details");
+    }
+  };
+
+  useEffect(() => {
+    fetchJobDetails();
+  }, []);
   return (
-    <div style={{ width: "100%", height: 400 }}>
+    <div style={{ width: "100%", height: 400, marginTop: "20px" }}>
       <ResponsiveContainer>
         <BarChart
-          data={BarChartData}
+          data={barChartData}
           margin={{
             top: 5,
             right: 30,
@@ -39,18 +58,12 @@ const BarChartExample: React.FC = () => {
           />
           <YAxis />
           <Tooltip />
-          <Legend />
+          <Legend />{" "}
           <Bar
             dataKey="jobsApplied"
             fill="#8884d8"
             name="Jobs Applied"
             activeBar={<Rectangle fill="pink" stroke="blue" />}
-          />
-          <Bar
-            dataKey="openings"
-            fill="#82ca9d"
-            name="Openings"
-            activeBar={<Rectangle fill="gold" stroke="purple" />}
           />
         </BarChart>
       </ResponsiveContainer>
