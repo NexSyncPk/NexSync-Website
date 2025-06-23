@@ -3,6 +3,8 @@ import { z } from "zod";
 export const JobCreationSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
+  }).refine((val) => !/\d/.test(val), {
+    message: "Title must not contain numbers.",
   }),
   position: z.enum(["full-time", "part-time", "intern", "contract"], {
     message: "Position must be selected.",

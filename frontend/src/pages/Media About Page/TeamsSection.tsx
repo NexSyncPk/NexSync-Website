@@ -13,7 +13,10 @@ import {
 } from "@/api/services";
 import toast from "react-hot-toast";
 import ConfirmationModal from "../../components/ui/ConfirmationModal";
-import { MediaTeamSchema } from "@/schemas/MediaTeamSection";
+import {
+  MediaTeamAddSchema,
+  MediaTeamEditSchema,
+} from "@/schemas/MediaTeamSection";
 
 const TeamsSection = () => {
   const [teamEdit, setTeamEdit] = useState(false);
@@ -42,32 +45,19 @@ const TeamsSection = () => {
   useEffect(() => {
     fetchTeamDetails();
   }, []);
-
   // Team Schema for both add and edit
 
-  type TeamFormValues = z.infer<typeof MediaTeamSchema>; // Form for adding team details
+  type TeamAddFormValues = z.infer<typeof MediaTeamAddSchema>;
+  type TeamEditFormValues = z.infer<typeof MediaTeamEditSchema>;
+
+  // Form for adding team details
   const {
     register: registerTeamAdd,
     handleSubmit: handleTeamAddSubmit,
     formState: { errors: errorsTeamAdd },
     reset: resetAddForm,
-  } = useForm<TeamFormValues>({
-    resolver: zodResolver(MediaTeamSchema),
-    defaultValues: {
-      name: "",
-      position: "",
-      email: "",
-      description: "",
-    },
-  }); // Form for editing teams Details
-  const {
-    register: registerTeamEdit,
-    handleSubmit: handleTeamEditSubmit,
-    formState: { errors: errorsTeamEdit },
-    reset: resetEditForm,
-    setValue: setEditValue,
-  } = useForm<TeamFormValues>({
-    resolver: zodResolver(MediaTeamSchema),
+  } = useForm<TeamAddFormValues>({
+    resolver: zodResolver(MediaTeamAddSchema),
     defaultValues: {
       name: "",
       position: "",
@@ -75,7 +65,24 @@ const TeamsSection = () => {
       description: "",
     },
   });
-  const onSubmitTeamAdd = async (data: TeamFormValues) => {
+
+  // Form for editing teams Details
+  const {
+    register: registerTeamEdit,
+    handleSubmit: handleTeamEditSubmit,
+    formState: { errors: errorsTeamEdit },
+    reset: resetEditForm,
+    setValue: setEditValue,
+  } = useForm<TeamEditFormValues>({
+    resolver: zodResolver(MediaTeamEditSchema),
+    defaultValues: {
+      name: "",
+      position: "",
+      email: "",
+      description: "",
+    },
+  });
+  const onSubmitTeamAdd = async (data: TeamAddFormValues) => {
     console.log("Team Add Data Submitted:", data);
     const formData = new FormData();
     formData.append("name", data.name);
@@ -102,7 +109,7 @@ const TeamsSection = () => {
     setImagePreviewAdd("");
     setTeamAdd(false);
   };
-  const onSubmitTeamEdit = async (data: TeamFormValues) => {
+  const onSubmitTeamEdit = async (data: TeamEditFormValues) => {
     if (editingTeamIndex === null) return;
 
     console.log("Team Edit Data Submitted:", data, "Index:", editingTeamIndex);
@@ -111,9 +118,12 @@ const TeamsSection = () => {
     formData.append("position", data.position);
     formData.append("email", data.email);
     formData.append("description", data.description);
+
+    // Only append picture if a new file was selected
     if (data.picture && data.picture[0]) {
       formData.append("picture", data.picture[0]);
     }
+    // If no new picture is selected, the backend should keep the existing picture
 
     const teamId = teamDetails[editingTeamIndex]?.id;
     if (!teamId) {
@@ -178,6 +188,14 @@ const TeamsSection = () => {
         setImagePreviewEdit(reader.result as string);
       };
       reader.readAsDataURL(file);
+    } else {
+      // If no file selected, reset to the original team member's picture
+      const teamToEdit = teamDetails[editingTeamIndex || 0];
+      if (teamToEdit && teamToEdit.picture) {
+        setImagePreviewEdit(teamToEdit.picture);
+      } else {
+        setImagePreviewEdit("");
+      }
     }
   };
 
@@ -370,6 +388,16 @@ const TeamsSection = () => {
             </div>{" "}
             <div>
               <label className="block font-semibold mb-1">Picture</label>
+              {imagePreviewEdit && (
+                <div className="mb-2">
+                  <p className="text-sm text-gray-600 mb-1">Current picture:</p>
+                  <img
+                    src={imagePreviewEdit}
+                    alt="Current"
+                    className="w-24 h-24 object-cover rounded-full border-2 border-gray-300"
+                  />
+                </div>
+              )}
               <input
                 type="file"
                 accept="image/*"
@@ -377,15 +405,10 @@ const TeamsSection = () => {
                 onChange={handleImageChangeEdit}
                 className="w-full border rounded px-3 py-2"
               />
-              {imagePreviewEdit && (
-                <div className="mt-2">
-                  <img
-                    src={imagePreviewEdit}
-                    alt="Preview"
-                    className="w-24 h-24 object-cover rounded-full border-2 border-gray-300"
-                  />
-                </div>
-              )}{" "}
+              <p className="text-xs text-gray-500 mt-1">
+                Leave empty to keep current picture, or select a new file to
+                replace it
+              </p>
               {errorsTeamEdit.picture && (
                 <span className="text-red-500 text-sm">
                   {String(

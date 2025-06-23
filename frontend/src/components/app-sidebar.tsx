@@ -27,13 +27,13 @@ import { Sidebar_Data } from "./utils/constants";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
-  console.log(location.pathname);
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="h-5 py-3 mb-2">
           <Link to={"/admin/dashboard"}>
-            <h1 className="text-center border-b-2 border-slate-300  ">
+            <h1 className="text-center border-b-2 border-slate-300  hover:scale-105 transition-all duration-300 ease-in-out  font-semibold text-sidebar-foreground">
               Admin's Dashboard
             </h1>
           </Link>

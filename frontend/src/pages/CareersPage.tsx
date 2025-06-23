@@ -89,7 +89,7 @@ export const CareersPage: React.FC = () => {
             </p>{" "}
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-md:items-center ">
               <Button
-                className="btn-seconda`ry"
+                className="btn-secondary"
                 onClick={() => {
                   const jobSection = document.getElementById("open-positions");
                   if (jobSection) {

@@ -13,6 +13,7 @@ import {
 } from "@/api/services";
 import toast from "react-hot-toast";
 import ConfirmationModal from "../../components/ui/ConfirmationModal";
+import { testimonialSchema } from "@/schemas/MediaTestimonialSchema";
 
 const TestimonialSection = () => {
   const [testimonialEdit, setTestimonialEdit] = useState(false);
@@ -50,13 +51,6 @@ const TestimonialSection = () => {
   useEffect(() => {
     getTestimonials();
   }, []);
-
-  const testimonialSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    feedback: z.string().min(1, "Testimonial is required"),
-    designation: z.string().min(1, "Designation is required"),
-    company: z.string().min(1, "Company is required"),
-  });
 
   type TestimonialFormValues = z.infer<typeof testimonialSchema>;
 
