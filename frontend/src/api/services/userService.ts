@@ -1,52 +1,37 @@
 import api from "../interceptor";
 
 import {
-    // Admin Auth endpoints
-    adminLogin,
-    adminLogout,
-    adminResetPassword,
-    adminVerifyToken,
     
     // Hero Section endpoints
     getHeroSection,
     updateHeroSection,
-    createHeroSection,
     
     // Team Section endpoints
     getTeamSection,
     createTeamMember,
     updateTeamMember,
     deleteTeamMember,
-    getTeamMemberById,
+
     
     // Job Posting Section endpoints
     getJobPostings,
     createJobPosting,
-    updateJobPosting,
     deleteJobPosting,
-    getJobPostingById,
     archiveJobPosting,
     
     // Job Applications endpoints
     getJobApplications,
     createJobApplication,
-    updateJobApplication,
     deleteJobApplication,
-    getJobApplicationById,
-    getJobApplicationsByPosting,
     
     // Testimonial Section endpoints
     getTestimonials,
     createTestimonial,
     updateTestimonial,
-    deleteTestimonial,    getTestimonialById,
+    deleteTestimonial,   
     
     // Public endpoints
-    getPublicJobs,
-    getPublicTestimonials,
-    getPublicTeam,
-    getPublicHero,
-    submitContactForm,
+
     getFindUsData,
     getFindUsAddress,
     getFindUsBusinessHours,
@@ -57,7 +42,6 @@ import {
 } from "../endpoints";
 
 import { type IObjectProps, type JobApplication } from "../../types/index";
-import { ca } from "zod/v4/locales";
 
 export const getTeamSectionData = async ()=>{
     try{

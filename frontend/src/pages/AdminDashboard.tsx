@@ -5,7 +5,6 @@ import {
   Calendar,
   Activity,
   MessageSquare,
-  Globe,
   ChevronRight,
   Clock,
   RefreshCw,

@@ -4,7 +4,6 @@ import { Card, Button } from "../components";
 import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
 import { type FindUs, type ContactFormData } from "../types";
 import { getFindUs } from "@/api/services";
-import { getFindUsData } from "@/api/endpoints";
 import { convertTo12Hour } from "@/components/utils/helpers";
 
 export const ContactPage: React.FC = () => {

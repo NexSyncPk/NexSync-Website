@@ -127,13 +127,6 @@ export const HeroSection: React.FC = () => {
             <div className="relative z-10">
               <div className="w-full h-96 bg-gradient-to-br from-primary-blue to-primary-orange rounded-3xl shadow-2xl animate-float">
                 <div className="absolute inset-0 bg-white bg-opacity-20 rounded-3xl backdrop-blur-sm">
-                  {/* <div className="flex items-center justify-center h-full">
-                    <div className="text-center text-white space-y-4">
-                      <Zap size={64} className="mx-auto" />
-                      <h3 className="text-2xl font-bold">Innovation</h3>
-                      <p className="text-lg opacity-90">Powered by Technology</p>
-                    </div>
-                  </div> */}
                   <img
                     src={heroSection?.heroImage || "Hero.jpg"}
                     alt=""

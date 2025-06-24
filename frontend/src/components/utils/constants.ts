@@ -1,30 +1,3 @@
-
-// import google from "../assets/google.png";
-// import github from "../assets/github.png";
-// import LoginBackground from "../assets/loginBackground.jpeg";
-// import noData from "../assets/noData.png";
-// import profileSkeleton from "../assets/profileSkeleton.png";
-// import webLogo from "../assets/web-logo.png";
-// import solCodersLogo from "../assets/Solcoders-Logo.png";
-// import LoginBg from "../assets/LoginBg.png";
-// import teamifyRed from "../assets/teamifyRed.png";
-// import teamifyWhite from "../assets/teamifyWhite.png";
-// import teamify from "../assets/teamifyOne.png";
-
-// export const images = {
-//   google,
-//   github,
-//   LoginBackground,
-//   noData,
-//   webLogo,
-//   profileSkeleton,
-//   solCodersLogo,
-//   LoginBg,
-//   teamifyRed,
-//   teamifyWhite,
-//   teamify,
-// };
-
 export const routes = {
   // Main website routes
   home: "/",

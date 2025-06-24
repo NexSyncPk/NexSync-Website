@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, Button } from "../components";
 import { benefits } from "../data/mockData";
-import { MapPin, DollarSign, Users, Home, BookOpen, Star } from "lucide-react";
+import { DollarSign, Users, Home, BookOpen, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { Job, JobPosting } from "@/types";
+import type { Job } from "@/types";
 import { getJobs } from "@/api/services";
 
 const benefitIconMap = {

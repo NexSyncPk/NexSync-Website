@@ -1,4 +1,4 @@
-import { Briefcase, Globe, Users } from 'lucide-react';
+import { Briefcase, Globe} from 'lucide-react';
 import type { Testimonial, JobOpening, Service, CompanyValue, Benefit, TeamMemberAttributes, Job, JobApplication } from '../types/index';
 
 export const fallbackTestimonials: Testimonial[] = [
