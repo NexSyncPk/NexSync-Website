@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, Button } from "../components";
-import { benefits } from "../data/mockData";
+import { benefits, mockJobs } from "../data/mockData";
 import { DollarSign, Users, Home, BookOpen, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Job } from "@/types";
@@ -19,23 +19,28 @@ export const CareersPage: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   // Simulating fetching jobs from an API
   const fetchJobs = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await getJobs();
-      if (response && response.data) {
+      if (response && response.data && response.data.length > 0) {
         console.log("Fetched jobs:", response.data);
         setJobs(response.data);
       } else {
-        console.error("Failed to fetch job postings");
-        setError("Failed to load job postings");
+        // Fallback to mock data if API fails or returns empty data
+        setJobs(mockJobs);
+        console.warn("API response was empty or invalid, using mock data");
+        // Don't set error here since we're using fallback data
       }
     } catch (error) {
       console.error("Error fetching jobs:", error);
-      setError("Error loading job postings");
+      // Use mock data as fallback when API call fails
+      setJobs(mockJobs);
+      console.warn("API call failed, using mock data as fallback");
+      // Optionally show a subtle warning instead of error
+      // setError("Using sample data - API temporarily unavailable");
     } finally {
       setLoading(false);
     }
@@ -114,13 +119,7 @@ export const CareersPage: React.FC = () => {
       {/* Why Work With Us */}
       <section className="py-20 bg-white">
         <div className="section-container">
-          <div
-            // initial={{ opacity: 0, y: 30 }}
-            // whileInView={{ opacity: 1, y: 0 }}
-            // transition={{ duration: 0.8 }}
-            // viewport={{ once: true }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-secondary-navy mb-6">
               Why Work With Us?
             </h2>
